@@ -1,4 +1,7 @@
 /* NOTES:
+		Seat Number in VARCHAR form
+        >> A/B/C/D/E/F/G/H + 1-2 digit numbers
+        
 		Member ID, Flight ID and Employee ID in VARCHAR form
         >> Member ID: GST001
         >> Flight ID: PAL001, QTR001 (ICAO Code + Flight Number)
@@ -23,8 +26,7 @@
 /* Booking Records:
 		Booking Reference (INT 8), Member ID (VARCHAR 6), Flight ID(VARCHAR 6), 
         Check-In Date (DATE), Seat Number (VARCHAR3), Class (VARCHAR 8), 
-        Food Order (VARCHAR 20), Number of Check-In Baggage (INT),
-        Departure Time (DATETIME), Arrival Time (DATETIME),
+        Food Order (VARCHAR 20), Number of Check-In Baggage (INT 2), Total Cost (INT 10)
         
         PRIMARY KEY: Booking Reference
         FOREIGN KEYS: Member ID (to Passenger Table), Flight ID (to Flight Table)
@@ -37,10 +39,10 @@ CREATE Table bookings (
     CONSTRAINT FOREIGN KEY (flight_id) REFERENCES flights(flight_id));
 
 /* Flight Records:
-		Flight ID (VARCHAR 6), Origin (VARCHAR 3), Destination (VARCHAR 3)
-        Gate Number (INT 2), Pilot ID (VARCHAR 6), Co-Pilot ID (VARCHAR 6),
-        Cabin Crew 1 (VARCHAR 6), Cabin Crew 2 (VARCHAR 6), Cabin Crew 3 (VARCHAR 6),
-        Cabin Crew 4 (VARCHAR 6)
+		Flight ID (VARCHAR 6), Origin (VARCHAR 3), Destination (VARCHAR 3), 
+        Gate Number (INT 2), Departure Time (DATETIME), Arrival Time (DATETIME), 
+        Pilot ID (VARCHAR 6), Co-Pilot ID (VARCHAR 6), Lead Attendant (VARCHAR 6), 
+        Flight Attendant (VARCHAR 6)
         
         PRIMARY KEY: Flight ID
         FOREIGN KEYS: Pilot ID (to Employees Table), Co-Pilot ID (to Employees Table),
