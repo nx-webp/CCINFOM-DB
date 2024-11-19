@@ -112,7 +112,6 @@ public class View {
 
     public JPanel createManage() {
         JPanel managePnl = new JPanel();
-        
 
         return managePnl;
     }
