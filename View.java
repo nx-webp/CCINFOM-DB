@@ -10,14 +10,17 @@ public class View {
         this.mainFrame = new JFrame();
         this.mainFrame.setTitle("Airline Database Management System");
         this.mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.mainFrame.setSize(800, 600);
+        this.mainFrame.setSize(1000, 800);
         this.mainFrame.setResizable(false);
 
         this.mainPnl = new JPanel(new BorderLayout());
 
         this.mainPnl.add(this.createHeader(), BorderLayout.NORTH);
         this.mainPnl.add(this.createSidebar(), BorderLayout.WEST);
-        this.mainPnl.add(this.createCenter(), BorderLayout.CENTER);
+        //this.mainPnl.add(this.createCenter(), BorderLayout.CENTER);
+
+        this.mainFrame.add(this.mainPnl);
+        this.mainFrame.setVisible(true);
     }
 
     public JPanel createHeader() {
@@ -44,7 +47,7 @@ public class View {
     {
         // menu panel
         JPanel menus = new JPanel();
-        menus.setPreferredSize(new Dimension(200, 400));
+        menus.setPreferredSize(new Dimension(300, 400));
         menus.setLayout(new GridLayout(7, 1, 10, 0));
 
         JLabel menuText = new JLabel("MAIN MENU");
@@ -75,18 +78,18 @@ public class View {
      *
      * @return the center panel to be used in the main frame.
      */
-    public JPanel createCenter()
-    {
-        this.centerMainPnl = new JPanel();
-        this.centerMainPnl.setLayout(new CardLayout());
-
-        this.centerMainPnl.add(createHome(), "Home");
-        this.centerMainPnl.add(createCreate(), "Create Hotel");
-        this.centerMainPnl.add(createView(), "View Hotels");
-        this.centerMainPnl.add(createManage(), "Manage Hotels");
-        this.centerMainPnl.add(createBook(), "Book Reservation");
-
-        return this.centerMainPnl;
-    }
+//    public JPanel createCenter()
+//    {
+//        this.centerMainPnl = new JPanel();
+//        this.centerMainPnl.setLayout(new CardLayout());
+//
+//        this.centerMainPnl.add(createHome(), "Home");
+//        this.centerMainPnl.add(createCreate(), "Create Hotel");
+//        this.centerMainPnl.add(createView(), "View Hotels");
+//        this.centerMainPnl.add(createManage(), "Manage Hotels");
+//        this.centerMainPnl.add(createBook(), "Book Reservation");
+//
+//        return this.centerMainPnl;
+//    }
 
 }
