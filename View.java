@@ -6,6 +6,9 @@ public class View {
     private JFrame mainFrame;
     private JPanel mainPnl, centerMainPnl;
     private JButton menuHome, menuView, menuManage, menuReport, menuBook;
+    private JButton viewFlight, viewBook, viewEmployee, viewPassenger;
+    private JButton manageFlight, manageBook, manageEmployee, managePassenger;
+    private JButton genFlight, genRevenue, genEmployee, genPassenger;
 
     public View() {
         this.mainFrame = new JFrame();
@@ -100,24 +103,143 @@ public class View {
 
     public JPanel createHome() {
         JPanel homePnl = new JPanel();
+        homePnl.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        homePnl.setBackground(Color.WHITE);
+
 
         return homePnl;
     }
 
     public JPanel createView() {
         JPanel viewPnl = new JPanel();
+        viewPnl.setLayout(new CardLayout());
+        viewPnl.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JPanel selectionPnl = new JPanel();
+        selectionPnl.setBackground(Color.WHITE);
+        selectionPnl.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(20, 20, 20, 20);
+
+        this.viewBook = new JButton("View Bookings");
+        this.viewBook.setPreferredSize(new Dimension(250, 150));
+
+        this.viewFlight = new JButton("View Flights");
+        this.viewFlight.setPreferredSize(new Dimension(250, 150));
+
+        this.viewPassenger = new JButton("View Passengers");
+        this.viewPassenger.setPreferredSize(new Dimension(250, 150));
+
+        this.viewEmployee = new JButton("View Employees");
+        this.viewEmployee.setPreferredSize(new Dimension(250, 150));
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        selectionPnl.add(this.viewBook, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        selectionPnl.add(this.viewFlight, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        selectionPnl.add(this.viewPassenger, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        selectionPnl.add(this.viewEmployee, gbc);
+
+        viewPnl.add(selectionPnl, "Selection");
 
         return viewPnl;
     }
 
     public JPanel createManage() {
         JPanel managePnl = new JPanel();
+        managePnl.setLayout(new CardLayout());
+        managePnl.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JPanel selectionPnl = new JPanel();
+        selectionPnl.setBackground(Color.WHITE);
+        selectionPnl.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(20, 20, 20, 20);
+
+        this.manageBook = new JButton("Manage Bookings");
+        this.manageBook.setPreferredSize(new Dimension(250, 150));
+
+        this.manageFlight = new JButton("Manage Flights");
+        this.manageFlight.setPreferredSize(new Dimension(250, 150));
+
+        this.managePassenger = new JButton("Manage Passengers");
+        this.managePassenger.setPreferredSize(new Dimension(250, 150));
+
+        this.manageEmployee = new JButton("Manage Employees");
+        this.manageEmployee.setPreferredSize(new Dimension(250, 150));
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        selectionPnl.add(this.manageBook, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        selectionPnl.add(this.manageFlight, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        selectionPnl.add(this.managePassenger, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        selectionPnl.add(this.manageEmployee, gbc);
+
+        managePnl.add(selectionPnl, "Selection");
+
 
         return managePnl;
     }
 
     public JPanel createReport() {
         JPanel reportPnl = new JPanel();
+        reportPnl.setLayout(new CardLayout());
+        reportPnl.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JPanel selectionPnl = new JPanel();
+        selectionPnl.setBackground(Color.WHITE);
+        selectionPnl.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(20, 20, 20, 20);
+
+        this.genFlight = new JButton("Flight Occupancy Report");
+        //this.genFlight.setFont(new Font("Arial", Font.BOLD, 17));
+        this.genFlight.setPreferredSize(new Dimension(250, 150));
+
+        this.genRevenue = new JButton("Revenue Report");
+        this.genRevenue.setPreferredSize(new Dimension(250, 150));
+
+        this.genPassenger = new JButton("Passenger Report");
+        this.genPassenger.setPreferredSize(new Dimension(250, 150));
+
+        this.genEmployee = new JButton("Employee Statistics Report");
+        this.genEmployee.setPreferredSize(new Dimension(250, 150));
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        selectionPnl.add(this.genFlight, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        selectionPnl.add(this.genRevenue, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        selectionPnl.add(this.genPassenger, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        selectionPnl.add(this.genEmployee, gbc);
+
+        reportPnl.add(selectionPnl, "Selection");
 
         return reportPnl;
     }

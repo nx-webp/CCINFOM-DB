@@ -11,6 +11,8 @@ public class Controller implements ActionListener /*, DocumentListener, ListSele
         this.view = view;
         this.model = model;
 
+        this.updateView();
+
         view.setActionListener(this);
     }
 
