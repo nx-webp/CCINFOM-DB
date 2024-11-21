@@ -3,6 +3,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.ResultSet;
 
 public class Main {
 
@@ -18,8 +19,8 @@ public class Main {
         String username = "root";
         String password = "";
     	
-    	try (Connection connection = DriverManager.getConnection(url, username, password);
-                Statement statement = connection.createStatement()) {
+    	try (Connection con = DriverManager.getConnection(url, username, password);
+                Statement statement = con.createStatement()) {
     	
 	    	Scanner scanner = new Scanner(System.in);
 	        int choice;
@@ -58,8 +59,59 @@ public class Main {
 	                				break;
 	                			}
 	                			case 3: {
-	                				/* reports to generate
-	                				  >> can be in menu form rin naman*/
+	                				int reportChoice;
+	                				
+	                				System.out.println("\nOptions:");
+	                				System.out.println("1: Flight Occupancy Report");
+	                				System.out.println("2: Revenue Report");
+	                				System.out.println("3: Passenger Report");
+	                				System.out.println("4: Employee Statistics Report");
+	                				System.out.println("0: Return to Previous Menu");
+	                				reportChoice = scanner.nextInt();
+	                				
+	                				do
+	                				{
+	                					switch (reportChoice)
+	                					{
+	                						case 1: { //flight occupancy report
+	                							//ask user for year and month
+	                							int nYear;
+	                							System.out.println("Enter year: ");
+	                							nYear = scanner.nextInt();
+	                							
+	                							Statement stmt = con.createStatement();
+	                							ResultSet rs = stmt.executeQuery
+	                									("SELECT f.flight_ID, f.origin, f.designation, COUNT(b.booking_ref) FROM flights, booking WHERE year(b.checkin_date) =" + nYear);
+	                							while(rs.next()) {
+	                								int flight_id = rs.getInt("flight_id");
+	                							}
+	                							break;
+	                						}
+	                						case 2: {
+	                							break;
+	                						}
+	                						case 3 : {
+	                							break;
+	                						}
+	                						case 4: {
+	                							Statement stmt = con.createStatement();
+	                							ResultSet rs = stmt.executeQuery("SELECT * FROM employees");
+	                							while(rs.next()) {
+	                								int employeeID = rs.getInt("employee_ID");
+	                								String lastName = rs.getString("last_name");
+	                								String firstName = rs.getString("first_name");
+	                								System.out.println("ID: " + employeeID + ", Name: " + firstName + " " + lastName);
+	                							} break;
+	                						}
+	                						case 0: {
+	                							break;
+	                						}
+	                						default:
+	                							System.out.println("Invalid Input.");
+	                					}
+	                				} while (reportChoice); //while reportChoice is TRUE
+	                				
+	                				// syntax error on menu exits, find better solution
 	                				break;
 	                			}
 	                			case 0: {
@@ -69,7 +121,7 @@ public class Main {
 	                				System.out.println("Invalid Input.");
 	                                break;
 	                		}
-	            		} while (nMenu != 0);
+	            		} while (nMenu); // while nMenu is TRUE
 	            		break;
 	            	}
 	            	case 2: { // PASSENGER TRANSACTIONS
@@ -100,7 +152,7 @@ public class Main {
 	                				System.out.println("Invalid Input.");
 	                                break;
 	                		}
-	            		} while (nMenu != 0);
+	            		} while (nMenu);
 	            		break;
 	            	}
 	            	case 0: {
@@ -127,11 +179,12 @@ public class Main {
     public static void flightBooking () {
     	
     	Scanner scanner = new Scanner(System.in);
+    	int choice;
     	
     	System.out.println("\nOptions:");
         System.out.println("1. Book a New Flight");
         System.out.println("2. Update Flight Booking");
-        System.out.println("3: Cancel Flight Booking")
+        System.out.println("3: Cancel Flight Booking");
         System.out.println("0. Return to Previous Menu");
         System.out.print("Enter your choice: ");
         choice = scanner.nextInt();
@@ -156,13 +209,20 @@ public class Main {
         } while (choice != 0);
     }
     
-    /*private static void insertData(Statement statement) throws SQLException {
-        String insertSQL = "INSERT INTO flights (username, email) VALUES ('john', 'john@example.com')";
+    private static void insertData(Statement statement) throws SQLException {
+    	
+    	//declare and get variable inputs
+    	int flight_id, gate_no, pilot_id, copilot_id, lead_attendant_id, flight_attendant_id;
+    	String destination, origin, departure_time, arrival_time;
+    	
+        String insertSQL = String.format("INSERT INTO flights VALUES (%d, %d, %s, %s, %s, %s, %d, %d, %d, %d",
+        			flight_id, gate_no, destination, origin, departure_time, arrival_time,
+        			pilot_id, copilot_id, lead_attendant_id, flight_attendant_id);
         statement.executeUpdate(insertSQL);
         System.out.println("Data inserted successfully.");
     }
 
-    private static void updateData(Statement statement) throws SQLException {
+    /*private static void updateData(Statement statement) throws SQLException {
         String updateSQL = "UPDATE flights SET email = 'newemail@example.com' WHERE username = 'john'";
         statement.executeUpdate(updateSQL);
         System.out.println("Data updated successfully.");
