@@ -1,9 +1,10 @@
-// di pako tapos pero lagay ko lng dito uwu
 package employee;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Employee 
 {
@@ -19,6 +20,18 @@ public class Employee
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection con = DriverManager.getConnection(url, user, password);
 			System.out.println("connection created");
+			
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Employee");
+			while(rs.next()) {
+				int employeeID = rs.getInt("employee_ID");
+				String lastName = rs.getString("last_name");
+				String firstName = rs.getString("first_name");
+				System.out.println("ID: " + employeeID + ", Name: " + firstName + " " + lastName);
+			}
+				
+				
+				
 			// show available employees based on status, dept, job title
 			// add/assign employees to certain flight
 			// update emp info
@@ -38,8 +51,7 @@ public class Employee
             System.out.println("Connection failed: " + e.getMessage());
         }
 		
-		
-	}
 
+	}
 }
 
