@@ -2,10 +2,8 @@
 		Seat Number in VARCHAR form
         >> A/B/C/D/E/F/G/H + 1-2 digit numbers
         
-		Member ID, Flight ID and Employee ID in VARCHAR form
-        >> Member ID: GST001
-        >> Flight ID: PAL001, QTR001 (ICAO Code + Flight Number)
-        >> Employee ID: EMP001
+		Member ID, Flight ID and Employee ID in MEDINT form (generate incrementing IDs)
+		>> all IDs start at 100000
         
         Departure and Arrival Time in DATETIME form
         >> YYYY-MM-DD hh:mm:ss
@@ -33,10 +31,12 @@
 */
 
 CREATE Table bookings (
-	ref_id INT(8) NOT NULL,
+	ref_id MEDIUMINT NOT NULL AUTO_INCREMENT,
     PRIMARY KEY (ref_id),
     CONSTRAINT FOREIGN KEY (member_id) REFERENCES passengers(member_id),
     CONSTRAINT FOREIGN KEY (flight_id) REFERENCES flights(flight_id));
+
+ALTER TABLE bookings AUTO_INCREMENT = 100000;
 
 /* Flight Records:
 		Flight ID (VARCHAR 6), Origin (VARCHAR 3), Destination (VARCHAR 3), 
@@ -50,12 +50,14 @@ CREATE Table bookings (
 */
 
 CREATE Table flights (
-	flight_id VARCHAR(6) NOT NULL,
+	flight_id MEDIUMINT NOT NULL AUTO_INCREMENT,
     PRIMARY KEY (flight_id),
     CONSTRAINT FOREIGN KEY (pilot_id) REFERENCES employees(employee_ID),
     CONSTRAINT FOREIGN KEY (copilot_id) REFERENCES employees(employee_ID),
     CONSTRAINT FOREIGN KEY (lead_attendant) REFERENCES employees(employee_ID),
     CONSTRAINT FOREIGN KEY (flight_attendant) REFERENCES employees(employee_ID));
+
+ALTER TABLE flights AUTO_INCREMENT = 100000;
     
 /* Passenger Records:
 		Member ID (VARCHAR 6), Passport Number (VARCHAR 9), Last Name (VARCHAR 20),
@@ -64,7 +66,7 @@ CREATE Table flights (
 */
 
 CREATE Table passengers (
-	passenger_id VARCHAR(6) NOT NULL,
+	passenger_id MEDIUMINT NOT NULL AUTO_INCREMENT,
     passport_number VARCHAR(9) NOT NULL,
     last_name VARCHAR(20) NOT NULL,
     first_name VARCHAR(30) NOT NULL,
@@ -72,7 +74,10 @@ CREATE Table passengers (
     contact_no INT(15) NOT NULL,
     email_address VARCHAR(320),
     vip_status ENUM('Silver', 'Gold', 'Platinum', 'Diamond'),
+    UNIQUE (passenger_id),
     PRIMARY KEY (passenger_id));
+
+ALTER TABLE passengers AUTO_INCREMENT = 100000;
     
 /* Employee Records:
 		Employee ID (VARCHAR 6), Last Name (VARCHAR 20), First Name (VARCHAR 30),
@@ -81,5 +86,7 @@ CREATE Table passengers (
 */
 
 CREATE Table employees (
-	employee_id VARCHAR(6) NOT NULL,
+	employee_id MEDIUMINT NOT NULL AUTO_INCREMENT,
     PRIMARY KEY (employee_id));
+    
+ALTER TABLE employees AUTO_INCREMENT = 100000;

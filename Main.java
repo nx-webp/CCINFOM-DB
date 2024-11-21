@@ -1,9 +1,21 @@
 import java.util.Scanner;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.ResultSet;
+import java.sql.*;
+
+/* NOTES/COMMENTS:
+
+ 	>> need to edit/improve menus (exiting/returning to previous pages need a better system)
+ 	>> menus can have different functions to be more effective ^^
+ 	>> still need to test functions !!
+ 	>> double check where input buffer clearance is needed
+ 	
+ 	>> will we need input error handling / user verifications (e.g. canceling a flight, booking id
+ 	   should match with the passenger's member id - when entered and in the records)
+   	   for everything or should we assume values entered always meet the necessary parameters?
+ 	   
+ 	>> flight booking: any ideas how we/the user can tell if a flight's seat is already booked?
+ 	>> can we make drop-down lists for ENUM values (e.g. flight class, passenger status, etc.)
+ 	>> how to compute for total cost of a booking T-T
+*/
 
 public class Main {
 
@@ -41,12 +53,13 @@ public class Main {
 	            		
 	            		do {
 	            			System.out.println("\nOptions:");
-	                        System.out.println("1. Create New Employee Record");
-	                        System.out.println("2. Create New Flight Record");
-	                        System.out.println("3. Generate Reports")
+	                        System.out.println("1. Edit Employee Records");
+	                        System.out.println("2. Edit Flight Records");
+	                        System.out.println("3. Generate Reports");
 	                        System.out.println("0. Previous Menu");
 	                        System.out.print("Enter your choice: ");
 	                		nMenu = scanner.nextInt();
+	                		scanner.nextLine();
 	                		
 	                		switch (nMenu)
 	                		{
@@ -55,7 +68,16 @@ public class Main {
 	                				break;
 	                			}
 	                			case 2: {
-	                				// flight records transaction
+	                				int flightMenu;
+	                				
+	                				System.out.println("\nOptions:");
+	    	                        System.out.println("1. Create New Flight Record");
+	    	                        System.out.println("2. Edit Existing Flight Records");
+	    	                        System.out.println("3. Delete a Flight Record");
+	    	                        System.out.println("0. Previous Menu");
+	    	                        System.out.print("Enter your choice: ");
+	    	                        flightMenu
+	    	                        
 	                				break;
 	                			}
 	                			case 3: {
@@ -68,6 +90,7 @@ public class Main {
 	                				System.out.println("4: Employee Statistics Report");
 	                				System.out.println("0: Return to Previous Menu");
 	                				reportChoice = scanner.nextInt();
+	                				scanner.nextLine(); //clear input buffer
 	                				
 	                				do
 	                				{
@@ -78,12 +101,29 @@ public class Main {
 	                							int nYear;
 	                							System.out.println("Enter year: ");
 	                							nYear = scanner.nextInt();
+	                							scanner.nextLine();
 	                							
-	                							Statement stmt = con.createStatement();
-	                							ResultSet rs = stmt.executeQuery
-	                									("SELECT f.flight_ID, f.origin, f.designation, COUNT(b.booking_ref) FROM flights, booking WHERE year(b.checkin_date) =" + nYear);
-	                							while(rs.next()) {
-	                								int flight_id = rs.getInt("flight_id");
+	                							int sMonth;
+	                							System.out.println("Enter month: (INT) ");
+	                							sMonth = scanner.nextInt();
+	                							scanner.nextLine();
+	                							
+	                							String query = "SELECT f.flight_ID, f.origin, f.designation, COUNT(b.booking_ref) FROM flights f JOIN bookings b ON f.flight_id = b.flight_id WHERE year(b.checkin_date) = ? AND month(b.checkin_date) = ?";
+	                							
+	                							PreparedStatement myStmt = con.prepareStatement(query);
+	                							
+	                							myStmt.setInt(1, nYear); 
+	                							myStmt.setInt(2, sMonth);
+	                							
+	                							ResultSet rs= myStmt.executeQuery(); 
+	               
+	                							while (rs.next()) {
+	                								int flightId = rs.getInt("flight_id");
+	                							    String origin = rs.getString("origin");
+	                							    String destination = rs.getString("destination");
+	                							    int bookingCount = rs.getInt(4); // Column index 4 for COUNT(b.booking_ref)
+	                							    System.out.println("Flight ID: " + flightId + ", Origin: " + origin + 
+	                							                       ", Destination: " + destination + ", Bookings: " + bookingCount);
 	                							}
 	                							break;
 	                						}
@@ -129,8 +169,8 @@ public class Main {
 	            		
 	            		do {
 	            			System.out.println("\nOptions:");
-	                        System.out.println("1. Book a Flight");
-	                        System.out.println("2. Create an Account");
+	                        System.out.println("1. Flight Booking");
+	                        System.out.println("2. Manage your Account");
 	                        System.out.println("0. Exit");
 	                        System.out.print("Enter your choice: ");
 	                		nMenu = scanner.nextInt();
@@ -138,7 +178,7 @@ public class Main {
 	                		switch (nMenu)
 	                		{
 	                			case 1: {
-	                				flightBooking();
+	                				flightBooking(statement, con);
 	                				break;
 	                			}
 	                			case 2: {
@@ -166,6 +206,8 @@ public class Main {
 	            }
 	        } while (choice != 0);
 	        
+	        scanner.close();
+	        
     	} catch (SQLException e) {
             e.printStackTrace();
         }
@@ -176,7 +218,13 @@ public class Main {
         Controller controller = new Controller(view, model);
     }
     
-    public static void flightBooking () {
+    public static void flightBooking (Statement statement, Connection con) throws SQLException {
+    	
+    	//declare variables
+    	int member_id, flight_id, checkin_bags;
+    	float total_cost;
+    	String checkin_date, seat_number, seat_class, food_order;
+    	PreparedStatement stmt = null;
     	
     	Scanner scanner = new Scanner(System.in);
     	int choice;
@@ -192,45 +240,90 @@ public class Main {
         do {
         	
         	switch (choice) {
-        		case 1: {
-        			//create booking
+        		case 1: { //book a new flight
+        	    	
+        	    	//initialize variables by asking for user input
+        	    	System.out.println("Enter Member ID: ");
+        	    	member_id = scanner.nextInt();
+        	    	scanner.nextLine();
+        	    	
+        	    	System.out.println("Enter Flight ID: ");
+        	    	flight_id = scanner.nextInt();
+        	    	scanner.nextLine();
+        	    	
+        	    	System.out.println("Enter Check-In Date (YYYY-MM-DD): ");
+        	    	checkin_date = scanner.nextLine();
+        	    	
+        	    	System.out.println("Enter Desired Seat Number: ");
+        	    	seat_number = scanner.nextLine();
+        	    	
+        	    	System.out.println("Enter Desired Seat Class: ");
+        	    	seat_class = scanner.nextLine();
+        	    	
+        	    	//total cost
+        	    	
+        	    	System.out.println("Choose your food order: ");
+        	    	food_order = scanner.nextLine();
+        	    	
+        	    	System.out.println("Number of Bags to Check-In: ");
+        	    	checkin_bags = scanner.nextInt();
+        	    	scanner.nextLine();
+        	    	
+        	    	String newBooking = "INSERT INTO bookings (member_id, flight_id, checkin_date, seat_number, class, total_cost, food_order, checkin_bags) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        	        
+        	        stmt = con.prepareStatement(newBooking);
+        	        
+        	        stmt.setInt(1, member_id);
+		            stmt.setInt(2, flight_id);
+		            stmt.setString(3, checkin_date);
+		            stmt.setString(4, seat_number);
+		            stmt.setString(5, seat_class);
+		            stmt.setDouble(6, total_cost);
+		            stmt.setString(7, food_order);
+		            stmt.setInt(8, checkin_bags);
+        	        
+        	        stmt.executeUpdate();
+        	        System.out.println("Data inserted successfully.");
         			break;
         		}
-        		case 2: {
-        			//update booking
+        		case 2: { //update booking
+        			int booking_id;
+        			
+        			System.out.println("Enter Booking ID: ");
+        	    	member_id = scanner.nextInt();
+        	    	scanner.nextLine();
+        			
+        	    	// FILL IN !!
+        			String updateBooking = "UPDATE bookings SET XXX WHERE booking_id = ?";
+        			
+        			stmt = con.prepareStatement(updateBooking);
         			break;
         		}
-        		case 3: {
-        			//delete booking
+        		case 3: { //cancel booking
+        			int booking_id;
+        			
+        			System.out.println("Enter Booking ID: ");
+        	    	booking_id = scanner.nextInt();
+        	    	scanner.nextLine();
+        	    	
+        	    	System.out.println("Enter Member ID: "); //for verification
+        	    	member_id = scanner.nextInt();
+        	    	scanner.nextLine();
+        			
+        			String cancelBooking = "DELETE FROM bookings WHERE booking_id = ? AND member_id = ?";
+        			
+        			stmt = con.prepareStatement(cancelBooking);
+        			
+        			stmt.setInt(1, booking_id);
+        			stmt.setInt(2, member_id);
+        			
+        			stmt = con.prepareStatement(cancelBooking);
         			break;
         		}
         	}
         	
         } while (choice != 0);
+        
+        scanner.close();
     }
-    
-    private static void insertData(Statement statement) throws SQLException {
-    	
-    	//declare and get variable inputs
-    	int flight_id, gate_no, pilot_id, copilot_id, lead_attendant_id, flight_attendant_id;
-    	String destination, origin, departure_time, arrival_time;
-    	
-        String insertSQL = String.format("INSERT INTO flights VALUES (%d, %d, %s, %s, %s, %s, %d, %d, %d, %d",
-        			flight_id, gate_no, destination, origin, departure_time, arrival_time,
-        			pilot_id, copilot_id, lead_attendant_id, flight_attendant_id);
-        statement.executeUpdate(insertSQL);
-        System.out.println("Data inserted successfully.");
-    }
-
-    /*private static void updateData(Statement statement) throws SQLException {
-        String updateSQL = "UPDATE flights SET email = 'newemail@example.com' WHERE username = 'john'";
-        statement.executeUpdate(updateSQL);
-        System.out.println("Data updated successfully.");
-    }
-
-    private static void deleteData(Statement statement) throws SQLException {
-        String deleteSQL = "DELETE FROM flights WHERE flight_id = ";
-        statement.executeUpdate(deleteSQL);
-        System.out.println("Data deleted successfully.");
-    }*/
 }
