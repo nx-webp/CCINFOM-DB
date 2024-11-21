@@ -2,9 +2,12 @@ package employee;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
+import java.util.Scanner;
 
 public class Employee 
 {
@@ -15,21 +18,83 @@ public class Employee
 		String user = "root";
 		String password = "Cupidissodumb<3"; // pls dont hack me guys
 		
+		Scanner scanner = new Scanner(System.in);
+		
 		try 
 		{
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection con = DriverManager.getConnection(url, user, password);
 			System.out.println("connection created");
 			
-			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM Employee");
-			while(rs.next()) {
-				int employeeID = rs.getInt("employee_ID");
-				String lastName = rs.getString("last_name");
-				String firstName = rs.getString("first_name");
-				System.out.println("ID: " + employeeID + ", Name: " + firstName + " " + lastName);
-			}
+			// Display menu options
+	        System.out.println("Select an option:");
+	        System.out.println("1. Show all employees");
+	        System.out.println("2. Insert Into Employee Table");
+	        int choice = scanner.nextInt(); // Taking the user's choice
+	        
+	        if(choice ==1) {
+	        	Statement stmt = con.createStatement();
+				ResultSet rs = stmt.executeQuery("SELECT * FROM Employee");
+				while(rs.next()) {
+					int employeeID = rs.getInt("employee_ID");
+					String lastName = rs.getString("last_name");
+					String firstName = rs.getString("first_name");
+					System.out.println("ID: " + employeeID + ", Name: " + firstName + " " + lastName);
+				}
+	        }
+	        
+	        else if(choice ==2) {
+	        	PreparedStatement stmt = null;
+	        	// Get employee details from user input
+	            System.out.println("Enter employee details:");
+
+	            System.out.print("Employee ID: ");
+	            int employeeID = scanner.nextInt();
+	            scanner.nextLine();  // Consume the newline left by nextInt()
+
+	            System.out.print("Last Name: ");
+	            String lastName = scanner.nextLine();
+
+	            System.out.print("First Name: ");
+	            String firstName = scanner.nextLine();
+
+	            System.out.print("Job Title (e.g., Pilot, Co-pilot, Attendant, etc.): ");
+	            String jobTitle = scanner.nextLine();
+
+	            System.out.print("Salary: ");
+	            double salary = scanner.nextDouble();
+	            scanner.nextLine();  // Consume the newline left by nextDouble()
+
+	            System.out.print("Department: ");
+	            String department = scanner.nextLine();
+
+	            
+					String insertEmployee = "INSERT INTO Employee (employee_ID, last_name, first_name, job_title, salary, department, flight_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
+					stmt = con.prepareStatement(insertEmployee);
+					
+					stmt.setInt(1, employeeID);
+		            stmt.setString(2, lastName);
+		            stmt.setString(3, firstName);
+		            stmt.setString(4, jobTitle);
+		            stmt.setDouble(5, salary);
+		            stmt.setString(6, department);
+		            // Insert NULL for flight_id
+		            stmt.setNull(7, Types.INTEGER);
+		            
+		            int rowsAffected = stmt.executeUpdate();
+		            if (rowsAffected > 0) {
+		                System.out.println("Employee added and assigned to flight successfully!");
+		            } else {
+		                System.out.println("Error: Unable to add the employee.");
+		            }
+		            
 				
+	        }
+	        
+	        else {
+	            System.out.println("Invalid choice.");
+	        }
+			
 				
 				
 			// show available employees based on status, dept, job title
@@ -51,7 +116,9 @@ public class Employee
             System.out.println("Connection failed: " + e.getMessage());
         }
 		
+		scanner.close();
 
 	}
 }
+
 
