@@ -105,7 +105,7 @@ public class Employee
 		            
 		            rowsAffected = stmt.executeUpdate();
 		            if (rowsAffected > 0) {
-		                System.out.println("Employee added and assigned to flight successfully!");
+		                System.out.println("Employee added successfully!");
 		            } else {
 		                System.out.println("Error: Unable to add the employee.");
 		            }
