@@ -1,4 +1,5 @@
 public class Flight {
+	
     private int flightID;
     private String gateNumber;
     private String destination;
@@ -69,7 +70,6 @@ public class Flight {
     public int getFlightAttendantID() {
         return flightAttendantID;
     }
-
 
     // SETTERS //
 

@@ -71,7 +71,7 @@ CREATE Table passengers (
     birthdate DATE,
     contact_no INT(15) NOT NULL,
     email_address VARCHAR(320),
-    vip_status VARCHAR(8),
+    vip_status ENUM('Silver', 'Gold', 'Platinum', 'Diamond'),
     PRIMARY KEY (passenger_id));
     
 /* Employee Records:
