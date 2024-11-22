@@ -5,25 +5,20 @@ public class Model {
     private Connection connection; // refers to the connection to the SQL database
     private String currentView;
 
-    //not sure if need pa mga to
-//    private ArrayList<Flight> flights;
-//    private ArrayList<Booking> bookings;
-//    private ArrayList<Passenger> passengers;
-//    private ArrayList<Employee> employees;
-
     public Model() {
         this.currentView = "Home";
     }
 
-    /*
     public boolean deleteFlight(String flightID) throws SQLException {
         // define the query needed to get the flight to delete, '?' is a placeholder
         String query = "DELETE * FROM flights WHERE flightID = ?";
-        try {
-            PreparedStatement statement = connection.prepareSt
-        }
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+        
+        stmt.setString(1, flightID);
+        stmt.executeUpdate();
+        return true;
     }
-    */
 
 
     public boolean setCurrentView(String currentView) {
