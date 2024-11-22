@@ -11,9 +11,9 @@ public class Controller implements ActionListener /*, DocumentListener, ListSele
         this.view = view;
         this.model = model;
 
+        view.setActionListener(this);
         this.updateView();
 
-        view.setActionListener(this);
     }
 
     public void updateView() {
@@ -22,10 +22,9 @@ public class Controller implements ActionListener /*, DocumentListener, ListSele
         // update buttons based on current view
         view.setMenuEnabled(
                 !currentView.equals("Home"),
-                !currentView.equals("View Records"),
-                !currentView.equals("Manage Records"),
-                !currentView.equals("Generate Reports"),
-                !currentView.equals("Book Flight")
+                !currentView.equals("Admin Menu"),
+                !currentView.equals("Passenger Menu"),
+                !currentView.equals("Exit Program")
         );
 
         // update view in gui

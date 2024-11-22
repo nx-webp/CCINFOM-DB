@@ -27,9 +27,8 @@ public class Model {
 
 
     public boolean setCurrentView(String currentView) {
-        if (currentView.equals("Home") || currentView.equals("View Records") ||
-                currentView.equals("Manage Records") || currentView.equals("Generate Reports") ||
-                currentView.equals("Book Flight")) {
+        if (currentView.equals("Home") || currentView.equals("Admin Menu") ||
+                currentView.equals("Passenger Menu") || currentView.equals("Exit Program")) {
             this.currentView = currentView;
             return true; // view changed
         }

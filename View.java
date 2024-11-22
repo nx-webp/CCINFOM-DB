@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 public class View {
     private JFrame mainFrame;
     private JPanel mainPnl, centerMainPnl;
+    private JButton menuAdmin, menuPassenger, menuExit;
     private JButton menuHome, menuView, menuManage, menuReport, menuBook;
     private JButton viewFlight, viewBook, viewEmployee, viewPassenger;
     private JButton manageFlight, manageBook, manageEmployee, managePassenger;
@@ -14,7 +15,7 @@ public class View {
         this.mainFrame = new JFrame();
         this.mainFrame.setTitle("Airline Database Management System");
         this.mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.mainFrame.setSize(1000, 800);
+        this.mainFrame.setSize(800, 600);
         this.mainFrame.setResizable(false);
 
         this.mainPnl = new JPanel(new BorderLayout());
@@ -31,13 +32,13 @@ public class View {
         JPanel header = new JPanel();
 
         header.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
-        header.setPreferredSize(new Dimension(800, 125));
+        header.setPreferredSize(new Dimension(800, 100));
         header.setBackground(Color.decode("#2A9DF4"));
         header.setLayout(new BoxLayout(header, BoxLayout.Y_AXIS));
 
         JLabel viewHeader = new JLabel("Airline Database Management System");
         viewHeader.setForeground(Color.WHITE);
-        viewHeader.setFont(new Font("Arial", Font.BOLD, 50));
+        viewHeader.setFont(new Font("Arial", Font.BOLD, 40));
         viewHeader.setAlignmentY(Component.CENTER_ALIGNMENT);
         viewHeader.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -58,8 +59,8 @@ public class View {
     {
         // menu panel
         JPanel menus = new JPanel();
-        menus.setPreferredSize(new Dimension(300, 400));
-        menus.setLayout(new GridLayout(6, 1, 10, 0));
+        menus.setPreferredSize(new Dimension(200, 400));
+        menus.setLayout(new GridLayout(5, 1, 10, 0));
 
         JLabel menuText = new JLabel("MAIN MENU");
         menuText.setHorizontalAlignment(JTextField.CENTER);
@@ -67,18 +68,16 @@ public class View {
         menus.add(menuText);
 
         // add menu buttons
+        this.menuAdmin = new JButton("Admin Menu");
+        this.menuPassenger = new JButton("Passenger Menu");
+        this.menuExit = new JButton("Exit Program");
         this.menuHome = new JButton("Home");
-        this.menuView = new JButton("View Records");
-        this.menuManage = new JButton("Manage Records");
-        this.menuReport = new JButton("Generate Reports");
-        this.menuBook = new JButton("Book Flight");
 
         // add all buttons to menu sidebar
         menus.add(this.menuHome);
-        menus.add(this.menuView);
-        menus.add(this.menuManage);
-        menus.add(this.menuReport);
-        menus.add(this.menuBook);
+        menus.add(this.menuAdmin);
+        menus.add(this.menuPassenger);
+        menus.add(this.menuExit);
         return menus;
     }
 
@@ -93,10 +92,8 @@ public class View {
         this.centerMainPnl.setLayout(new CardLayout());
 
         this.centerMainPnl.add(createHome(), "Home");
-        this.centerMainPnl.add(createView(), "View Records");
-        this.centerMainPnl.add(createManage(), "Manage Records");
-        this.centerMainPnl.add(createReport(), "Generate Reports");
-        this.centerMainPnl.add(createBook(), "Book Flight");
+        this.centerMainPnl.add(createAdmin(), "Admin Menu");
+        this.centerMainPnl.add(createPassenger(), "Passenger Menu");
 
         return this.centerMainPnl;
     }
@@ -110,94 +107,153 @@ public class View {
         return homePnl;
     }
 
-    public JPanel createView() {
-        JPanel viewPnl = new JPanel();
-        viewPnl.setLayout(new CardLayout());
-        viewPnl.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    public JPanel createAdmin() {
+        JPanel adminPnl = new JPanel();
+        adminPnl.setLayout(new BorderLayout());
+        adminPnl.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JPanel selectionPnl = new JPanel();
-        selectionPnl.setBackground(Color.WHITE);
-        selectionPnl.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(20, 20, 20, 20);
+        JPanel northPnl = new JPanel();
+        northPnl.setBackground(Color.WHITE);
+        JLabel label = new JLabel("Administrator's Menu");
+        northPnl.add(label);
 
-        this.viewBook = new JButton("View Bookings");
-        this.viewBook.setPreferredSize(new Dimension(250, 150));
+        JPanel centerPnl = new JPanel();
+        centerPnl.setLayout(new GridLayout(3, 1,  5, 5));
+        centerPnl.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        centerPnl.setBackground(Color.WHITE);
 
-        this.viewFlight = new JButton("View Flights");
-        this.viewFlight.setPreferredSize(new Dimension(250, 150));
+        JButton editEmployee = new JButton("Edit Employee Records");
+        JButton editFlight = new JButton("Edit Employee Records");
+        JButton genReports = new JButton("Edit Employee Records");
 
-        this.viewPassenger = new JButton("View Passengers");
-        this.viewPassenger.setPreferredSize(new Dimension(250, 150));
+        centerPnl.add(editEmployee);
+        centerPnl.add(editFlight);
+        centerPnl.add(genReports);
 
-        this.viewEmployee = new JButton("View Employees");
-        this.viewEmployee.setPreferredSize(new Dimension(250, 150));
+        adminPnl.add(centerPnl, BorderLayout.CENTER);
 
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        selectionPnl.add(this.viewBook, gbc);
 
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        selectionPnl.add(this.viewFlight, gbc);
+        adminPnl.add(northPnl, BorderLayout.NORTH);
 
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        selectionPnl.add(this.viewPassenger, gbc);
-
-        gbc.gridx = 1;
-        gbc.gridy = 2;
-        selectionPnl.add(this.viewEmployee, gbc);
-
-        viewPnl.add(selectionPnl, "Selection");
-
-        return viewPnl;
+        return adminPnl;
     }
 
-    public JPanel createManage() {
-        JPanel managePnl = new JPanel();
-        managePnl.setLayout(new CardLayout());
-        managePnl.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    public JPanel createPassenger() {
+        JPanel passengerPnl = new JPanel();
+        passengerPnl.setLayout(new BorderLayout());
+        passengerPnl.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JPanel selectionPnl = new JPanel();
-        selectionPnl.setBackground(Color.WHITE);
-        selectionPnl.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(20, 20, 20, 20);
+        JPanel northPnl = new JPanel();
+        northPnl.setBackground(Color.WHITE);
+        JLabel label = new JLabel("Passenger's Menu");
+        northPnl.add(label);
 
-        this.manageBook = new JButton("Manage Bookings");
-        this.manageBook.setPreferredSize(new Dimension(250, 150));
+        passengerPnl.add(northPnl, BorderLayout.NORTH);
 
-        this.manageFlight = new JButton("Manage Flights");
-        this.manageFlight.setPreferredSize(new Dimension(250, 150));
+        JPanel centerPnl = new JPanel();
+        centerPnl.setLayout(new GridLayout(2, 1,  5, 5));
+        centerPnl.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        centerPnl.setBackground(Color.WHITE);
 
-        this.managePassenger = new JButton("Manage Passengers");
-        this.managePassenger.setPreferredSize(new Dimension(250, 150));
+        JButton bookFlight = new JButton("Book Flight");
+        JButton manageAccount = new JButton("Manage Account");
 
-        this.manageEmployee = new JButton("Manage Employees");
-        this.manageEmployee.setPreferredSize(new Dimension(250, 150));
+        centerPnl.add(bookFlight);
+        centerPnl.add(manageAccount);
 
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        selectionPnl.add(this.manageBook, gbc);
+        passengerPnl.add(centerPnl, BorderLayout.CENTER);
 
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        selectionPnl.add(this.manageFlight, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        selectionPnl.add(this.managePassenger, gbc);
-
-        gbc.gridx = 1;
-        gbc.gridy = 2;
-        selectionPnl.add(this.manageEmployee, gbc);
-
-        managePnl.add(selectionPnl, "Selection");
-
-
-        return managePnl;
+        return passengerPnl;
     }
+
+//    public JPanel createView() {
+//        JPanel viewPnl = new JPanel();
+//        viewPnl.setLayout(new CardLayout());
+//        viewPnl.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+//
+//        JPanel selectionPnl = new JPanel();
+//        selectionPnl.setBackground(Color.WHITE);
+//        selectionPnl.setLayout(new GridBagLayout());
+//        GridBagConstraints gbc = new GridBagConstraints();
+//        gbc.insets = new Insets(20, 20, 20, 20);
+//
+//        this.viewBook = new JButton("View Bookings");
+//        this.viewBook.setPreferredSize(new Dimension(250, 150));
+//
+//        this.viewFlight = new JButton("View Flights");
+//        this.viewFlight.setPreferredSize(new Dimension(250, 150));
+//
+//        this.viewPassenger = new JButton("View Passengers");
+//        this.viewPassenger.setPreferredSize(new Dimension(250, 150));
+//
+//        this.viewEmployee = new JButton("View Employees");
+//        this.viewEmployee.setPreferredSize(new Dimension(250, 150));
+//
+//        gbc.gridx = 0;
+//        gbc.gridy = 1;
+//        selectionPnl.add(this.viewBook, gbc);
+//
+//        gbc.gridx = 1;
+//        gbc.gridy = 1;
+//        selectionPnl.add(this.viewFlight, gbc);
+//
+//        gbc.gridx = 0;
+//        gbc.gridy = 2;
+//        selectionPnl.add(this.viewPassenger, gbc);
+//
+//        gbc.gridx = 1;
+//        gbc.gridy = 2;
+//        selectionPnl.add(this.viewEmployee, gbc);
+//
+//        viewPnl.add(selectionPnl, "Selection");
+//
+//        return viewPnl;
+//    }
+
+//    public JPanel createManage() {
+//        JPanel managePnl = new JPanel();
+//        managePnl.setLayout(new CardLayout());
+//        managePnl.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+//
+//        JPanel selectionPnl = new JPanel();
+//        selectionPnl.setBackground(Color.WHITE);
+//        selectionPnl.setLayout(new GridBagLayout());
+//        GridBagConstraints gbc = new GridBagConstraints();
+//        gbc.insets = new Insets(20, 20, 20, 20);
+//
+//        this.manageBook = new JButton("Manage Bookings");
+//        this.manageBook.setPreferredSize(new Dimension(250, 150));
+//
+//        this.manageFlight = new JButton("Manage Flights");
+//        this.manageFlight.setPreferredSize(new Dimension(250, 150));
+//
+//        this.managePassenger = new JButton("Manage Passengers");
+//        this.managePassenger.setPreferredSize(new Dimension(250, 150));
+//
+//        this.manageEmployee = new JButton("Manage Employees");
+//        this.manageEmployee.setPreferredSize(new Dimension(250, 150));
+//
+//        gbc.gridx = 0;
+//        gbc.gridy = 1;
+//        selectionPnl.add(this.manageBook, gbc);
+//
+//        gbc.gridx = 1;
+//        gbc.gridy = 1;
+//        selectionPnl.add(this.manageFlight, gbc);
+//
+//        gbc.gridx = 0;
+//        gbc.gridy = 2;
+//        selectionPnl.add(this.managePassenger, gbc);
+//
+//        gbc.gridx = 1;
+//        gbc.gridy = 2;
+//        selectionPnl.add(this.manageEmployee, gbc);
+//
+//        managePnl.add(selectionPnl, "Selection");
+//
+//
+//        return managePnl;
+//    }
 
     public JPanel createReport() {
         JPanel reportPnl = new JPanel();
@@ -260,28 +316,22 @@ public class View {
         JPanel centerPanel = new JPanel();
         centerPanel.setBackground(Color.WHITE);
 
-
-
-
         return bookPnl;
     }
 
 
-    public void setMenuEnabled(boolean home, boolean view, boolean manage, boolean report, boolean book) {
+    public void setMenuEnabled(boolean home, boolean admin, boolean passenger, boolean exit) {
         if (this.menuHome != null) {
             this.menuHome.setEnabled(home);
         }
-        if (this.menuView != null) {
-            this.menuView.setEnabled(view);
+        if (this.menuAdmin != null) {
+            this.menuAdmin.setEnabled(admin);
         }
-        if (this.menuManage != null) {
-            this.menuManage.setEnabled(manage);
+        if (this.menuPassenger != null) {
+            this.menuPassenger.setEnabled(passenger);
         }
-        if (this.menuReport != null) {
-            this.menuReport.setEnabled(report);
-        }
-        if (this.menuBook != null) {
-            this.menuBook.setEnabled(book);
+        if (this.menuExit != null) {
+            this.menuExit.setEnabled(exit);
         }
     }
 
@@ -293,11 +343,9 @@ public class View {
     {
         // main menu buttons
         this.menuHome.addActionListener(listener);
-        this.menuReport.addActionListener(listener);
-        this.menuView.addActionListener(listener);
-        this.menuManage.addActionListener(listener);
-        this.menuBook.addActionListener(listener);
-
+        this.menuAdmin.addActionListener(listener);
+        this.menuPassenger.addActionListener(listener);
+        this.menuExit.addActionListener(listener);
     }
 
 }
