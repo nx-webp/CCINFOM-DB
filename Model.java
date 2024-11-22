@@ -140,7 +140,7 @@ public class Model {
         
         stmt.executeUpdate();
         
-        Passenger newPassenger = new Passenger(passengers.get(passengers.size() - 1).getID() + 1);
+        Passenger newPassenger = new Passenger(passengers.get(passengers.size() - 1).getID() + 1, passport_number, last_name, first_name, birthdate, contact_no, email_address, vip_status);
         passengers.add(newPassenger);
         
         return true;
@@ -253,7 +253,8 @@ public class Model {
         
         stmt.executeUpdate();
 
-	Employee newEmployee = new Employee(employees.get(employees.size() - 1).getID() + 1);
+	Employee newEmployee = new Employee(employees.get(employees.size() - 1).getID() + 1, last_name,
+                                        first_name, job_title, hire_date, salary, department);
         employees.add(newEmployee);
         
         return true;
@@ -342,7 +343,9 @@ public class Model {
     ---------------------------------------------------------------------------------------------------
     */
     
-    public boolean createFlight(int gate_number, String destination, String origin, String departure, String arrival, int pilot_id, int copilot_id, int lead_attendant_id, int flight_attendant_id, double price) throws SQLException {
+    public boolean createFlight(int gate_number, String destination, String origin, String departure, String arrival,
+                                int pilot_id, int copilot_id, int lead_attendant_id, int flight_attendant_id, double price)
+            throws SQLException {
 	String query = "insert into flights (gate_number, destination, origin, departure, arrival, pilot_id, copilot_id, lead_attendant, flight_attendant) values (?, ?, ?, ?, ?, ?, ?, ?, ?);";
 	PreparedStatement stmt = connection.prepareStatement(query);
 
@@ -357,7 +360,8 @@ public class Model {
 	stmt.setInt(9, flight_attendant_id);
 	stmt.executeUpdate();
         
-        Flight newFlight = new Flight(flights.get(flights.size() - 1).getFlight_id() + 1, price);
+        Flight newFlight = new Flight(flights.get(flights.size() - 1).getFlight_id() + 1, gate_number, destination, origin,
+                departure, arrival, pilot_id, copilot_id, lead_attendant_id, flight_attendant_id, price);
         flights.add(newFlight);
         
 	return true;
@@ -497,7 +501,8 @@ public class Model {
         
         stmt.executeUpdate();
         
-        Booking newBooking = new Booking(bookings.get(bookings.size() - 1).getID() + 1);
+        Booking newBooking = new Booking(bookings.get(bookings.size() - 1).getID() + 1, passenger_id, flight_id, checkin_date,
+                seat_number, seat_class, total_cost, food_order, checkin_bags);
         bookings.add(newBooking);
         
         return true;

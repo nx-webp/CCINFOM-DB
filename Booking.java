@@ -19,8 +19,17 @@ public class Booking {
     private int total_checkin_bags;
 
     // constructor
-    public Booking(int ref_id) {
+    public Booking(int ref_id, int passenger_id, int flight_id, String checkin_date, String seat_no,
+                   String seat_class, double total_cost, String food_order, int total_checkin_bags) {
         this.ref_id = ref_id;
+        this.passenger_id = passenger_id;
+        this.flight_id = flight_id;
+        this.checkin_date = checkin_date;
+        this.seat_no = seat_no;
+        this.seat_class = seat_class;
+        this.total_cost = total_cost;
+        this.food_order = food_order;
+        this.total_checkin_bags = total_checkin_bags;
     }
 
     // getters

@@ -9,6 +9,7 @@
  */
 public class Passenger {
     private int passenger_id;
+    private String passport_number;
     private String last_name;
     private String first_name;
     private String birthdate;
@@ -17,8 +18,8 @@ public class Passenger {
     private String vip_status;
 
     // constructor
-    public Passenger(int passenger_id, String last_name, String first_name, String birthdate,
-                     int contact_no, String email_address, String vip_status) {
+    public Passenger(int passenger_id, String passport_number, String last_name, String first_name,
+                     String birthdate, int contact_no, String email_address, String vip_status) {
         this.passenger_id = passenger_id;
         this.last_name = last_name;
         this.first_name = first_name;
@@ -31,6 +32,10 @@ public class Passenger {
     // getters
     public int getID(){
         return this.passenger_id;
+    }
+
+    public String getPassport_number() {
+        return passport_number;
     }
 
     public String getLast_name() {
@@ -60,6 +65,10 @@ public class Passenger {
     // setters
     public void setID(int passenger_id){
         this.passenger_id = passenger_id;
+    }
+
+    public void setPassport_number(String passport_number) {
+        this.passport_number = passport_number;
     }
 
     public void setLast_name(String last_name) {
