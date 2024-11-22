@@ -1,6 +1,7 @@
-CREATE DATABASE  IF NOT EXISTS `ccinfom`;
-USE `ccinfom`;
 create schema ccinfom;
+
+use ccinfom;
+
 /* NOTES:
 		Seat Number in VARCHAR form
         >> A/B/C/D/E/F/G/H + 1-2 digit numbers
