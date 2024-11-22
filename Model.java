@@ -20,17 +20,8 @@ public class Model {
         this.bookings = new ArrayList<>();
         this.passengers = new ArrayList<>();
 
-        
-	/*
-	while(resultset(flightID))
- 		flights.add(new Flight(flightID, price))
-   	while(resultset(employee_id))
- 		flights.add(new Flight(employee_id))
-   	while(resultset(ref_id))
- 		flights.add(new Flight(ref_id))
-   	while(resultset(passenger_id))
- 		flights.add(new Flight(passenger_id))
-     	*/
+        this.fetchData();
+
     }
 
     public void fetchData() {
@@ -196,7 +187,8 @@ public class Model {
         
         stmt.executeUpdate();
         
-        Passenger newPassenger = new Passenger(passengers.get(passengers.size() - 1).getID() + 1, passport_number, last_name, first_name, birthdate, contact_no, email_address, vip_status);
+        Passenger newPassenger = new Passenger(passengers.get(passengers.size() - 1).getID() + 1,
+                passport_number, last_name, first_name, birthdate, contact_no, email_address, vip_status);
         passengers.add(newPassenger);
         
         return true;
@@ -676,7 +668,9 @@ public class Model {
 
     public boolean viewBooking(int booking_ID) throws SQLException {
         // define the query needed to get the flight to delete, '?' is a placeholder
-        String query = "select b.ref_id as booking_no, flight_id, p.passenger_id, last_name, first_name, passport_number, birthdate, contact_no, email_address, vip_status from bookings b join passengers p on b.passenger_id = p.passenger_id where booking_id = ?";
+        String query = "select b.ref_id as booking_no, flight_id, p.passenger_id, last_name, " +
+                "first_name, passport_number, birthdate, contact_no, email_address, vip_status from bookings b " +
+                "join passengers p on b.passenger_id = p.passenger_id where booking_id = ?";
         
         PreparedStatement stmt = connection.prepareStatement(query);
 
@@ -687,7 +681,9 @@ public class Model {
 
     public boolean viewBooking() throws SQLException {
         // define the query needed to get the flight to delete, '?' is a placeholder
-        String query = "select b.ref_id as booking_no, flight_id, p.passenger_id, last_name, first_name, passport_number, birthdate, contact_no, email_address, vip_status from bookings b join passengers p on b.passenger_id = p.passenger_id";
+        String query = "select b.ref_id as booking_no, flight_id, p.passenger_id, last_name, first_name, " +
+                "passport_number, birthdate, contact_no, email_address, vip_status from bookings b join passengers" +
+                " p on b.passenger_id = p.passenger_id";
         
         PreparedStatement stmt = connection.prepareStatement(query);
 
