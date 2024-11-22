@@ -53,7 +53,16 @@ public class Model {
         	
         	while(rs.next()) {
         		/*
-        		 * array lists, please fill in
+        		Employee employee = new Employee(
+                        rs.getInt("employee_id"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name"),
+                        rs.getString("job_title"),
+                        rs.getDate("hire_date"),
+                        rs.getBigDecimal("salary"),
+                        rs.getString("department")
+			);
+               		 employees.add(employee);
         		 */
         	}
         	rs.close();
