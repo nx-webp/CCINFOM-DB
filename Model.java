@@ -19,9 +19,9 @@ public class Model {
         this.employees = new ArrayList<>();
         this.bookings = new ArrayList<>();
         this.passengers = new ArrayList<>();
-
+        
         this.fetchData();
-
+        
     }
 
     public void fetchData() {
@@ -187,7 +187,7 @@ public class Model {
         
         stmt.executeUpdate();
         
-        Passenger newPassenger = new Passenger(passengers.get(passengers.size() - 1).getID() + 1,
+        Passenger newPassenger = new Passenger(passengers.get(passengers.size() - 1).getID() + 1, 
                 passport_number, last_name, first_name, birthdate, contact_no, email_address, vip_status);
         passengers.add(newPassenger);
         
