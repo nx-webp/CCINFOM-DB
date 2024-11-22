@@ -133,8 +133,6 @@ public class Model {
 
             while(rs.next()) {
                 // create new booking object
-                // public Booking(int ref_id, int passenger_id, int flight_id, String checkin_date, String seat_no,
-                //                   String seat_class, double total_cost, String food_order, int total_checkin_bags) {
 
                 Booking bookHolder = new Booking(rs.getInt("ref_id"),
                                                  rs.getInt("passenger_id"),
@@ -292,7 +290,7 @@ public class Model {
                                 "department) VALUES (?, ?, ?, ?, ?, ?)";
 		PreparedStatement stmt = connection.prepareStatement(insertEmployee);
 		
-	stmt.setString(1, last_name);
+	    stmt.setString(1, last_name);
         stmt.setString(2, first_name);
         stmt.setString(3, job_title);
         stmt.setString(4, hire_date);
@@ -663,30 +661,22 @@ public class Model {
     ---------------------------------------------------------------------------------------------------
     */
 
-    public boolean viewBooking(int booking_ID) throws SQLException {
-        // define the query needed to get the flight to delete, '?' is a placeholder
-        String query = "select b.ref_id as booking_no, flight_id, p.passenger_id, last_name, " +
-                "first_name, passport_number, birthdate, contact_no, email_address, vip_status from bookings b " +
-                "join passengers p on b.passenger_id = p.passenger_id where booking_id = ?";
-        
-        PreparedStatement stmt = connection.prepareStatement(query);
-
-	    stmt.setInt(1, booking_ID);
-        stmt.executeUpdate();
-        return true;
+    public ArrayList<Booking> getBookings() {
+        return bookings;
     }
 
-    public boolean viewBooking() throws SQLException {
-        // define the query needed to get the flight to delete, '?' is a placeholder
-        String query = "select b.ref_id as booking_no, flight_id, p.passenger_id, last_name, first_name, " +
-                "passport_number, birthdate, contact_no, email_address, vip_status from bookings b join passengers" +
-                " p on b.passenger_id = p.passenger_id";
-        
-        PreparedStatement stmt = connection.prepareStatement(query);
-
-        stmt.executeUpdate();
-        return true;
+    public ArrayList<Flight> getFlights() {
+        return flights;
     }
+
+    public ArrayList<Employee> getEmployees() {
+        return employees;
+    }
+
+    public ArrayList<Passenger> getPassengers() {
+        return passengers;
+    }
+    
 	    
     
     
