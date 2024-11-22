@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `ccinfom`;
+USE `ccinfom`;
 create schema ccinfom;
 /* NOTES:
 		Seat Number in VARCHAR form
