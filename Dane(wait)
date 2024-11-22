@@ -41,8 +41,9 @@ public class Employee
 	        System.out.println("Select an option:");
 	        System.out.println("1. Show all employees");
 	        System.out.println("2. Insert Into Employee Table");
-	        System.out.println("3. Update Employee Flight Assignment");
-	        int choice = scanner.nextInt(); // Taking the user's choice
+	        System.out.println("3. Update Employee(s) Flight Assignment");
+	        System.out.println("4. Show Available Employees by Status, Department, or Job Title");
+            int choice = scanner.nextInt();
 	        
 	        if(choice ==1) {
 	        	Statement stmt = con.createStatement();
@@ -61,7 +62,8 @@ public class Employee
 				}
 	        }
 	        
-	        else if(choice ==2) {
+	        else if(choice ==2) 
+	        {
 	        	PreparedStatement stmt = null;
 	        	// Get employee details from user input
 	            System.out.println("Enter employee details:");
@@ -113,45 +115,123 @@ public class Employee
 				
 	        }
 	        
-	        else if(choice ==3) {
-	        	
-	        	// Update the employee's flight assignment
-                System.out.print("Enter Employee ID to update: ");
-                employeeID = scanner.nextInt();
-                scanner.nextLine();  // Consume the newline left by nextInt()
+	        else if (choice == 3) 
+	        {
+	            System.out.print("Enter Flight ID to assign employees: ");
+	            flight_id = scanner.nextInt();
+	            scanner.nextLine(); 
 
-                System.out.print("Enter new Flight ID for the employee: ");
-                flight_id = scanner.nextInt();
-                scanner.nextLine();  // Consume the newline left by nextInt()
+	            System.out.println("Enter Employee IDs to assign to this flight (comma-separated): ");
+	            String employeeIDsInput = scanner.nextLine();
 
-                // SQL query to update the flight assignment
-                String updateSQL = "UPDATE Employee SET flight_id = ? WHERE employee_ID = ?";
-                PreparedStatement stmt = con.prepareStatement(updateSQL);
+	            // Split the input string to extract individual employee IDs
+	            String[] employeeIDsArray = employeeIDsInput.split(",");
 
-                // Set values for the parameters
-                stmt.setInt(1, flight_id);
-                stmt.setInt(2, employeeID);
-		           
-		            // Execute the update statement
-		            rowsAffected = stmt.executeUpdate();
-		          
-		            // Check if the update was successful
-		            if (rowsAffected > 0) {
-		                System.out.println("Employee details updated successfully.");
-		            } else {
-		                System.out.println("No employee found with ID " + employeeID);
-		            }
-		         }
-	        
-	        
-	        else {
-	            System.out.println("Invalid choice.");
+	            // SQL query to update flight_id for multiple employees
+	            String updateSQL = "UPDATE Employee SET flight_id = ? WHERE employee_ID = ?";
+	            PreparedStatement stmt = con.prepareStatement(updateSQL);
+
+	            // Add each employee ID to the batch
+	            for (String eID : employeeIDsArray) 
+	            {
+	                stmt.setInt(1, flight_id);
+	                stmt.setInt(2, Integer.parseInt(eID.trim())); // Trim spaces and convert to integer
+	                stmt.addBatch(); // Add to batch
+	            }
+
+	            // Execute the batch update
+	            int[] rows = stmt.executeBatch();
+
+	            // Output the results
+	            System.out.println("Employees assigned to flight " + flight_id + ":");
+	            for (int i = 0; i < rows.length; i++) 
+	            {
+	                if (rows[i] > 0) 
+	                {
+	                    System.out.println("Employee ID " + employeeIDsArray[i].trim() + " assigned successfully.");
+	                } 
+	                
+	                else 
+	                {
+	                    System.out.println("Error: Employee ID " + employeeIDsArray[i].trim() + " could not be assigned.");
+	                }
+	            }
 	        }
-			
-				
+	        
 				
 			// show available employees based on status, dept, job title
-			// add/assign employees to certain flight
+	        else if (choice == 4) 
+	        {
+                // Show available employees based on criteria
+                System.out.println("Select filter criteria:");
+                System.out.println("1. Employees without flight assignments");
+                System.out.println("2. Employees by department");
+                System.out.println("3. Employees by job title");
+                int filterChoice = scanner.nextInt();
+                scanner.nextLine(); // Consume newline
+
+                if (filterChoice == 1) 
+                {
+                    // Show employees with NULL flight_id
+                    String query = "SELECT * FROM Employee WHERE flight_id IS NULL";
+                    Statement stmt = con.createStatement();
+                    ResultSet rs = stmt.executeQuery(query);
+                    while (rs.next()) 
+                    {
+                        employeeID = rs.getInt("employee_ID");
+                        lastName = rs.getString("last_name");
+                        firstName = rs.getString("first_name");
+                        System.out.println("ID: " + employeeID + ", Name: " + firstName + " " + lastName);
+                    }
+                } 
+                
+                else if (filterChoice == 2) 
+                {
+                    // Show employees by department
+                    System.out.print("Enter Department Name: ");
+                    department = scanner.nextLine();
+
+                    String query = "SELECT * FROM Employee WHERE department = ?";
+                    PreparedStatement stmt = con.prepareStatement(query);
+                    stmt.setString(1, department);
+
+                    ResultSet rs = stmt.executeQuery();
+                    while (rs.next()) 
+                    {
+                        employeeID = rs.getInt("employee_ID");
+                        lastName = rs.getString("last_name");
+                        firstName = rs.getString("first_name");
+                        System.out.println("ID: " + employeeID + ", Name: " + firstName + " " + lastName);
+                    }
+                } 
+                
+                else if (filterChoice == 3) 
+                {
+                    // Show employees by job title
+                    System.out.print("Enter Job Title (e.g., Pilot, Co-pilot): ");
+                    jobTitle = scanner.nextLine();
+
+                    String query = "SELECT * FROM Employee WHERE job_title = ?";
+                    PreparedStatement stmt = con.prepareStatement(query);
+                    stmt.setString(1, jobTitle);
+
+                    ResultSet rs = stmt.executeQuery();
+                    while (rs.next()) 
+                    {
+                        employeeID = rs.getInt("employee_ID");
+                        lastName = rs.getString("last_name");
+                        firstName = rs.getString("first_name");
+                        System.out.println("ID: " + employeeID + ", Name: " + firstName + " " + lastName);
+                    }
+                } 
+                
+                else 
+                {
+                    System.out.println("Invalid choice.");
+                }
+	       }       
+	        
+	        
 			// update emp info
 			// delete emp info from certain flight
 			
