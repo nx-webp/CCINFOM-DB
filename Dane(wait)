@@ -1,256 +1,239 @@
 package employee;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Types;
+import java.sql.*;
 import java.util.Scanner;
 
-public class Employee 
-{
+public class Employee {
 
-	public static void main(String[] args) 
-	{	
-		String url = "jdbc:mysql://localhost:3306/airport";
-		String user = "root";
-		String password = "Cupidissodumb<3"; // pls dont hack me guys
-		
-		int employeeID;
-		String lastName;
-		String firstName;
-		String jobTitle;
-		String HireDate;
-		double salary;
-		String department;
-		int flight_id;
-		
-		int rowsAffected;
-		
-		Scanner scanner = new Scanner(System.in);
-		
-		try 
-		{
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection(url, user, password);
-			System.out.println("connection created");
-			
-			// Display menu options
-	        System.out.println("Select an option:");
-	        System.out.println("1. Show all employees");
-	        System.out.println("2. Insert Into Employee Table");
-	        System.out.println("3. Update Employee(s) Flight Assignment");
-	        System.out.println("4. Show Available Employees by Status, Department, or Job Title");
-            int choice = scanner.nextInt();
-	        
-	        if(choice ==1) {
-	        	Statement stmt = con.createStatement();
-				ResultSet rs = stmt.executeQuery("SELECT * FROM Employee");
-				while(rs.next()) { 
-					employeeID = rs.getInt("employee_ID");
-					lastName = rs.getString("last_name");
-					firstName = rs.getString("first_name");
-					jobTitle = rs.getString("job_title");
-					HireDate = rs.getString("hire_date");
-					salary = rs.getDouble("salary");
-					department = rs.getString("department");
-					flight_id = rs.getInt("flight_id");
-					
-					System.out.println("ID: " + employeeID + ", Name: " + firstName + " " + lastName + ", Job Title:" + jobTitle + ", Hire Date:" + HireDate + ", Salary:" + salary + ", Department:" + department + ", Flight Assigned:" + flight_id );
-				}
-	        }
-	        
-	        else if(choice ==2) 
-	        {
-	        	PreparedStatement stmt = null;
-	        	// Get employee details from user input
-	            System.out.println("Enter employee details:");
+    public static void main(String[] args) {
+        String url = "jdbc:mysql://localhost:3306/airport";
+        String user = "root";
+        String password = "Cupidissodumb<3"; // Change this for security in production
 
-	            System.out.print("Employee ID: ");
-	            employeeID = scanner.nextInt();
-	            scanner.nextLine();  // Consume the newline left by nextInt()
+        // Scanner for user input
+        try (Scanner scanner = new Scanner(System.in)) {
+            // Establish database connection
+            try (Connection con = DriverManager.getConnection(url, user, password)) {
+                System.out.println("Connection created successfully.");
 
-	            System.out.print("Last Name: ");
-	            lastName = scanner.nextLine();
+                // Display menu options
+                while (true) {
+                    System.out.println("\nSelect an option:");
+                    System.out.println("1. Show all employees");
+                    System.out.println("2. Insert into Employee Table");
+                    System.out.println("3. Update Employee(s) Flight Assignment");
+                    System.out.println("4. Show Available Employees by Criteria");
+                    System.out.println("5. Delete Employee from Database");
+                    System.out.println("6. Show Total Flights Handled by Employees");
+                    System.out.println("7. Mark Employees as Finished with a Flight");
+                    System.out.println("8. Exit");
+                    System.out.print("Enter your choice: ");
 
-	            System.out.print("First Name: ");
-	            firstName = scanner.nextLine();
+                    int choice = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
 
-	            System.out.print("Job Title (e.g., Pilot, Co-pilot, Attendant, etc.): ");
-	            jobTitle = scanner.nextLine();
-	            
-	            System.out.print("Hire Date: "); 
-	            HireDate = scanner.nextLine();
-
-	            System.out.print("Salary: ");
-	            salary = scanner.nextDouble();
-	            scanner.nextLine();  // Consume the newline left by nextDouble()
-
-	            System.out.print("Department: ");
-	            department = scanner.nextLine();
-
-	            
-					String insertEmployee = "INSERT INTO Employee (employee_ID, last_name, first_name, job_title, salary, department, flight_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
-					stmt = con.prepareStatement(insertEmployee);
-					
-					stmt.setInt(1, employeeID);
-		            stmt.setString(2, lastName);
-		            stmt.setString(3, firstName);
-		            stmt.setString(4, jobTitle);
-		            stmt.setString(5, HireDate);
-		            stmt.setDouble(6, salary);
-		            stmt.setString(7, department);
-		            // Insert NULL for flight_id
-		            stmt.setNull(8, Types.INTEGER);
-		            
-		            rowsAffected = stmt.executeUpdate();
-		            if (rowsAffected > 0) {
-		                System.out.println("Employee added successfully!");
-		            } else {
-		                System.out.println("Error: Unable to add the employee.");
-		            }
-		            
-				
-	        }
-	        
-	        else if (choice == 3) 
-	        {
-	            System.out.print("Enter Flight ID to assign employees: ");
-	            flight_id = scanner.nextInt();
-	            scanner.nextLine(); 
-
-	            System.out.println("Enter Employee IDs to assign to this flight (comma-separated): ");
-	            String employeeIDsInput = scanner.nextLine();
-
-	            // Split the input string to extract individual employee IDs
-	            String[] employeeIDsArray = employeeIDsInput.split(",");
-
-	            // SQL query to update flight_id for multiple employees
-	            String updateSQL = "UPDATE Employee SET flight_id = ? WHERE employee_ID = ?";
-	            PreparedStatement stmt = con.prepareStatement(updateSQL);
-
-	            // Add each employee ID to the batch
-	            for (String eID : employeeIDsArray) 
-	            {
-	                stmt.setInt(1, flight_id);
-	                stmt.setInt(2, Integer.parseInt(eID.trim())); // Trim spaces and convert to integer
-	                stmt.addBatch(); // Add to batch
-	            }
-
-	            // Execute the batch update
-	            int[] rows = stmt.executeBatch();
-
-	            // Output the results
-	            System.out.println("Employees assigned to flight " + flight_id + ":");
-	            for (int i = 0; i < rows.length; i++) 
-	            {
-	                if (rows[i] > 0) 
-	                {
-	                    System.out.println("Employee ID " + employeeIDsArray[i].trim() + " assigned successfully.");
-	                } 
-	                
-	                else 
-	                {
-	                    System.out.println("Error: Employee ID " + employeeIDsArray[i].trim() + " could not be assigned.");
-	                }
-	            }
-	        }
-	        
-				
-			// show available employees based on status, dept, job title
-	        else if (choice == 4) 
-	        {
-                // Show available employees based on criteria
-                System.out.println("Select filter criteria:");
-                System.out.println("1. Employees without flight assignments");
-                System.out.println("2. Employees by department");
-                System.out.println("3. Employees by job title");
-                int filterChoice = scanner.nextInt();
-                scanner.nextLine(); // Consume newline
-
-                if (filterChoice == 1) 
-                {
-                    // Show employees with NULL flight_id
-                    String query = "SELECT * FROM Employee WHERE flight_id IS NULL";
-                    Statement stmt = con.createStatement();
-                    ResultSet rs = stmt.executeQuery(query);
-                    while (rs.next()) 
-                    {
-                        employeeID = rs.getInt("employee_ID");
-                        lastName = rs.getString("last_name");
-                        firstName = rs.getString("first_name");
-                        System.out.println("ID: " + employeeID + ", Name: " + firstName + " " + lastName);
+                    switch (choice) {
+                        case 1 -> showAllEmployees(con);
+                        case 2 -> insertEmployee(con, scanner);
+                        case 3 -> updateEmployeeFlight(con, scanner);
+                        case 4 -> showAvailableEmployees(con, scanner);
+                        case 5 -> deleteEmployee(con, scanner);
+                        case 6 -> showTotalFlightsHandled(con);
+                        case 7 -> markFinishedFlights(con, scanner);
+                        case 8 -> {
+                            System.out.println("Exiting program. Goodbye!");
+                            return;
+                        }
+                        default -> System.out.println("Invalid choice. Please try again.");
                     }
-                } 
-                
-                else if (filterChoice == 2) 
-                {
-                    // Show employees by department
-                    System.out.print("Enter Department Name: ");
-                    department = scanner.nextLine();
-
-                    String query = "SELECT * FROM Employee WHERE department = ?";
-                    PreparedStatement stmt = con.prepareStatement(query);
-                    stmt.setString(1, department);
-
-                    ResultSet rs = stmt.executeQuery();
-                    while (rs.next()) 
-                    {
-                        employeeID = rs.getInt("employee_ID");
-                        lastName = rs.getString("last_name");
-                        firstName = rs.getString("first_name");
-                        System.out.println("ID: " + employeeID + ", Name: " + firstName + " " + lastName);
-                    }
-                } 
-                
-                else if (filterChoice == 3) 
-                {
-                    // Show employees by job title
-                    System.out.print("Enter Job Title (e.g., Pilot, Co-pilot): ");
-                    jobTitle = scanner.nextLine();
-
-                    String query = "SELECT * FROM Employee WHERE job_title = ?";
-                    PreparedStatement stmt = con.prepareStatement(query);
-                    stmt.setString(1, jobTitle);
-
-                    ResultSet rs = stmt.executeQuery();
-                    while (rs.next()) 
-                    {
-                        employeeID = rs.getInt("employee_ID");
-                        lastName = rs.getString("last_name");
-                        firstName = rs.getString("first_name");
-                        System.out.println("ID: " + employeeID + ", Name: " + firstName + " " + lastName);
-                    }
-                } 
-                
-                else 
-                {
-                    System.out.println("Invalid choice.");
                 }
-	       }       
-	        
-	        
-			// update emp info
-			// delete emp info from certain flight
-			
-			// total num of task an employee handled
-			// total num of revenue generated by the emp
-		} 
-		
-		catch (ClassNotFoundException e) 
-		{
-			System.out.println("MySQL Driver not found: " + e.getMessage());
-		}
-		
-		catch (SQLException e) 
-		{
-            System.out.println("Connection failed: " + e.getMessage());
+            } catch (SQLException e) {
+                System.out.println("Database connection failed: " + e.getMessage());
+            }
         }
-		
-		scanner.close();
-	}
+    }
+
+    // Option 1: Show all employees
+    private static void showAllEmployees(Connection con) throws SQLException {
+        String query = "SELECT * FROM Employee";
+        try (Statement stmt = con.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
+            System.out.println("Employee Details:");
+            System.out.println("----------------------------------------------------------");
+            while (rs.next()) {
+                System.out.printf("ID: %d, Name: %s %s, Job: %s, Salary: %.2f, Dept: %s, Flight: %s%n",
+                        rs.getInt("employee_ID"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name"),
+                        rs.getString("job_title"),
+                        rs.getDouble("salary"),
+                        rs.getString("department"),
+                        rs.getObject("flight_id"));
+            }
+        }
+    }
+
+    // Option 2: Insert into Employee table
+    private static void insertEmployee(Connection con, Scanner scanner) throws SQLException {
+        System.out.println("Enter employee details:");
+        System.out.print("Employee ID: ");
+        int employeeID = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+        System.out.print("First Name: ");
+        String firstName = scanner.nextLine();
+        System.out.print("Last Name: ");
+        String lastName = scanner.nextLine();
+        System.out.print("Job Title: ");
+        String jobTitle = scanner.nextLine();
+        System.out.print("Hire Date (YYYY-MM-DD): ");
+        String hireDate = scanner.nextLine();
+        System.out.print("Salary: ");
+        double salary = scanner.nextDouble();
+        scanner.nextLine(); // Consume newline
+        System.out.print("Department: ");
+        String department = scanner.nextLine();
+
+        String query = "INSERT INTO Employee (employee_ID, first_name, last_name, job_title, hire_date, salary, department, flight_id) VALUES (?, ?, ?, ?, ?, ?, ?, NULL)";
+        try (PreparedStatement stmt = con.prepareStatement(query)) {
+            stmt.setInt(1, employeeID);
+            stmt.setString(2, firstName);
+            stmt.setString(3, lastName);
+            stmt.setString(4, jobTitle);
+            stmt.setString(5, hireDate);
+            stmt.setDouble(6, salary);
+            stmt.setString(7, department);
+
+            int rows = stmt.executeUpdate();
+            if (rows > 0) {
+                System.out.println("Employee added successfully!");
+            } else {
+                System.out.println("Failed to add employee.");
+            }
+        }
+    }
+
+    // Option 3: Update Employee Flight Assignment
+    private static void updateEmployeeFlight(Connection con, Scanner scanner) throws SQLException {
+        System.out.print("Enter Flight ID to assign employees: ");
+        int flightID = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+        System.out.print("Enter Employee IDs (comma-separated): ");
+        String[] employeeIDs = scanner.nextLine().split(",");
+
+        String checkQuery = "SELECT flight_id FROM Employee WHERE employee_ID = ?";
+        String updateQuery = "UPDATE Employee SET flight_id = ? WHERE employee_ID = ?";
+
+        try (PreparedStatement checkStmt = con.prepareStatement(checkQuery);
+             PreparedStatement updateStmt = con.prepareStatement(updateQuery)) {
+
+            for (String id : employeeIDs) {
+                int empID = Integer.parseInt(id.trim());
+                checkStmt.setInt(1, empID);
+                try (ResultSet rs = checkStmt.executeQuery()) {
+                    if (rs.next() && rs.getObject("flight_id") == null) {
+                        updateStmt.setInt(1, flightID);
+                        updateStmt.setInt(2, empID);
+                        updateStmt.executeUpdate();
+                        System.out.println("Assigned Employee ID " + empID + " to Flight ID " + flightID);
+                    } else {
+                        System.out.println("Employee ID " + empID + " already has a flight assignment or does not exist.");
+                    }
+                }
+            }
+        }
+    }
+
+    // Option 4: Show Available Employees by Criteria
+    private static void showAvailableEmployees(Connection con, Scanner scanner) throws SQLException {
+        System.out.println("Select filter criteria:");
+        System.out.println("1. Employees without flight assignments");
+        System.out.println("2. Employees by department");
+        System.out.println("3. Employees by job title");
+        int choice = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+
+        String query = switch (choice) {
+            case 1 -> "SELECT * FROM Employee WHERE flight_id IS NULL";
+            case 2 -> {
+                System.out.print("Enter department: ");
+                String department = scanner.nextLine();
+                yield "SELECT * FROM Employee WHERE department = '" + department + "'";
+            }
+            case 3 -> {
+                System.out.print("Enter job title: ");
+                String jobTitle = scanner.nextLine();
+                yield "SELECT * FROM Employee WHERE job_title = '" + jobTitle + "'";
+            }
+            default -> {
+                System.out.println("Invalid choice.");
+                yield null;
+            }
+        };
+
+        if (query != null) {
+            try (Statement stmt = con.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
+                while (rs.next()) {
+                    System.out.printf("ID: %d, Name: %s %s%n",
+                            rs.getInt("employee_ID"),
+                            rs.getString("first_name"),
+                            rs.getString("last_name"));
+                }
+            }
+        }
+    }
+
+    // Option 5: Delete Employee
+    private static void deleteEmployee(Connection con, Scanner scanner) throws SQLException {
+        System.out.print("Enter Employee IDs to delete (comma-separated): ");
+        String[] employeeIDs = scanner.nextLine().split(",");
+
+        String query = "DELETE FROM Employee WHERE employee_ID = ?";
+        try (PreparedStatement stmt = con.prepareStatement(query)) {
+            for (String id : employeeIDs) {
+                stmt.setInt(1, Integer.parseInt(id.trim()));
+                int rows = stmt.executeUpdate();
+                if (rows > 0) {
+                    System.out.println("Deleted Employee ID " + id.trim());
+                } else {
+                    System.out.println("Failed to delete Employee ID " + id.trim());
+                }
+            }
+        }
+    }
+
+    // Option 6: Show Total Flights Handled by Employees
+    private static void showTotalFlightsHandled(Connection con) throws SQLException {
+        String query = "SELECT employee_ID, first_name, last_name, COUNT(flight_id) AS total_flights " +
+                       "FROM Employee " +
+                       "WHERE flight_id IS NOT NULL " +
+                       "GROUP BY employee_ID, first_name, last_name";
+
+        try (Statement stmt = con.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
+            while (rs.next()) {
+                System.out.printf("Employee ID: %d, Name: %s %s, Total Flights: %d%n",
+                        rs.getInt("employee_ID"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name"),
+                        rs.getInt("total_flights"));
+            }
+        }
+    }
+
+    // Option 7: Mark Employees as Finished with a Flight
+    private static void markFinishedFlights(Connection con, Scanner scanner) throws SQLException {
+        System.out.print("Enter Employee IDs to mark as finished (comma-separated): ");
+        String[] employeeIDs = scanner.nextLine().split(",");
+
+        String query = "UPDATE Employee SET flight_id = NULL WHERE employee_ID = ?";
+        try (PreparedStatement stmt = con.prepareStatement(query)) {
+            for (String id : employeeIDs) {
+                stmt.setInt(1, Integer.parseInt(id.trim()));
+                int rows = stmt.executeUpdate();
+                if (rows > 0) {
+                    System.out.println("Marked Employee ID " + id.trim() + " as finished.");
+                } else {
+                    System.out.println("Failed to update Employee ID " + id.trim());
+                }
+            }
+        }
+    }
 }
-
-
