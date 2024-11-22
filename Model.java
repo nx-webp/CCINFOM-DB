@@ -88,15 +88,20 @@ public class Model {
     
     //flight functions
     
-    public boolean createFlight(int flight_id, int pilot_id, int copilot_id, int lead_attendant_id, int flight_attendant_id) throws SQLException {
-	String query = "insert into flights (flight_id, pilot_id, copilot_id, lead_attendant, flight_attendant) values (?, ?, ?, ?, ?);";
+    public boolean createFlight(int flight_id, int gate_number, String destination, String origin, String departure, String arrival, int pilot_id, int copilot_id, int lead_attendant_id, int flight_attendant_id) throws SQLException {
+	String query = "insert into flights (flight_id, gate_number, destination, origin, departure, arrival, pilot_id, copilot_id, lead_attendant, flight_attendant) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 	PreparedStatement stmt = connection.prepareStatement(query);
 
 	stmt.setInt(1, flight_id);
-	stmt.setInt(2, pilot_id);
-	stmt.setInt(3, copilot_id);
-	stmt.setInt(4, lead_attendant_id);
-	stmt.setInt(5, flight_attendant_id);
+	stmt.setInt(2, gate_number);
+	stmt.setString(3, destination);
+	stmt.setString(4, origin);
+	stmt.setString(5, departure);
+        stmt.setString(6, arrival);
+        stmt.setInt(7, pilot_id);
+	stmt.setInt(8, copilot_id);
+	stmt.setInt(9, lead_attendant_id);
+	stmt.setInt(10, flight_attendant_id);
 	stmt.executeUpdate();
 	return true;
     }
