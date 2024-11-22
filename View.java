@@ -8,8 +8,9 @@ public class View implements ActionListener /*, DocumentListener, ListSelectionL
     private JFrame mainFrame;
     private JPanel mainPnl, centerMainPnl;
     private JPanel adminPnl, editEmp, editFlight, genRep;
-    private JPanel passPnl, manageAcc, bookFlight;
-    private JButton menuAdmin, menuPassenger, menuExit, menuHome;
+    private JPanel passPnl, manageAcc, bookFlight, editBook;
+    private JPanel viewPnl;
+    private JButton menuAdmin, menuPassenger, menuExit, menuHome, menuRecords;
     private JButton submitOcc, submitRev, submitStats, submitPass;
     private JComboBox monthComboBox, yearComboBox;
 
@@ -67,7 +68,7 @@ public class View implements ActionListener /*, DocumentListener, ListSelectionL
         // menu panel
         JPanel menus = new JPanel();
         menus.setPreferredSize(new Dimension(200, 400));
-        menus.setLayout(new GridLayout(5, 1, 10, 0));
+        menus.setLayout(new GridLayout(6, 1, 10, 0));
 
         JLabel menuText = new JLabel("MAIN MENU");
         menuText.setHorizontalAlignment(JTextField.CENTER);
@@ -77,6 +78,7 @@ public class View implements ActionListener /*, DocumentListener, ListSelectionL
         // add menu buttons
         this.menuAdmin = new JButton("Admin Menu");
         this.menuPassenger = new JButton("Passenger Menu");
+        this.menuRecords = new JButton("View Records");
         this.menuExit = new JButton("Exit Program");
         this.menuHome = new JButton("Home");
 
@@ -84,6 +86,7 @@ public class View implements ActionListener /*, DocumentListener, ListSelectionL
         menus.add(this.menuHome);
         menus.add(this.menuAdmin);
         menus.add(this.menuPassenger);
+        menus.add(this.menuRecords);
         menus.add(this.menuExit);
         return menus;
     }
@@ -101,6 +104,7 @@ public class View implements ActionListener /*, DocumentListener, ListSelectionL
         this.centerMainPnl.add(createHome(), "Home");
         this.centerMainPnl.add(createAdmin(), "Admin Menu");
         this.centerMainPnl.add(createPassenger(), "Passenger Menu");
+        this.centerMainPnl.add(createView(), "View Records");
 
         return this.centerMainPnl;
     }
@@ -376,7 +380,44 @@ public class View implements ActionListener /*, DocumentListener, ListSelectionL
         return this.manageAcc;
     }
 
-    public void setMenuEnabled(boolean home, boolean admin, boolean passenger, boolean exit) {
+    public JPanel editBook(JButton editBook) {
+        this.editBook = new JPanel();
+
+        return this.editBook;
+    }
+
+    public JPanel createView() {
+        this.viewPnl = new JPanel();
+        this.viewPnl.setLayout(new BorderLayout());
+        this.viewPnl.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+        JPanel northPnl = new JPanel();
+        northPnl.setBackground(Color.WHITE);
+
+        JLabel label = new JLabel("View Records");
+        northPnl.add(label);
+
+        JPanel centerPnl = new JPanel();
+        centerPnl.setLayout(new GridLayout(2, 2, 5, 5));
+        centerPnl.setBackground(Color.WHITE);
+
+        JButton bookings = new JButton("View Bookings");
+        JButton flights = new JButton("View Flights");
+        JButton passengers = new JButton("View Passengers");
+        JButton employees = new JButton("View Employees");
+
+        centerPnl.add(bookings);
+        centerPnl.add(flights);
+        centerPnl.add(passengers);
+        centerPnl.add(employees);
+
+        this.viewPnl.add(northPnl, BorderLayout.NORTH);
+        this.viewPnl.add(centerPnl, BorderLayout.CENTER);
+
+        return this.viewPnl;
+    }
+
+    public void setMenuEnabled(boolean home, boolean admin, boolean passenger, boolean view) {
         if (this.menuHome != null) {
             this.menuHome.setEnabled(home);
         }
@@ -387,7 +428,7 @@ public class View implements ActionListener /*, DocumentListener, ListSelectionL
             this.menuPassenger.setEnabled(passenger);
         }
         if (this.menuExit != null) {
-            this.menuExit.setEnabled(exit);
+            this.menuExit.setEnabled(view);
         }
     }
 
@@ -403,7 +444,7 @@ public class View implements ActionListener /*, DocumentListener, ListSelectionL
                 !currentView.equals("Home"),
                 !currentView.equals("Admin Menu"),
                 !currentView.equals("Passenger Menu"),
-                !currentView.equals("Exit Program")
+                !currentView.equals("View Records")
         );
 
         // update view in gui
@@ -445,6 +486,7 @@ public class View implements ActionListener /*, DocumentListener, ListSelectionL
         this.menuHome.addActionListener(listener);
         this.menuAdmin.addActionListener(listener);
         this.menuPassenger.addActionListener(listener);
+        this.menuRecords.addActionListener(listener);
         this.menuExit.addActionListener(listener);
 
         this.monthComboBox.addActionListener(listener);
