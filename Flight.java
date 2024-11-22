@@ -22,11 +22,21 @@ public class Flight {
     private int flight_attendant;
     private ArrayList<Seat> seats;
     private int seatAmount = 300;
-    private double price;
     
-    public Flight(int flight_id, double price) {
+    public Flight(int flight_id, int gate_number, String destination, String origin, String departure,
+                  String arrival, int pilot_id, int copilot_id, int lead_attendant, int flight_attendant,
+                  double price) {
         this.flight_id = flight_id;
-        this.price = price;
+        this.gate_number = gate_number;
+        this.destination = destination;
+        this.origin = origin;
+        this.departure = departure;
+        this.arrival = arrival;
+        this.pilot_id = pilot_id;
+        this.copilot_id = copilot_id;
+        this.lead_attendant = lead_attendant;
+        this.flight_attendant = flight_attendant;
+
         this.seats = new ArrayList<>();
         for(int i = 1; i <= 30; i++){
             Seat newSeat = new Economy("A" + i, price);

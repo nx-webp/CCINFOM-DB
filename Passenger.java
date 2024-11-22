@@ -17,8 +17,15 @@ public class Passenger {
     private String vip_status;
 
     // constructor
-    public Passenger(int passenger_id) {
+    public Passenger(int passenger_id, String last_name, String first_name, String birthdate,
+                     int contact_no, String email_address, String vip_status) {
         this.passenger_id = passenger_id;
+        this.last_name = last_name;
+        this.first_name = first_name;
+        this.birthdate = birthdate;
+        this.contact_no = contact_no;
+        this.email_address = email_address;
+        this.vip_status = vip_status;
     }
 
     // getters
@@ -32,6 +39,10 @@ public class Passenger {
 
     public String getFirst_name() {
         return first_name;
+    }
+
+    public String getBirthdate() {
+        return birthdate;
     }
 
     public int getContact_no() {
@@ -57,6 +68,10 @@ public class Passenger {
 
     public void setFirst_name(String first_name) {
         this.first_name = first_name;
+    }
+
+    public void setBirthdate(String birthdate) {
+        this.birthdate = birthdate;
     }
 
     public void setContact_no(int contact_no) {

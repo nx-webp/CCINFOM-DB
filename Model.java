@@ -30,15 +30,18 @@ public class Model {
         	
         	while(rs.next()) {
         		//data read (by row) is assigned to an arraylist
-        		passengers.add(new Flight(flightID));
+        		passengers.add();
         	}
         	rs.close();
+        } catch(SQLException e) {
+            System.out.println("Error! Something happened to the database.");
         }
-        	
         finally {
     		try {
     			stmt.close();
-    		} catch (Exception e) {}
+    		} catch (SQLException e) {
+                System.out.println("Error! Unable to close the statement.");
+            }
         }
         
         // EMPLOYEES

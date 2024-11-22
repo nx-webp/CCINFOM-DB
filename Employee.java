@@ -17,8 +17,15 @@ public class Employee {
     private String department;
 
     // constructor
-    public Employee(int employee_id) {
+    public Employee(int employee_id, String last_name, String first_name, String job_title,
+                    String hire_date, double salary, String department) {
         this.employee_id = employee_id;
+        this.last_name = last_name;
+        this.first_name = first_name;
+        this.job_title = job_title;
+        this.hire_date = hire_date;
+        this.salary = salary;
+        this.department = department;
     }
 
     // getters
