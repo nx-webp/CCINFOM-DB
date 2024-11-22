@@ -51,6 +51,13 @@ ALTER TABLE passengers AUTO_INCREMENT = 100000;
 
 CREATE Table employees (
 	employee_id MEDIUMINT NOT NULL AUTO_INCREMENT,
+    last_name VARCHAR(45) NOT NULL,
+    first_name VARCHAR(45) NOT NULL,
+    job_title VARCHAR(45) NOT NULL,
+    hire_date DATE NOT NULL,
+    salary DECIMAL (10,2),
+    department VARCHAR(50),
+    UNIQUE (employee_id),
     PRIMARY KEY (employee_id));
     
 ALTER TABLE employees AUTO_INCREMENT = 100000;
@@ -68,6 +75,13 @@ CREATE Table bookings (
 	ref_id MEDIUMINT NOT NULL AUTO_INCREMENT,
     passenger_id MEDIUMINT NOT NULL,
     flight_id MEDIUMINT NOT NULL,
+    checkin_date DATE,
+    seat_no VARCHAR(3),
+    seat_class ENUM('Economy', 'Business', 'First'),
+    total_cost DECIMAL (6, 2),
+    food_order ENUM('Beef', 'Pork', 'Chicken', 'Fish', 'Vegan'),
+    ctotal_checkin_bags INT,
+    UNIQUE (ref_id),
     PRIMARY KEY (ref_id),
     CONSTRAINT FOREIGN KEY (passenger_id) REFERENCES passengers(passenger_id),
     CONSTRAINT FOREIGN KEY (flight_id) REFERENCES flights(flight_id));
@@ -87,6 +101,11 @@ ALTER TABLE bookings AUTO_INCREMENT = 100000;
 
 CREATE Table flights (
 	flight_id MEDIUMINT NOT NULL AUTO_INCREMENT,
+    gate_number INT,
+    destination VARCHAR(45) NOT NULL,
+    origin VARCHAR(45) NOT NULL,
+    departure DATETIME NOT NULL,
+    arrival DATETIME,
     pilot_id MEDIUMINT NOT NULL,
     copilot_id MEDIUMINT NOT NULL,
     lead_attendant MEDIUMINT NOT NULL,

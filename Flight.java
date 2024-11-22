@@ -1,115 +1,135 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package group3db;
+
+import java.util.ArrayList;
+
+/**
+ *
+ * @author Lenovo
+ */
 public class Flight {
-	
-    private int flightID;
-    private String gateNumber;
-    private String destination;
-    private String origin;
-    private String departureTime;
-    private String arrivalTime;
-    private int pilotID;
-    private int copilotID;
-    private int leadAttendantID;
-    private int flightAttendantID;
-
-
-    // Constructor
-
-    public Flight(int flightID, String gateNumber, String destination, String origin, String departureTime,
-                  String arrivalTime, int pilotID, int copilotID, int leadAttendantID, int flightAttendantID) {
-        this.flightID = flightID;
-        this.gateNumber = gateNumber;
-        this.destination = destination;
-        this.origin = origin;
-        this.departureTime = departureTime;
-        this.arrivalTime = arrivalTime;
-        this.pilotID = pilotID;
-        this.copilotID = copilotID;
-        this.leadAttendantID = leadAttendantID;
-        this.flightAttendantID = flightAttendantID;
+    private int flight_id;
+    private ArrayList<Seat> seats;
+    private int seatAmount = 300;
+    private double price;
+    
+    public Flight(int flight_id, double price) {
+        this.flight_id = flight_id;
+        this.price = price;
+        for(int i = 1; i <= 30; i++){
+            Seat newSeat = new Economy("A" + i, price);
+            seats.add(newSeat);
+        }
+        for(int i = 1; i <= 30; i++){
+            Seat newSeat = new Economy("B" + i, price);
+            seats.add(newSeat);
+        }
+        for(int i = 1; i <= 30; i++){
+            Seat newSeat = new Economy("C" + i, price);
+            seats.add(newSeat);
+        }
+        for(int i = 1; i <= 30; i++){
+            Seat newSeat = new Economy("D" + i, price);
+            seats.add(newSeat);
+        }
+        for(int i = 1; i <= 30; i++){
+            Seat newSeat = new Economy("E" + i, price);
+            seats.add(newSeat);
+        }
+        for(int i = 1; i <= 30; i++){
+            Seat newSeat = new Economy("F" + i, price);
+            seats.add(newSeat);
+        }
+        for(int i = 31; i <= 40; i++){
+            Seat newSeat = new Business("A" + i, price);
+            seats.add(newSeat);
+        }
+        for(int i = 31; i <= 40; i++){
+            Seat newSeat = new Business("B" + i, price);
+            seats.add(newSeat);
+        }
+        for(int i = 31; i <= 40; i++){
+            Seat newSeat = new Business("C" + i, price);
+            seats.add(newSeat);
+        }
+        for(int i = 31; i <= 40; i++){
+            Seat newSeat = new Business("D" + i, price);
+            seats.add(newSeat);
+        }
+        for(int i = 31; i <= 40; i++){
+            Seat newSeat = new Business("E" + i, price);
+            seats.add(newSeat);
+        }
+        for(int i = 31; i <= 40; i++){
+            Seat newSeat = new Business("F" + i, price);
+            seats.add(newSeat);
+        }
+        for(int i = 41; i <= 50; i++){
+            Seat newSeat = new First("A" + i, price);
+            seats.add(newSeat);
+        }
+        for(int i = 41; i <= 50; i++){
+            Seat newSeat = new First("B" + i, price);
+            seats.add(newSeat);
+        }
+        for(int i = 41; i <= 50; i++){
+            Seat newSeat = new First("C" + i, price);
+            seats.add(newSeat);
+        }
+        for(int i = 41; i <= 50; i++){
+            Seat newSeat = new First("D" + i, price);
+            seats.add(newSeat);
+        }
+        for(int i = 41; i <= 50; i++){
+            Seat newSeat = new First("E" + i, price);
+            seats.add(newSeat);
+        }
+        for(int i = 41; i <= 50; i++){
+            Seat newSeat = new First("F" + i, price);
+            seats.add(newSeat);
+        }
     }
-
-
-    // GETTERS //
-
-    public int getFlightID() {
-        return flightID;
+    
+    public boolean isSeatOccupied(String seatName) {
+        for(int i = 0; i < seatAmount; i++){
+            if(seatName.equals(seats.get(i).getName()))
+                return seats.get(i).isOccupied();
+        }
+        return true;
     }
-
-    public String getGateNumber() {
-        return gateNumber;
+    
+    public boolean occupySeat(String seatName) {
+        for(int i = 0; i < seatAmount; i++){
+            if(seatName.equals(seats.get(i).getName())){
+                seats.get(i).occupySeat();
+                return true;
+            }
+        }
+        return false;
     }
-
-    public String getDestination() {
-        return destination;
+    
+    public boolean unoccupySeat(String seatName) {
+        for(int i = 0; i < seatAmount; i++){
+            if(seatName.equals(seats.get(i).getName())){
+                seats.get(i).unoccupySeat();
+                return true;
+            }
+        }
+        return false;
     }
-
-    public String getOrigin() {
-        return origin;
+    
+    public double getSeatPrice(String seatName) {
+        for(int i = 0; i < seatAmount; i++){
+            if(seatName.equals(seats.get(i).getName()))
+                return seats.get(i).getPrice();
+        }
+        return -1;
     }
-
-    public String getDepartureTime() {
-        return departureTime;
-    }
-
-    public String getArrivalTime() {
-        return arrivalTime;
-    }
-
-    public int getPilotID() {
-        return pilotID;
-    }
-
-    public int getCoPilotID() {
-        return copilotID;
-    }
-
-    public int getLeadAttendantID() {
-        return leadAttendantID;
-    }
-
-    public int getFlightAttendantID() {
-        return flightAttendantID;
-    }
-
-    // SETTERS //
-
-    public void setFlightID(int flightID) {
-        this.flightID = flightID;
-    }
-
-    public void setGateNumber(String gateNumber) {
-        this.gateNumber = gateNumber;
-    }
-
-    public void setDestination(String destination) {
-        this.destination = destination;
-    }
-
-    public void setOrigin(String origin) {
-        this.origin = origin;
-    }
-
-    public void setDepartureTime(String departureTime) {
-        this.departureTime = departureTime;
-    }
-
-    public void setArrivalTime(String arrivalTime) {
-        this.arrivalTime = arrivalTime;
-    }
-
-    public void setPilotID(int pilotID) {
-        this.pilotID = pilotID;
-    }
-
-    public void setCoPilotID(int coPilotID) {
-        this.copilotID = coPilotID;
-    }
-
-    public void setLeadAttendantID(int leadAttendantID) {
-        this.leadAttendantID = leadAttendantID;
-    }
-
-    public void setFlightAttendantID(int flightAttendantID) {
-        this.flightAttendantID = flightAttendantID;
+    
+    public int getFlight_id(){
+        return this.flight_id;
     }
 }
