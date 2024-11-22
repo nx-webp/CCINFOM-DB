@@ -1,3 +1,4 @@
+import javax.swing.plaf.nimbus.State;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -13,99 +14,12 @@ public class Model {
     public Model(Connection connection) {
         this.currentView = "Home";
         this.connection = connection;
+
         this.flights = new ArrayList<>();
         this.employees = new ArrayList<>();
         this.bookings = new ArrayList<>();
         this.passengers = new ArrayList<>();
-        
-        // fetch existing data from the database (store in arraylists above)
-        Statement stmt = null;
-        
-        // PASSENGERS
-        String passengersQuery = "SELECT * FROM passengers";
-        try {
-        	stmt = connection.createStatement();
-        	
-        	ResultSet rs = stmt.executeQuery(passengersQuery);
-        	
-        	while(rs.next()) {
-        		//data read (by row) is assigned to an arraylist
-        		passengers.add();
-        	}
-        	rs.close();
-        } catch(SQLException e) {
-            System.out.println("Error! Something happened to the database.");
-        }
-        finally {
-    		try {
-    			stmt.close();
-    		} catch (SQLException e) {
-                System.out.println("Error! Unable to close the statement.");
-            }
-        }
-        
-        // EMPLOYEES
-        String employeesQuery = "SELECT * FROM employees";
-        try {
-        	stmt = connection.createStatement();
-        	
-        	ResultSet rs = stmt.executeQuery(employeesQuery);
-        	
-        	while(rs.next()) {
-        		/*
-        		 * array lists, please fill in
-        		 */
-        	}
-        	rs.close();
-        }
-        	
-        finally {
-    		try {
-    			stmt.close();
-    		} catch (Exception e) {}
-        }
-        
-        // FLIGHTS
-        String flightsQuery = "SELECT * FROM flights";
-        try {
-        	stmt = connection.createStatement();
-        	
-        	ResultSet rs = stmt.executeQuery(flightsQuery);
-        	
-        	while(rs.next()) {
-        		/*
-        		 * array lists, please fill in
-        		 */
-        	}
-        	rs.close();
-        }
-        	
-        finally {
-    		try {
-    			stmt.close();
-    		} catch (Exception e) {}
-        }
-        
-        // BOOKINGS
-        String bookingsQuery = "SELECT * FROM bookings";
-        try {
-        	stmt = connection.createStatement();
-        	
-        	ResultSet rs = stmt.executeQuery(bookingsQuery);
-        	
-        	while(rs.next()) {
-        		/*
-        		 * array lists, please fill in
-        		 */
-        	}
-        	rs.close();
-        }
-        	
-        finally {
-    		try {
-    			stmt.close();
-    		} catch (Exception e) {}
-        }
+
         
 	/*
 	while(resultset(flightID))
@@ -118,6 +32,145 @@ public class Model {
  		flights.add(new Flight(passenger_id))
      	*/
     }
+
+    public void fetchData() {
+        // fetch existing data from the database (store in arraylists above)
+        Statement stmt = null;
+
+        // PASSENGERS
+        String passengersQuery = "SELECT * FROM passengers";
+        try {
+            stmt = connection.createStatement();
+
+            ResultSet rs = stmt.executeQuery(passengersQuery);
+
+            while(rs.next()) {
+                //create new passenger
+                Passenger passHolder = new Passenger(rs.getInt("passenger_id"),
+                                                 rs.getString("passport_number"),
+                                                 rs.getString("last_name"),
+                                                 rs.getString("first_name"),
+                                                 rs.getString("birthdate"),
+                                                 rs.getInt("contact_no"),
+                                                 rs.getString("email_address"),
+                                                 rs.getString("vip_status"));
+                //data read (by row) is assigned to an arraylist
+                passengers.add(passHolder);
+            }
+            rs.close();
+        } catch(SQLException e) {
+            System.out.println("Error! Something happened to the database.");
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                System.out.println("Error! Unable to close the statement.");
+            }
+        }
+
+        // EMPLOYEES
+        String employeesQuery = "SELECT * FROM employees";
+        try {
+            stmt = connection.createStatement();
+
+            ResultSet rs = stmt.executeQuery(employeesQuery);
+
+            while(rs.next()) {
+                // create new employee
+                Employee empHolder = new Employee(rs.getInt("employee_id"),
+                                                  rs.getString("last_name"),
+                                                  rs.getString("first_name"),
+                                                  rs.getString("job_title"),
+                                                  rs.getString("hire_date"),
+                                                  rs.getDouble("salary"),
+                                                  rs.getString("department"));
+
+                employees.add(empHolder);
+            }
+            rs.close();
+        } catch(SQLException e) {
+            System.out.println("Error! Something happened to the database.");
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                System.out.println("Error! Unable to close the statement.");
+            }
+        }
+
+        // FLIGHTS
+        String flightsQuery = "SELECT * FROM flights";
+        try {
+            stmt = connection.createStatement();
+
+            ResultSet rs = stmt.executeQuery(flightsQuery);
+
+            while(rs.next()) {
+                // create new flight instance
+                // public Flight(int flight_id, int gate_number, String destination, String origin, String departure,
+                //                  String arrival, int pilot_id, int copilot_id, int lead_attendant, int flight_attendant,
+                //                  double price)
+
+                Flight flightHolder = new Flight(rs.getInt("flight_id"),
+                                                 rs.getInt("gate_number"),
+                                                 rs.getString("destination"),
+                                                 rs.getString("origin"),
+                                                 rs.getString("departure"),
+                                                 rs.getString("arrival"),
+                                                 rs.getInt("pilot_id"),
+                                                 rs.getInt("copilot_id"),
+                                                 rs.getInt("lead_attendant"),
+                                                 rs.getInt("flight_attendant"),
+                                                 3000 /* base price? */ );
+
+                flights.add(flightHolder);
+            }
+            rs.close();
+        } catch(SQLException e) {
+            System.out.println("Error! Something happened to the database.");
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                System.out.println("Error! Unable to close the statement.");
+            }
+        }
+
+        // BOOKINGS
+        String bookingsQuery = "SELECT * FROM bookings";
+        try {
+            stmt = connection.createStatement();
+
+            ResultSet rs = stmt.executeQuery(bookingsQuery);
+
+            while(rs.next()) {
+                // create new booking object
+                // public Booking(int ref_id, int passenger_id, int flight_id, String checkin_date, String seat_no,
+                //                   String seat_class, double total_cost, String food_order, int total_checkin_bags) {
+
+                Booking bookHolder = new Booking(rs.getInt("ref_id"),
+                                                 rs.getInt("passenger_id"),
+                                                 rs.getInt("flight_id"),
+                                                 rs.getString("checkin_date"),
+                                                 rs.getString("seat_no"),
+                                                 rs.getString("saet_class"),
+                                                 rs.getDouble("total_cost"),
+                                                 rs.getString("food_order"),
+                                                 rs.getInt("total_checkin_bags"));
+
+                bookings.add(bookHolder);
+            }
+            rs.close();
+        } catch(SQLException e) {
+            System.out.println("Error! Something happened to the database.");
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                System.out.println("Error! Unable to close the statement.");
+            }
+        }
+    }
     
     
     /*
@@ -126,8 +179,11 @@ public class Model {
     ---------------------------------------------------------------------------------------------------
     */
     
-    public boolean createPassenger(String passport_number, String last_name, String first_name, String birthdate, int contact_no, String email_address, String vip_status) throws SQLException{
-        String query = "INSERT INTO passengers (passport_number, last_name, first_name, birthdate, contact_no, email_address, vip_status) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    public boolean createPassenger(String passport_number, String last_name, String first_name,
+                                   String birthdate, int contact_no, String email_address, String vip_status)
+            throws SQLException{
+        String query = "INSERT INTO passengers (passport_number, last_name, first_name, " +
+                "birthdate, contact_no, email_address, vip_status) VALUES (?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement stmt = connection.prepareStatement(query);
         
         stmt.setString(1, passport_number);
@@ -240,8 +296,11 @@ public class Model {
     ---------------------------------------------------------------------------------------------------
     */
     
-    public boolean createEmployee(String last_name, String first_name, String job_title, String hire_date, float salary, String department) throws SQLException {
-    	String insertEmployee = "INSERT INTO employees (last_name, first_name, job_title, salary, hire_date, department) VALUES (?, ?, ?, ?, ?, ?)";
+    public boolean createEmployee(String last_name, String first_name, String job_title, String hire_date,
+                                  float salary, String department)
+            throws SQLException {
+    	String insertEmployee = "INSERT INTO employees (last_name, first_name, job_title, salary, hire_date, " +
+                                "department) VALUES (?, ?, ?, ?, ?, ?)";
 		PreparedStatement stmt = connection.prepareStatement(insertEmployee);
 		
 	stmt.setString(1, last_name);
@@ -346,19 +405,20 @@ public class Model {
     public boolean createFlight(int gate_number, String destination, String origin, String departure, String arrival,
                                 int pilot_id, int copilot_id, int lead_attendant_id, int flight_attendant_id, double price)
             throws SQLException {
-	String query = "insert into flights (gate_number, destination, origin, departure, arrival, pilot_id, copilot_id, lead_attendant, flight_attendant) values (?, ?, ?, ?, ?, ?, ?, ?, ?);";
-	PreparedStatement stmt = connection.prepareStatement(query);
+	    String query = "insert into flights (gate_number, destination, origin, departure, arrival, " +
+                    "pilot_id, copilot_id, lead_attendant, flight_attendant) values (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+	    PreparedStatement stmt = connection.prepareStatement(query);
 
-	stmt.setInt(1, gate_number);
-	stmt.setString(2, destination);
-	stmt.setString(3, origin);
-	stmt.setString(4, departure);
+	    stmt.setInt(1, gate_number);
+	    stmt.setString(2, destination);
+	    stmt.setString(3, origin);
+	    stmt.setString(4, departure);
         stmt.setString(5, arrival);
         stmt.setInt(6, pilot_id);
-	stmt.setInt(7, copilot_id);
-	stmt.setInt(8, lead_attendant_id);
-	stmt.setInt(9, flight_attendant_id);
-	stmt.executeUpdate();
+	    stmt.setInt(7, copilot_id);
+	    stmt.setInt(8, lead_attendant_id);
+	    stmt.setInt(9, flight_attendant_id);
+	    stmt.executeUpdate();
         
         Flight newFlight = new Flight(flights.get(flights.size() - 1).getFlight_id() + 1, gate_number, destination, origin,
                 departure, arrival, pilot_id, copilot_id, lead_attendant_id, flight_attendant_id, price);
@@ -483,10 +543,11 @@ public class Model {
     ---------------------------------------------------------------------------------------------------
     */
     
-    public boolean createBooking (int passenger_id, int flight_id,
-    		String checkin_date, String seat_number, String seat_class,
-    		Float total_cost, String food_order, int checkin_bags) throws SQLException {
-    	String query = "INSERT INTO bookings (passenger_id, flight_id, checkin_date, seat_number, seat_class, total_cost, food_order, total_checkin_bags) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    public boolean createBooking (int passenger_id, int flight_id, String checkin_date, String seat_number,
+                                  String seat_class, Float total_cost, String food_order, int checkin_bags)
+            throws SQLException {
+    	String query = "INSERT INTO bookings (passenger_id, flight_id, checkin_date, seat_number, " +
+                "seat_class, total_cost, food_order, total_checkin_bags) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         
     	 PreparedStatement stmt = connection.prepareStatement(query);
         
@@ -509,14 +570,14 @@ public class Model {
     }
 
     public boolean deleteBooking(int booking_id, int passenger_id) throws SQLException {
-	String cancelBooking = "DELETE FROM bookings WHERE booking_id = ?";
+	    String cancelBooking = "DELETE FROM bookings WHERE booking_id = ?";
 	     
-	PreparedStatement stmt = connection.prepareStatement(cancelBooking);
+	    PreparedStatement stmt = connection.prepareStatement(cancelBooking);
 	     
-	stmt.setInt(1, booking_id);
+	    stmt.setInt(1, booking_id);
 	     
-	stmt.executeUpdate();
-	return true;
+	    stmt.executeUpdate();
+	    return true;
     }
     
     public boolean updatePassenger (int ref_id, int passenger_id) throws SQLException{
@@ -619,7 +680,7 @@ public class Model {
         
         PreparedStatement stmt = connection.prepareStatement(query);
 
-	stmt.setInt(1, booking_ID);
+	    stmt.setInt(1, booking_ID);
         stmt.executeUpdate();
         return true;
     }
