@@ -12,10 +12,96 @@ public class Model {
 
     public Model() {
         this.currentView = "Home";
-	this.flights = new ArrayList<>();
+        this.flights = new ArrayList<>();
         this.employees = new ArrayList<>();
         this.bookings = new ArrayList<>();
         this.passengers = new ArrayList<>();
+        
+        // fetch existing data from the database (store in arraylists above)
+        Statement stmt = null;
+        
+        // PASSENGERS
+        String passengersQuery = "SELECT * FROM passengers";
+        try {
+        	stmt = connection.createStatement();
+        	
+        	ResultSet rs = stmt.executeQuery(passengersQuery);
+        	
+        	while(rs.next()) {
+        		//data read (by row) is assigned to an arraylist
+        		passengers.add(new Flight(flightID));
+        	}
+        	rs.close();
+        }
+        	
+        finally {
+    		try {
+    			stmt.close();
+    		} catch (Exception e) {}
+        }
+        
+        // EMPLOYEES
+        String employeesQuery = "SELECT * FROM employees";
+        try {
+        	stmt = connection.createStatement();
+        	
+        	ResultSet rs = stmt.executeQuery(employeesQuery);
+        	
+        	while(rs.next()) {
+        		/*
+        		 * array lists, please fill in
+        		 */
+        	}
+        	rs.close();
+        }
+        	
+        finally {
+    		try {
+    			stmt.close();
+    		} catch (Exception e) {}
+        }
+        
+        // FLIGHTS
+        String flightsQuery = "SELECT * FROM flights";
+        try {
+        	stmt = connection.createStatement();
+        	
+        	ResultSet rs = stmt.executeQuery(flightsQuery);
+        	
+        	while(rs.next()) {
+        		/*
+        		 * array lists, please fill in
+        		 */
+        	}
+        	rs.close();
+        }
+        	
+        finally {
+    		try {
+    			stmt.close();
+    		} catch (Exception e) {}
+        }
+        
+        // BOOKINGS
+        String bookingsQuery = "SELECT * FROM bookings";
+        try {
+        	stmt = connection.createStatement();
+        	
+        	ResultSet rs = stmt.executeQuery(bookingsQuery);
+        	
+        	while(rs.next()) {
+        		/*
+        		 * array lists, please fill in
+        		 */
+        	}
+        	rs.close();
+        }
+        	
+        finally {
+    		try {
+    			stmt.close();
+    		} catch (Exception e) {}
+        }
         
 	/*
 	while(resultset(flightID))
