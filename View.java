@@ -158,19 +158,34 @@ public class View implements ActionListener /*, DocumentListener, ListSelectionL
         this.editEmp.setLayout(new BorderLayout());
         this.editEmp.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-        JPanel northEmp = new JPanel();
-        northEmp.setBackground(Color.WHITE);
-        JLabel empLabel = new JLabel("Edit Employee Records");
-        northEmp.add(empLabel);
+        JPanel northPnl = new JPanel();
+        northPnl.setBackground(Color.WHITE);
+        JLabel empLabel = new JLabel("Manage Employee Records");
+        northPnl.add(empLabel);
 
-        JPanel southEmp = new JPanel();
-        southEmp.setLayout(new FlowLayout(FlowLayout.LEFT));
-        southEmp.setBackground(Color.WHITE);
+        JPanel centerPnl = new JPanel();
+        centerPnl.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));;
+        centerPnl.setLayout(new GridLayout(3, 1, 5, 5));
+        centerPnl.setBackground(Color.WHITE);
+
+        JButton create = new JButton("Create Employee");
+        JButton edit = new JButton("Edit Employee");
+        JButton delete = new JButton("Delete Employee");
+
+        centerPnl.add(create);
+        centerPnl.add(edit);
+        centerPnl.add(delete);
+
+        JPanel southPnl = new JPanel();
+        southPnl.setLayout(new FlowLayout(FlowLayout.LEFT));
+        southPnl.setBackground(Color.WHITE);
 
         JButton backBtn = new JButton("Back");
-        southEmp.add(backBtn);
+        southPnl.add(backBtn);
 
-        this.editEmp.add(southEmp, BorderLayout.SOUTH);
+        this.editEmp.add(centerPnl, BorderLayout.CENTER);
+        this.editEmp.add(northPnl, BorderLayout.NORTH);
+        this.editEmp.add(southPnl, BorderLayout.SOUTH);
 
         editEmployee.addActionListener((ActionEvent e) -> {
             CardLayout cl = (CardLayout) this.adminPnl.getLayout();
@@ -192,14 +207,34 @@ public class View implements ActionListener /*, DocumentListener, ListSelectionL
         this.editFlight.setLayout(new BorderLayout());
         this.editFlight.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-        JPanel southEmp = new JPanel();
-        southEmp.setLayout(new FlowLayout(FlowLayout.LEFT));
-        southEmp.setBackground(Color.WHITE);
+        JPanel northPnl = new JPanel();
+        northPnl.setBackground(Color.WHITE);
+        JLabel empLabel = new JLabel("Manage Flight Records");
+        northPnl.add(empLabel);
+
+        JPanel centerPnl = new JPanel();
+        centerPnl.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));;
+        centerPnl.setLayout(new GridLayout(3, 1, 5, 5));
+        centerPnl.setBackground(Color.WHITE);
+
+        JButton create = new JButton("Create Flight");
+        JButton edit = new JButton("Edit Flight");
+        JButton delete = new JButton("Delete Flight");
+
+        centerPnl.add(create);
+        centerPnl.add(edit);
+        centerPnl.add(delete);
+
+        JPanel southPnl = new JPanel();
+        southPnl.setLayout(new FlowLayout(FlowLayout.LEFT));
+        southPnl.setBackground(Color.WHITE);
 
         JButton backBtn = new JButton("Back");
-        southEmp.add(backBtn);
+        southPnl.add(backBtn);
 
-        this.editFlight.add(southEmp, BorderLayout.SOUTH);
+        this.editFlight.add(northPnl, BorderLayout.NORTH);
+        this.editFlight.add(centerPnl, BorderLayout.CENTER);
+        this.editFlight.add(southPnl, BorderLayout.SOUTH);
 
         editFlight.addActionListener((ActionEvent e) -> {
             CardLayout cl = (CardLayout) this.adminPnl.getLayout();
