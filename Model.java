@@ -147,9 +147,9 @@ public class Model {
     public boolean createBooking (int member_id, int flight_id,
     		String checkin_date, String seat_number, String seat_class,
     		Float total_cost, String food_order, int checkin_bags) throws SQLException {
-    	String newBooking = "INSERT INTO bookings (member_id, flight_id, checkin_date, seat_number, class, total_cost, food_order, checkin_bags) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    	String query = "INSERT INTO bookings (member_id, flight_id, checkin_date, seat_number, class, total_cost, food_order, checkin_bags) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         
-    	 PreparedStatement stmt = connection.prepareStatement(newBooking);
+    	 PreparedStatement stmt = connection.prepareStatement(query);
         
         stmt.setInt(1, member_id);
         stmt.setInt(2, flight_id);
@@ -161,6 +161,10 @@ public class Model {
         stmt.setInt(8, checkin_bags);
         
         stmt.executeUpdate();
+        
+        Booking newBooking = new Booking(bookings.get(bookings.size() - 1).getID() + 1);
+        bookings.add(newBooking);
+        
         return true;
     }
 
