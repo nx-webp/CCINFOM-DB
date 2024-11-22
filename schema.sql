@@ -113,7 +113,7 @@ CREATE Table bookings (
     seat_class ENUM('Economy', 'Business', 'First'),
     total_cost DECIMAL (6, 2),
     food_order ENUM('Beef', 'Pork', 'Chicken', 'Fish', 'Vegan'),
-    ctotal_checkin_bags INT,
+    total_checkin_bags INT,
     UNIQUE (ref_id),
     PRIMARY KEY (ref_id),
     CONSTRAINT FOREIGN KEY (passenger_id) REFERENCES passengers(passenger_id),
