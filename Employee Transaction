@@ -8,7 +8,7 @@ public class Employee {
     public static void main(String[] args) {
         String url = "jdbc:mysql://localhost:3306/airport";
         String user = "root";
-        String password = "Cupidissodumb<3"; // Change this for security in production
+        String password = "Cupidissodumb<3"; // Change this na lng
 
         // Scanner for user input
         try (Scanner scanner = new Scanner(System.in)) {
@@ -21,7 +21,7 @@ public class Employee {
                     System.out.println("\nSelect an option:");
                     System.out.println("1. Show all employees");
                     System.out.println("2. Insert into Employee Table");
-                    System.out.println("3. Update Employee(s) Flight Assignment");
+                    System.out.println("3. Update Employee(s) Information");
                     System.out.println("4. Show Available Employees by Criteria");
                     System.out.println("5. Delete Employee from Database");
                     System.out.println("6. Show Total Flights Handled by Employees");
@@ -35,7 +35,7 @@ public class Employee {
                     switch (choice) {
                         case 1 -> showAllEmployees(con);
                         case 2 -> insertEmployee(con, scanner);
-                        case 3 -> updateEmployeeFlight(con, scanner);
+                        case 3 -> updateEmployeeInformation(con, scanner);
                         case 4 -> showAvailableEmployees(con, scanner);
                         case 5 -> deleteEmployee(con, scanner);
                         case 6 -> showTotalFlightsHandled(con);
@@ -75,9 +75,7 @@ public class Employee {
     // Option 2: Insert into Employee table
     private static void insertEmployee(Connection con, Scanner scanner) throws SQLException {
         System.out.println("Enter employee details:");
-        System.out.print("Employee ID: ");
-        int employeeID = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        // Remove input for employee_ID as it's auto-generated
         System.out.print("First Name: ");
         String firstName = scanner.nextLine();
         System.out.print("Last Name: ");
@@ -92,15 +90,15 @@ public class Employee {
         System.out.print("Department: ");
         String department = scanner.nextLine();
 
-        String query = "INSERT INTO Employee (employee_ID, first_name, last_name, job_title, hire_date, salary, department, flight_id) VALUES (?, ?, ?, ?, ?, ?, ?, NULL)";
+        // SQL query without employee_ID
+        String query = "INSERT INTO Employee (first_name, last_name, job_title, hire_date, salary, department, flight_id) VALUES (?, ?, ?, ?, ?, ?, NULL)";
         try (PreparedStatement stmt = con.prepareStatement(query)) {
-            stmt.setInt(1, employeeID);
-            stmt.setString(2, firstName);
-            stmt.setString(3, lastName);
-            stmt.setString(4, jobTitle);
-            stmt.setString(5, hireDate);
-            stmt.setDouble(6, salary);
-            stmt.setString(7, department);
+            stmt.setString(1, firstName);
+            stmt.setString(2, lastName);
+            stmt.setString(3, jobTitle);
+            stmt.setString(4, hireDate);
+            stmt.setDouble(5, salary);
+            stmt.setString(6, department);
 
             int rows = stmt.executeUpdate();
             if (rows > 0) {
@@ -111,34 +109,149 @@ public class Employee {
         }
     }
 
-    // Option 3: Update Employee Flight Assignment
-    private static void updateEmployeeFlight(Connection con, Scanner scanner) throws SQLException {
-        System.out.print("Enter Flight ID to assign employees: ");
-        int flightID = scanner.nextInt();
+ // Option 3: Update Employee Information
+    private static void updateEmployeeInformation(Connection con, Scanner scanner) throws SQLException {
+        System.out.print("Enter Employee ID to update: ");
+        int empID = scanner.nextInt();
         scanner.nextLine(); // Consume newline
-        System.out.print("Enter Employee IDs (comma-separated): ");
-        String[] employeeIDs = scanner.nextLine().split(",");
 
-        String checkQuery = "SELECT flight_id FROM Employee WHERE employee_ID = ?";
-        String updateQuery = "UPDATE Employee SET flight_id = ? WHERE employee_ID = ?";
+        System.out.println("Select the field you want to update:");
+        System.out.println("1. Name");
+        System.out.println("2. Job Title");
+        System.out.println("3. Department");
+        System.out.println("4. Flight Assignment");
+        System.out.println("5. Salary");
+        System.out.println("6. Hire Date");
 
-        try (PreparedStatement checkStmt = con.prepareStatement(checkQuery);
-             PreparedStatement updateStmt = con.prepareStatement(updateQuery)) {
+        int updateChoice = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
 
-            for (String id : employeeIDs) {
-                int empID = Integer.parseInt(id.trim());
-                checkStmt.setInt(1, empID);
-                try (ResultSet rs = checkStmt.executeQuery()) {
-                    if (rs.next() && rs.getObject("flight_id") == null) {
-                        updateStmt.setInt(1, flightID);
-                        updateStmt.setInt(2, empID);
-                        updateStmt.executeUpdate();
-                        System.out.println("Assigned Employee ID " + empID + " to Flight ID " + flightID);
+        switch (updateChoice) {
+            case 1 -> {
+                // Update Name
+                System.out.print("Enter new First Name: ");
+                String newFirstName = scanner.nextLine();
+
+                System.out.print("Enter new Last Name: ");
+                String newLastName = scanner.nextLine();
+
+                String updateNameSQL = "UPDATE Employee SET first_name = ?, last_name = ? WHERE employee_ID = ?";
+                try (PreparedStatement stmt = con.prepareStatement(updateNameSQL)) {
+                    stmt.setString(1, newFirstName);
+                    stmt.setString(2, newLastName);
+                    stmt.setInt(3, empID);
+
+                    int rowsAffected = stmt.executeUpdate();
+                    if (rowsAffected > 0) {
+                        System.out.println("Employee name updated successfully.");
                     } else {
-                        System.out.println("Employee ID " + empID + " already has a flight assignment or does not exist.");
+                        System.out.println("Employee ID not found.");
                     }
+                } catch (SQLException e) {
+                    System.out.println("Error updating name: " + e.getMessage());
                 }
             }
+            case 2 -> {
+                // Update Job Title
+                System.out.print("Enter new Job Title: ");
+                String newJobTitle = scanner.nextLine();
+
+                String updateJobTitleSQL = "UPDATE Employee SET job_title = ? WHERE employee_ID = ?";
+                try (PreparedStatement stmt = con.prepareStatement(updateJobTitleSQL)) {
+                    stmt.setString(1, newJobTitle);
+                    stmt.setInt(2, empID);
+
+                    int rowsAffected = stmt.executeUpdate();
+                    if (rowsAffected > 0) {
+                        System.out.println("Employee job title updated successfully.");
+                    } else {
+                        System.out.println("Employee ID not found.");
+                    }
+                } catch (SQLException e) {
+                    System.out.println("Error updating job title: " + e.getMessage());
+                }
+            }
+            case 3 -> {
+                // Update Department
+                System.out.print("Enter new Department: ");
+                String newDepartment = scanner.nextLine();
+
+                String updateDepartmentSQL = "UPDATE Employee SET department = ? WHERE employee_ID = ?";
+                try (PreparedStatement stmt = con.prepareStatement(updateDepartmentSQL)) {
+                    stmt.setString(1, newDepartment);
+                    stmt.setInt(2, empID);
+
+                    int rowsAffected = stmt.executeUpdate();
+                    if (rowsAffected > 0) {
+                        System.out.println("Employee department updated successfully.");
+                    } else {
+                        System.out.println("Employee ID not found.");
+                    }
+                } catch (SQLException e) {
+                    System.out.println("Error updating department: " + e.getMessage());
+                }
+            }
+            case 4 -> {
+                // Update Flight Assignment
+                System.out.print("Enter new Flight ID for assignment: ");
+                int newFlightID = scanner.nextInt();
+
+                String updateFlightSQL = "UPDATE Employee SET flight_id = ? WHERE employee_ID = ?";
+                try (PreparedStatement stmt = con.prepareStatement(updateFlightSQL)) {
+                    stmt.setInt(1, newFlightID);
+                    stmt.setInt(2, empID);
+
+                    int rowsAffected = stmt.executeUpdate();
+                    if (rowsAffected > 0) {
+                        System.out.println("Employee flight assignment updated successfully.");
+                    } else {
+                        System.out.println("Employee ID not found.");
+                    }
+                } catch (SQLException e) {
+                    System.out.println("Error updating flight assignment: " + e.getMessage());
+                }
+            }
+            case 5 -> {
+                // Update Salary
+                System.out.print("Enter new Salary: ");
+                double newSalary = scanner.nextDouble();
+
+                String updateSalarySQL = "UPDATE Employee SET salary = ? WHERE employee_ID = ?";
+                try (PreparedStatement stmt = con.prepareStatement(updateSalarySQL)) {
+                    stmt.setDouble(1, newSalary);
+                    stmt.setInt(2, empID);
+
+                    int rowsAffected = stmt.executeUpdate();
+                    if (rowsAffected > 0) {
+                        System.out.println("Employee salary updated successfully.");
+                    } else {
+                        System.out.println("Employee ID not found.");
+                    }
+                } catch (SQLException e) {
+                    System.out.println("Error updating salary: " + e.getMessage());
+                }
+            }
+            case 6 -> {
+                // Update Hire Date
+                System.out.print("Enter new Hire Date (YYYY-MM-DD): ");
+                String newHireDate = scanner.nextLine();
+
+                String updateHireDateSQL = "UPDATE Employee SET hire_date = ? WHERE employee_ID = ?";
+                try (PreparedStatement stmt = con.prepareStatement(updateHireDateSQL)) {
+                    stmt.setString(1, newHireDate);
+                    stmt.setInt(2, empID);
+
+                    int rowsAffected = stmt.executeUpdate();
+                    if (rowsAffected > 0) {
+                        System.out.println("Employee hire date updated successfully.");
+                    } else {
+                        System.out.println("Employee ID not found.");
+                    }
+                } catch (SQLException e) {
+                    System.out.println("Error updating hire date: " + e.getMessage());
+                }
+            }
+            default -> System.out.println("Invalid choice. Please try again.");
         }
     }
 

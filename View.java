@@ -341,14 +341,16 @@ public class View implements ActionListener /*, DocumentListener, ListSelectionL
         northPnl.add(label);
 
         JPanel centerPnl = new JPanel();
-        centerPnl.setLayout(new GridLayout(2, 1,  5, 5));
+        centerPnl.setLayout(new GridLayout(3, 1,  5, 5));
         centerPnl.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         centerPnl.setBackground(Color.WHITE);
 
         JButton bookFlight = new JButton("Book a Flight");
+        JButton editBook = new JButton("Edit Booking Details");
         JButton manageAcc = new JButton("Manage Your Account");
 
         centerPnl.add(bookFlight);
+        centerPnl.add(editBook);
         centerPnl.add(manageAcc);
 
         buttonsPnl.add(northPnl, BorderLayout.NORTH);
