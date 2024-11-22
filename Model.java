@@ -38,13 +38,13 @@ public class Model {
             while(rs.next()) {
                 //create new passenger
                 Passenger passHolder = new Passenger(rs.getInt("passenger_id"),
-                                                 rs.getString("passport_number"),
-                                                 rs.getString("last_name"),
-                                                 rs.getString("first_name"),
-                                                 rs.getString("birthdate"),
-                                                 rs.getInt("contact_no"),
-                                                 rs.getString("email_address"),
-                                                 rs.getString("vip_status"));
+                                                     rs.getString("passport_number"),
+                                                     rs.getString("last_name"),
+                                                     rs.getString("first_name"),
+                                                     rs.getString("birthdate"),
+                                                     rs.getInt("contact_no"),
+                                                     rs.getString("email_address"),
+                                                     rs.getString("vip_status"));
                 //data read (by row) is assigned to an arraylist
                 passengers.add(passHolder);
             }
@@ -98,9 +98,6 @@ public class Model {
 
             while(rs.next()) {
                 // create new flight instance
-                // public Flight(int flight_id, int gate_number, String destination, String origin, String departure,
-                //                  String arrival, int pilot_id, int copilot_id, int lead_attendant, int flight_attendant,
-                //                  double price)
 
                 Flight flightHolder = new Flight(rs.getInt("flight_id"),
                                                  rs.getInt("gate_number"),
