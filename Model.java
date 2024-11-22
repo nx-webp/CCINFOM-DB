@@ -83,14 +83,53 @@ public class Model {
 	     stmt.executeUpdate();
 	     return true;
 	 }
+	 
+	 public boolean createFlight(int flight_id, int pilot_id, int copilot_id, int lead_attendant_id, int flight_attendant_id) throws SQLException {
+			String query = "insert into flights (flight_id, pilot_id, copilot_id, lead_attendant, flight_attendant) values (?, ?, ?, ?, ?);";
+			PreparedStatement stmt = connection.prepareStatement(query);
 
-    public boolean deleteFlight(String flightID) throws SQLException {
+			stmt.setInt(1, flight_id);
+			stmt.setInt(2, pilot_id);
+			stmt.setInt(3, copilot_id);
+			stmt.setInt(4, lead_attendant_id);
+			stmt.setInt(5, flight_attendant_id);
+		        stmt.executeUpdate();
+		        return true;
+		    }
+
+    public boolean deleteFlight(int flightID) throws SQLException {
         // define the query needed to get the flight to delete, '?' is a placeholder
-        String query = "DELETE * FROM flights WHERE flightID = ?";
+        String query = "DELETE * FROM flights WHERE flight_id = ?";
         
         PreparedStatement stmt = connection.prepareStatement(query);
         
-        stmt.setString(1, flightID);
+        stmt.setInt(1, flightID);
+        stmt.executeUpdate();
+        return true;
+    }
+    
+    public boolean createFlight(String last_name, String first_name, String job_title, String hire_date, float salary, String department) throws SQLException {
+    	String insertEmployee = "INSERT INTO Employee (last_name, first_name, job_title, salary, hire_date, department) VALUES (?, ?, ?, ?, ?, ?)";
+		PreparedStatement stmt = connect.prepareStatement(insertEmployee);
+		
+		stmt.setString(1, last_name);
+        stmt.setString(2, first_name);
+        stmt.setString(3, job_title);
+        stmt.setString(4, hire_date);
+        stmt.setDouble(5, salary);
+        stmt.setString(6, department);
+        
+        stmt.executeUpdate();
+        return true;
+    }
+    
+    public boolean deleteEmployee (int employee_id) throws SQLException {
+        // define the query needed to get the flight to delete, '?' is a placeholder
+        String query = "DELETE * FROM employees WHERE employee_id = ?";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+        
+        stmt.setInt(1, employee_id);
         stmt.executeUpdate();
         return true;
     }
@@ -112,19 +151,6 @@ public class Model {
         
         PreparedStatement stmt = connection.prepareStatement(query);
 
-        stmt.executeUpdate();
-        return true;
-    }
-
-    public boolean createFlight(int flight_id, int pilot_id, int copilot_id, int lead_attendant_id, int flight_attendant_id) throws SQLException {
-	String query = "insert into flights (flight_id, pilot_id, copilot_id, lead_attendant, flight_attendant) values (?, ?, ?, ?, ?);";
-	PreparedStatement stmt = connection.prepareStatement(query);
-
-	stmt.setInt(1, flight_id);
-	stmt.setInt(2, pilot_id);
-	stmt.setInt(3, copilot_id);
-	stmt.setInt(4, lead_attendant_id);
-	stmt.setInt(5, flight_attendant_id);
         stmt.executeUpdate();
         return true;
     }
