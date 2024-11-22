@@ -95,7 +95,41 @@ public class Model {
         return true;
     }
 
+    public boolean viewBooking(int bookingID) throws SQLException {
+        // define the query needed to get the flight to delete, '?' is a placeholder
+        String query = "select b.ref_id as booking_no, flight_id, p.passenger_id, last_name, first_name, passport_number, birthdate, contact_no, email_address, vip_status from bookings b join passengers p on b.passenger_id = p.passenger_id where booking_id = ?";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
 
+	stmt.setInt(1, booking_ID);
+        stmt.executeUpdate();
+        return true;
+    }
+
+    public boolean viewBooking() throws SQLException {
+        // define the query needed to get the flight to delete, '?' is a placeholder
+        String query = "select b.ref_id as booking_no, flight_id, p.passenger_id, last_name, first_name, passport_number, birthdate, contact_no, email_address, vip_status from bookings b join passengers p on b.passenger_id = p.passenger_id";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+
+        stmt.executeUpdate();
+        return true;
+    }
+
+    public boolean createFlight(int flight_id, int pilot_id, int copilot_id, int lead_attendant_id, int flight_attendant_id) throws SQLException {
+	String query = "insert into flights (flight_id, pilot_id, copilot_id, lead_attendant, flight_attendant) values (?, ?, ?, ?, ?);";
+	PreparedStatement stmt = connection.prepareStatement(query);
+
+	stmt.setInt(1, flight_id);
+	stmt.setInt(2, pilot_id);
+	stmt.setInt(3, copilot_id);
+	stmt.setInt(4, lead_attendant_id);
+	stmt.setInt(5, flight_attendant_id);
+        stmt.executeUpdate();
+        return true;
+    }
+	    
+	
     public boolean setCurrentView(String currentView) {
         if (currentView.equals("Home") || currentView.equals("Admin Menu") ||
                 currentView.equals("Passenger Menu") || currentView.equals("Exit Program")) {
