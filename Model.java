@@ -1,3 +1,5 @@
+package group3db;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -52,67 +54,17 @@ public class Model {
         scanner.close();
     }*/
     
-    public boolean newBooking (int member_id, int flight_id,
-    		String checkin_date, String seat_number, String seat_class,
-    		Float total_cost, String food_order, int checkin_bags) throws SQLException {
-    	String newBooking = "INSERT INTO bookings (member_id, flight_id, checkin_date, seat_number, class, total_cost, food_order, checkin_bags) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        
-    	 PreparedStatement stmt = connection.prepareStatement(newBooking);
-        
-        stmt.setInt(1, member_id);
-        stmt.setInt(2, flight_id);
-        stmt.setString(3, checkin_date);
-        stmt.setString(4, seat_number);
-        stmt.setString(5, seat_class);
-        stmt.setDouble(6, total_cost);
-        stmt.setString(7, food_order);
-        stmt.setInt(8, checkin_bags);
-        
-        stmt.executeUpdate();
-        return true;
-    }
-
-	 public boolean cancelBooking(int booking_id, int member_id) throws SQLException {
-		 String cancelBooking = "DELETE FROM bookings WHERE booking_id = ? AND member_id = ?";
-	     
-	     PreparedStatement stmt = connection.prepareStatement(cancelBooking);
-	     
-	     stmt.setInt(1, booking_id);
-	     stmt.setInt(2, member_id);
-	     
-	     stmt.executeUpdate();
-	     return true;
-	 }
-	 
-	 public boolean createFlight(int flight_id, int pilot_id, int copilot_id, int lead_attendant_id, int flight_attendant_id) throws SQLException {
-			String query = "insert into flights (flight_id, pilot_id, copilot_id, lead_attendant, flight_attendant) values (?, ?, ?, ?, ?);";
-			PreparedStatement stmt = connection.prepareStatement(query);
-
-			stmt.setInt(1, flight_id);
-			stmt.setInt(2, pilot_id);
-			stmt.setInt(3, copilot_id);
-			stmt.setInt(4, lead_attendant_id);
-			stmt.setInt(5, flight_attendant_id);
-		        stmt.executeUpdate();
-		        return true;
-		    }
-
-    public boolean deleteFlight(int flightID) throws SQLException {
-        // define the query needed to get the flight to delete, '?' is a placeholder
-        String query = "DELETE * FROM flights WHERE flight_id = ?";
-        
-        PreparedStatement stmt = connection.prepareStatement(query);
-        
-        stmt.setInt(1, flightID);
-        stmt.executeUpdate();
-        return true;
-    }
+    //passenger functions
     
-    public boolean createFlight(String last_name, String first_name, String job_title, String hire_date, float salary, String department) throws SQLException {
+    
+    
+    //employee functions
+    
+    public boolean createEmployee(String last_name, String first_name, String job_title, String hire_date, float salary, String department) throws SQLException {
     	String insertEmployee = "INSERT INTO Employee (last_name, first_name, job_title, salary, hire_date, department) VALUES (?, ?, ?, ?, ?, ?)";
 		PreparedStatement stmt = connection.prepareStatement(insertEmployee);
 		
-		stmt.setString(1, last_name);
+	stmt.setString(1, last_name);
         stmt.setString(2, first_name);
         stmt.setString(3, job_title);
         stmt.setString(4, hire_date);
@@ -132,6 +84,66 @@ public class Model {
         stmt.setInt(1, employee_id);
         stmt.executeUpdate();
         return true;
+    }
+    
+    //flight functions
+    
+    public boolean createFlight(int flight_id, int pilot_id, int copilot_id, int lead_attendant_id, int flight_attendant_id) throws SQLException {
+	String query = "insert into flights (flight_id, pilot_id, copilot_id, lead_attendant, flight_attendant) values (?, ?, ?, ?, ?);";
+	PreparedStatement stmt = connection.prepareStatement(query);
+
+	stmt.setInt(1, flight_id);
+	stmt.setInt(2, pilot_id);
+	stmt.setInt(3, copilot_id);
+	stmt.setInt(4, lead_attendant_id);
+	stmt.setInt(5, flight_attendant_id);
+	stmt.executeUpdate();
+	return true;
+    }
+    
+    public boolean deleteFlight(int flightID) throws SQLException {
+        // define the query needed to get the flight to delete, '?' is a placeholder
+        String query = "DELETE * FROM flights WHERE flight_id = ?";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+        
+        stmt.setInt(1, flightID);
+        stmt.executeUpdate();
+        return true;
+    }
+    
+    //booking functions
+    
+    public boolean createBooking (int member_id, int flight_id,
+    		String checkin_date, String seat_number, String seat_class,
+    		Float total_cost, String food_order, int checkin_bags) throws SQLException {
+    	String newBooking = "INSERT INTO bookings (member_id, flight_id, checkin_date, seat_number, class, total_cost, food_order, checkin_bags) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        
+    	 PreparedStatement stmt = connection.prepareStatement(newBooking);
+        
+        stmt.setInt(1, member_id);
+        stmt.setInt(2, flight_id);
+        stmt.setString(3, checkin_date);
+        stmt.setString(4, seat_number);
+        stmt.setString(5, seat_class);
+        stmt.setDouble(6, total_cost);
+        stmt.setString(7, food_order);
+        stmt.setInt(8, checkin_bags);
+        
+        stmt.executeUpdate();
+        return true;
+    }
+
+    public boolean deleteBooking(int booking_id, int member_id) throws SQLException {
+	String cancelBooking = "DELETE FROM bookings WHERE booking_id = ? AND member_id = ?";
+	     
+	PreparedStatement stmt = connection.prepareStatement(cancelBooking);
+	     
+	stmt.setInt(1, booking_id);
+	stmt.setInt(2, member_id);
+	     
+	stmt.executeUpdate();
+	return true;
     }
 
     public boolean viewBooking(int booking_ID) throws SQLException {
@@ -155,7 +167,21 @@ public class Model {
         return true;
     }
 	    
-	
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     public boolean setCurrentView(String currentView) {
         if (currentView.equals("Home") || currentView.equals("Admin Menu") ||
                 currentView.equals("Passenger Menu") || currentView.equals("Exit Program")) {
