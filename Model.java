@@ -40,7 +40,7 @@ public class Model {
         	    	scanner.nextLine();
         			
         	    	// FILL IN !!
-        			String updateBooking = "UPDATE bookings SET XXX WHERE booking_id = ?";
+        			String updateBooking = "UPDATE bookings SET ___ WHERE booking_id = ?";
         			
         			stmt = con.prepareStatement(updateBooking);
         			break;
@@ -110,7 +110,7 @@ public class Model {
     
     public boolean createFlight(String last_name, String first_name, String job_title, String hire_date, float salary, String department) throws SQLException {
     	String insertEmployee = "INSERT INTO Employee (last_name, first_name, job_title, salary, hire_date, department) VALUES (?, ?, ?, ?, ?, ?)";
-		PreparedStatement stmt = connect.prepareStatement(insertEmployee);
+		PreparedStatement stmt = connection.prepareStatement(insertEmployee);
 		
 		stmt.setString(1, last_name);
         stmt.setString(2, first_name);
@@ -134,7 +134,7 @@ public class Model {
         return true;
     }
 
-    public boolean viewBooking(int bookingID) throws SQLException {
+    public boolean viewBooking(int booking_ID) throws SQLException {
         // define the query needed to get the flight to delete, '?' is a placeholder
         String query = "select b.ref_id as booking_no, flight_id, p.passenger_id, last_name, first_name, passport_number, birthdate, contact_no, email_address, vip_status from bookings b join passengers p on b.passenger_id = p.passenger_id where booking_id = ?";
         
