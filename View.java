@@ -10,7 +10,8 @@ public class View implements ActionListener /*, DocumentListener, ListSelectionL
     private JPanel adminPnl, editEmp, editFlight, genRep;
     private JPanel passPnl, manageAcc, bookFlight;
     private JButton menuAdmin, menuPassenger, menuExit, menuHome;
-    private JButton genFlight, genRevenue, genEmployee, genPassenger;
+    private JButton submitOcc, submitRev, submitStats, submitPass;
+    private JComboBox monthComboBox, yearComboBox;
 
     public View(Model model) {
         this.model = new Model();
@@ -106,7 +107,7 @@ public class View implements ActionListener /*, DocumentListener, ListSelectionL
 
     public JPanel createHome() {
         JPanel homePnl = new JPanel();
-        homePnl.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        homePnl.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         homePnl.setBackground(Color.WHITE);
 
 
@@ -116,11 +117,11 @@ public class View implements ActionListener /*, DocumentListener, ListSelectionL
     public JPanel createAdmin() {
         this.adminPnl = new JPanel();
         this.adminPnl.setLayout(new CardLayout());
-        this.adminPnl.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        this.adminPnl.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         JPanel buttonsPnl = new JPanel();
         buttonsPnl.setLayout(new BorderLayout());
-        buttonsPnl.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        buttonsPnl.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         JPanel northPnl = new JPanel();
         northPnl.setBackground(Color.WHITE);
@@ -129,7 +130,7 @@ public class View implements ActionListener /*, DocumentListener, ListSelectionL
 
         JPanel centerPnl = new JPanel();
         centerPnl.setLayout(new GridLayout(3, 1,  5, 5));
-        centerPnl.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        centerPnl.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         centerPnl.setBackground(Color.WHITE);
 
         JButton editEmployee = new JButton("Edit Employee Records");
@@ -155,7 +156,7 @@ public class View implements ActionListener /*, DocumentListener, ListSelectionL
     public JPanel editEmployee(JButton editEmployee) {
         this.editEmp = new JPanel();
         this.editEmp.setLayout(new BorderLayout());
-        this.editEmp.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        this.editEmp.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         JPanel northEmp = new JPanel();
         northEmp.setBackground(Color.WHITE);
@@ -189,7 +190,7 @@ public class View implements ActionListener /*, DocumentListener, ListSelectionL
     public JPanel editFlight(JButton editFlight) {
         this.editFlight = new JPanel();
         this.editFlight.setLayout(new BorderLayout());
-        this.editFlight.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        this.editFlight.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         JPanel southEmp = new JPanel();
         southEmp.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -218,26 +219,50 @@ public class View implements ActionListener /*, DocumentListener, ListSelectionL
     public JPanel generateReport(JButton genReport) {
         this.genRep = new JPanel();
         this.genRep.setLayout(new BorderLayout());
-        this.genRep.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        this.genRep.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         JPanel northPnl = new JPanel();
+        northPnl.setLayout(new GridBagLayout());
         northPnl.setBackground(Color.WHITE);
-        JLabel repLabel = new JLabel("Generate Reports");
-        northPnl.add(repLabel);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+
+        JLabel yearLabel = new JLabel("Select Year");
+        JLabel monthLabel = new JLabel("Select Month");
+
+        String[] months = {"January", "February", "March", "April", "May", "June",
+                            "July", "August", "September", "October", "November", "December"};
+
+        this.monthComboBox = new JComboBox<>(months);
+        this.monthComboBox.setSelectedIndex(-1);
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        northPnl.add(yearLabel, gbc);
+
+        gbc.gridx = 1;
+        //northPnl.add(this.yearComboBox, gbc);
+
+        gbc.gridx = 2;
+        northPnl.add(monthLabel, gbc);
+
+        gbc.gridx = 3;
+        northPnl.add(this.monthComboBox, gbc);
+
 
         JPanel centerPnl = new JPanel();
         centerPnl.setLayout(new GridLayout(2, 2, 5, 5));
         centerPnl.setBackground(Color.WHITE);
-        centerPnl.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        JButton flight = new JButton("Flight Occupancy Report");
-        JButton revenue = new JButton("Revenue Report");
-        JButton passenger = new JButton("Passenger Report");
-        JButton employee = new JButton("Employee Statistics Report");
+        centerPnl.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        this.submitOcc = new JButton("Flight Occupancy Report");
+        this.submitRev = new JButton("Revenue Report");
+        this.submitPass = new JButton("Passenger Report");
+        this.submitStats = new JButton("Employee Statistics Report");
 
-        centerPnl.add(flight);
-        centerPnl.add(revenue);
-        centerPnl.add(passenger);
-        centerPnl.add(employee);
+        centerPnl.add(this.submitOcc);
+        centerPnl.add(this.submitRev);
+        centerPnl.add(this.submitPass);
+        centerPnl.add(this.submitStats);
 
         JPanel southPnl = new JPanel();
         southPnl.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -258,6 +283,7 @@ public class View implements ActionListener /*, DocumentListener, ListSelectionL
 
         backBtn.addActionListener((ActionEvent e) -> {
             CardLayout cl = (CardLayout) this.adminPnl.getLayout();
+            this.monthComboBox.setSelectedIndex(-1);
 
             cl.show(this.adminPnl, "buttons");
         });
@@ -268,11 +294,11 @@ public class View implements ActionListener /*, DocumentListener, ListSelectionL
     public JPanel createPassenger() {
         this.passPnl = new JPanel();
         this.passPnl.setLayout(new CardLayout());
-        this.passPnl.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        this.passPnl.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         JPanel buttonsPnl = new JPanel();
         buttonsPnl.setLayout(new BorderLayout());
-        buttonsPnl.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        buttonsPnl.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         JPanel northPnl = new JPanel();
         northPnl.setBackground(Color.WHITE);
@@ -281,7 +307,7 @@ public class View implements ActionListener /*, DocumentListener, ListSelectionL
 
         JPanel centerPnl = new JPanel();
         centerPnl.setLayout(new GridLayout(2, 1,  5, 5));
-        centerPnl.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        centerPnl.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         centerPnl.setBackground(Color.WHITE);
 
         JButton bookFlight = new JButton("Book a Flight");
@@ -312,8 +338,6 @@ public class View implements ActionListener /*, DocumentListener, ListSelectionL
 
         return this.manageAcc;
     }
-
-
 
     public void setMenuEnabled(boolean home, boolean admin, boolean passenger, boolean exit) {
         if (this.menuHome != null) {
@@ -348,7 +372,7 @@ public class View implements ActionListener /*, DocumentListener, ListSelectionL
         // update view in gui
         this.showView(currentView);
         // update submit buttons based on missing fields
-        // view.setSubmitEnabled();
+        this.setSubmitEnabled();
     }
 
     @Override
@@ -386,7 +410,27 @@ public class View implements ActionListener /*, DocumentListener, ListSelectionL
         this.menuPassenger.addActionListener(listener);
         this.menuExit.addActionListener(listener);
 
+        this.monthComboBox.addActionListener(listener);
+    }
 
+    public void setSubmitEnabled() {
+        // generate reports
+        if(/* this.yearComboBox.getSelectedIndex() == -1 || */ this.monthComboBox.getSelectedIndex() == -1) {
+            this.submitStats.setEnabled(false);
+            this.submitRev.setEnabled(false);
+            this.submitOcc.setEnabled(false);
+            this.submitPass.setEnabled(false);
+        } else {
+            this.submitStats.setEnabled(true);
+            this.submitRev.setEnabled(true);
+            this.submitOcc.setEnabled(true);
+            this.submitPass.setEnabled(true);
+        }
+
+    }
+
+    public void clearSelection() {
+        this.monthComboBox.setSelectedIndex(-1);
     }
 
 }
