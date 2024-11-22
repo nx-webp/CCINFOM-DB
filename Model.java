@@ -32,52 +32,6 @@ public class Model {
         do {
         	
         	switch (choice) {
-        		case 1: { //book a new flight
-        	    	
-        	    	//initialize variables by asking for user input
-        	    	System.out.println("Enter Member ID: ");
-        	    	member_id = scanner.nextInt();
-        	    	scanner.nextLine();
-        	    	
-        	    	System.out.println("Enter Flight ID: ");
-        	    	flight_id = scanner.nextInt();
-        	    	scanner.nextLine();
-        	    	
-        	    	System.out.println("Enter Check-In Date (YYYY-MM-DD): ");
-        	    	checkin_date = scanner.nextLine();
-        	    	
-        	    	System.out.println("Enter Desired Seat Number: ");
-        	    	seat_number = scanner.nextLine();
-        	    	
-        	    	System.out.println("Enter Desired Seat Class: ");
-        	    	seat_class = scanner.nextLine();
-        	    	
-        	    	//total cost
-        	    	
-        	    	System.out.println("Choose your food order: ");
-        	    	food_order = scanner.nextLine();
-        	    	
-        	    	System.out.println("Number of Bags to Check-In: ");
-        	    	checkin_bags = scanner.nextInt();
-        	    	scanner.nextLine();
-        	    	
-        	    	String newBooking = "INSERT INTO bookings (member_id, flight_id, checkin_date, seat_number, class, total_cost, food_order, checkin_bags) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        	        
-        	        stmt = con.prepareStatement(newBooking);
-        	        
-        	        stmt.setInt(1, member_id);
-		            stmt.setInt(2, flight_id);
-		            stmt.setString(3, checkin_date);
-		            stmt.setString(4, seat_number);
-		            stmt.setString(5, seat_class);
-		            stmt.setDouble(6, total_cost);
-		            stmt.setString(7, food_order);
-		            stmt.setInt(8, checkin_bags);
-        	        
-        	        stmt.executeUpdate();
-        	        System.out.println("Data inserted successfully.");
-        			break;
-        		}
         		case 2: { //update booking
         			int booking_id;
         			
@@ -91,36 +45,34 @@ public class Model {
         			stmt = con.prepareStatement(updateBooking);
         			break;
         		}
-        		case 3: { //cancel booking
-        			int booking_id;
-        			
-        			System.out.println("Enter Booking ID: ");
-        	    	booking_id = scanner.nextInt();
-        	    	scanner.nextLine();
-        	    	
-        	    	System.out.println("Enter Member ID: "); //for verification
-        	    	member_id = scanner.nextInt();
-        	    	scanner.nextLine();
-        			
-        			String cancelBooking = "DELETE FROM bookings WHERE booking_id = ? AND member_id = ?";
-        			
-        			stmt = con.prepareStatement(cancelBooking);
-        			
-        			stmt.setInt(1, booking_id);
-        			stmt.setInt(2, member_id);
-        			
-        			stmt = con.prepareStatement(cancelBooking);
-        			break;
-        		}
         	}
         	
         } while (choice != 0);
         
         scanner.close();
     }*/
+    
+    public boolean newBooking (int member_id, int flight_id,
+    		String checkin_date, String seat_number, String seat_class,
+    		Float total_cost, String food_order, int checkin_bags) throws SQLException {
+    	String newBooking = "INSERT INTO bookings (member_id, flight_id, checkin_date, seat_number, class, total_cost, food_order, checkin_bags) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        
+    	 PreparedStatement stmt = connection.prepareStatement(newBooking);
+        
+        stmt.setInt(1, member_id);
+        stmt.setInt(2, flight_id);
+        stmt.setString(3, checkin_date);
+        stmt.setString(4, seat_number);
+        stmt.setString(5, seat_class);
+        stmt.setDouble(6, total_cost);
+        stmt.setString(7, food_order);
+        stmt.setInt(8, checkin_bags);
+        
+        stmt.executeUpdate();
+        return true;
+    }
 
 	 public boolean cancelBooking(int booking_id, int member_id) throws SQLException {
-	     // define the query needed to get the flight to delete, '?' is a placeholder
 		 String cancelBooking = "DELETE FROM bookings WHERE booking_id = ? AND member_id = ?";
 	     
 	     PreparedStatement stmt = connection.prepareStatement(cancelBooking);
