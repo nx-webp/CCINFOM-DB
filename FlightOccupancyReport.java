@@ -11,9 +11,10 @@ public class FlightOccupancyReport {
         for(Flight flight : flights) {
             if(flight.getFlight_id() == flight_id) {
 
-                origin = flight.getOrigin();
-                destination = flight.getDestination();
-                numPassenger = 0;
+                this.flight_id = flight_id;
+                this.origin = flight.getOrigin();
+                this.destination = flight.getDestination();
+                this.numPassenger = 0;
 
                 for(Booking booking : bookings) {
                     if(booking.getFlight_id() == flight_id &&
