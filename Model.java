@@ -16,6 +16,16 @@ public class Model {
         this.employees = new ArrayList<>();
         this.bookings = new ArrayList<>();
         this.passengers = new ArrayList<>();
+	/*
+	while(resultset(flightID))
+ 		flights.add(new Flight(flightID, price))
+   	while(resultset(employee_id))
+ 		flights.add(new Flight(employee_id))
+   	while(resultset(ref_id))
+ 		flights.add(new Flight(ref_id))
+   	while(resultset(passenger_id))
+ 		flights.add(new Flight(passenger_id))
+     	*/
     }
     
     /* public static void flightBooking (Statement statement, Connection con) throws SQLException {
