@@ -676,7 +676,7 @@ public class Model {
     public ArrayList<Passenger> getPassengers() {
         return passengers;
     }
-    
+
 	    
     
     
