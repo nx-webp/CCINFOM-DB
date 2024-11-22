@@ -1,8 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class View {
+public class View implements ActionListener /*, DocumentListener, ListSelectionListener */{
+    private Model model;
     private JFrame mainFrame;
     private JPanel mainPnl, centerMainPnl;
     private JButton menuAdmin, menuPassenger, menuExit;
@@ -11,7 +13,9 @@ public class View {
     private JButton manageFlight, manageBook, manageEmployee, managePassenger;
     private JButton genFlight, genRevenue, genEmployee, genPassenger;
 
-    public View() {
+    public View(Model model) {
+        this.model = new Model();
+
         this.mainFrame = new JFrame();
         this.mainFrame.setTitle("Airline Database Management System");
         this.mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -26,6 +30,9 @@ public class View {
 
         this.mainFrame.add(this.mainPnl);
         this.mainFrame.setVisible(true);
+
+        this.setActionListener(this);
+        this.updateView();
     }
 
     public JPanel createHeader() {
@@ -337,6 +344,52 @@ public class View {
 
     public void showView(String viewName) {
         ((CardLayout) centerMainPnl.getLayout()).show(centerMainPnl, viewName);
+    }
+
+    public void updateView() {
+        String currentView = model.getCurrentView();
+
+        // update buttons based on current view
+        this.setMenuEnabled(
+                !currentView.equals("Home"),
+                !currentView.equals("Admin Menu"),
+                !currentView.equals("Passenger Menu"),
+                !currentView.equals("Exit Program")
+        );
+
+        // update view in gui
+        this.showView(currentView);
+        // update submit buttons based on missing fields
+        // view.setSubmitEnabled();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent event) {
+        // ignore null action commands (from changing selected indexes)
+        if (event == null) {
+            return;
+        }
+        String action = event.getActionCommand();
+
+        // clear selections when view changes
+        if (model.setCurrentView(action)) {
+            //view.clearHotelSelection();
+            //view.clearRoomSelection();
+        }
+
+        // show in console action (except comboBoxChanged)
+        System.out.println("ACTION READ: " + action);
+
+        // handle the event based on current view
+//        switch (model.getCurrentView()) {
+//            case "Create Hotel" -> this.handleCreate(event);
+//            case "View Hotels" -> this.handleView(event);
+//            case "Manage Hotels" -> this.handleManage(event);
+//            case "Book Reservation" -> this.handleBook(event);
+//        }
+
+        // update view after any action
+        this.updateView();
     }
 
     public void setActionListener(ActionListener listener)
