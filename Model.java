@@ -116,7 +116,18 @@ public class Model {
         stmt.executeUpdate();
         return true;
     }
-    
+
+    public boolean updateGateNumber(int flightID, int gate_number) throws SQLException{
+        String query = "UPDATE flights SET gate_number = ? WHERE flightID = ?";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+        
+        stmt.setInt(1, flightID);
+        stmt.setInt(2, flightID);
+        stmt.executeUpdate();
+        return true;
+    }
+	
     //booking functions
     
     public boolean createBooking (int member_id, int flight_id,
