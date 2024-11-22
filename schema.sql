@@ -62,32 +62,6 @@ CREATE Table employees (
     
 ALTER TABLE employees AUTO_INCREMENT = 100000;
 
-/* Booking Records:
-		Booking Reference (INT 8), Member ID (VARCHAR 6), Flight ID(VARCHAR 6), 
-        Check-In Date (DATE), Seat Number (VARCHAR3), Class (VARCHAR 8), 
-        Food Order (VARCHAR 20), Number of Check-In Baggage (INT 2), Total Cost (INT 10)
-        
-        PRIMARY KEY: Booking Reference
-        FOREIGN KEYS: Member ID (to Passenger Table), Flight ID (to Flight Table)
-*/
-
-CREATE Table bookings (
-	ref_id MEDIUMINT NOT NULL AUTO_INCREMENT,
-    passenger_id MEDIUMINT NOT NULL,
-    flight_id MEDIUMINT NOT NULL,
-    checkin_date DATE,
-    seat_no VARCHAR(3),
-    seat_class ENUM('Economy', 'Business', 'First'),
-    total_cost DECIMAL (6, 2),
-    food_order ENUM('Beef', 'Pork', 'Chicken', 'Fish', 'Vegan'),
-    ctotal_checkin_bags INT,
-    UNIQUE (ref_id),
-    PRIMARY KEY (ref_id),
-    CONSTRAINT FOREIGN KEY (passenger_id) REFERENCES passengers(passenger_id),
-    CONSTRAINT FOREIGN KEY (flight_id) REFERENCES flights(flight_id));
-
-ALTER TABLE bookings AUTO_INCREMENT = 100000;
-
 /* Flight Records:
 		Flight ID (VARCHAR 6), Origin (VARCHAR 3), Destination (VARCHAR 3), 
         Gate Number (INT 2), Departure Time (DATETIME), Arrival Time (DATETIME), 
@@ -117,3 +91,29 @@ CREATE Table flights (
     CONSTRAINT FOREIGN KEY (flight_attendant) REFERENCES employees(employee_ID));
 
 ALTER TABLE flights AUTO_INCREMENT = 100000;
+
+/* Booking Records:
+		Booking Reference (INT 8), Member ID (VARCHAR 6), Flight ID(VARCHAR 6), 
+        Check-In Date (DATE), Seat Number (VARCHAR3), Class (VARCHAR 8), 
+        Food Order (VARCHAR 20), Number of Check-In Baggage (INT 2), Total Cost (INT 10)
+        
+        PRIMARY KEY: Booking Reference
+        FOREIGN KEYS: Member ID (to Passenger Table), Flight ID (to Flight Table)
+*/
+
+CREATE Table bookings (
+	ref_id MEDIUMINT NOT NULL AUTO_INCREMENT,
+    passenger_id MEDIUMINT NOT NULL,
+    flight_id MEDIUMINT NOT NULL,
+    checkin_date DATE,
+    seat_no VARCHAR(3),
+    seat_class ENUM('Economy', 'Business', 'First'),
+    total_cost DECIMAL (6, 2),
+    food_order ENUM('Beef', 'Pork', 'Chicken', 'Fish', 'Vegan'),
+    ctotal_checkin_bags INT,
+    UNIQUE (ref_id),
+    PRIMARY KEY (ref_id),
+    CONSTRAINT FOREIGN KEY (passenger_id) REFERENCES passengers(passenger_id),
+    CONSTRAINT FOREIGN KEY (flight_id) REFERENCES flights(flight_id));
+
+ALTER TABLE bookings AUTO_INCREMENT = 100000;
