@@ -7,10 +7,8 @@ public class View implements ActionListener /*, DocumentListener, ListSelectionL
     private Model model;
     private JFrame mainFrame;
     private JPanel mainPnl, centerMainPnl;
-    private JButton menuAdmin, menuPassenger, menuExit;
-    private JButton menuHome, menuView, menuManage, menuReport, menuBook;
-    private JButton viewFlight, viewBook, viewEmployee, viewPassenger;
-    private JButton manageFlight, manageBook, manageEmployee, managePassenger;
+    private JPanel adminPnl, editEmp, editFlight, genRep;
+    private JButton menuAdmin, menuPassenger, menuExit, menuHome;
     private JButton genFlight, genRevenue, genEmployee, genPassenger;
 
     public View(Model model) {
@@ -115,9 +113,13 @@ public class View implements ActionListener /*, DocumentListener, ListSelectionL
     }
 
     public JPanel createAdmin() {
-        JPanel adminPnl = new JPanel();
-        adminPnl.setLayout(new BorderLayout());
-        adminPnl.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        this.adminPnl = new JPanel();
+        this.adminPnl.setLayout(new CardLayout());
+        this.adminPnl.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JPanel buttonsPnl = new JPanel();
+        buttonsPnl.setLayout(new BorderLayout());
+        buttonsPnl.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JPanel northPnl = new JPanel();
         northPnl.setBackground(Color.WHITE);
@@ -130,19 +132,115 @@ public class View implements ActionListener /*, DocumentListener, ListSelectionL
         centerPnl.setBackground(Color.WHITE);
 
         JButton editEmployee = new JButton("Edit Employee Records");
-        JButton editFlight = new JButton("Edit Employee Records");
-        JButton genReports = new JButton("Edit Employee Records");
+        JButton editFlight = new JButton("Edit Flight Records");
+        JButton genReports = new JButton("Generate Reports");
 
         centerPnl.add(editEmployee);
         centerPnl.add(editFlight);
         centerPnl.add(genReports);
 
-        adminPnl.add(centerPnl, BorderLayout.CENTER);
+        buttonsPnl.add(northPnl, BorderLayout.NORTH);
+        buttonsPnl.add(centerPnl, BorderLayout.CENTER);
 
+        this.adminPnl.add(buttonsPnl, "buttons");
 
-        adminPnl.add(northPnl, BorderLayout.NORTH);
+        this.adminPnl.add(editEmployee(editEmployee), "Edit Employee Records");
+        this.adminPnl.add(editFlight(editFlight), "Edit Flight Records");
+        this.adminPnl.add(generateReport(genReports), "Generate Reports");
 
-        return adminPnl;
+        return this.adminPnl;
+    }
+
+    public JPanel editEmployee(JButton editEmployee) {
+        this.editEmp = new JPanel();
+        this.editEmp.setLayout(new BorderLayout());
+        this.editEmp.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JPanel northEmp = new JPanel();
+        northEmp.setBackground(Color.WHITE);
+        JLabel empLabel = new JLabel("Edit Employee Records");
+        northEmp.add(empLabel);
+
+        JPanel southEmp = new JPanel();
+        southEmp.setLayout(new FlowLayout(FlowLayout.LEFT));
+        southEmp.setBackground(Color.WHITE);
+
+        JButton backBtn = new JButton("Back");
+        southEmp.add(backBtn);
+
+        this.editEmp.add(southEmp, BorderLayout.SOUTH);
+
+        editEmployee.addActionListener((ActionEvent e) -> {
+            CardLayout cl = (CardLayout) this.adminPnl.getLayout();
+
+            cl.show(this.adminPnl, e.getActionCommand());
+        });
+
+        backBtn.addActionListener((ActionEvent e) -> {
+            CardLayout cl = (CardLayout) this.adminPnl.getLayout();
+
+            cl.show(this.adminPnl, "buttons");
+        });
+
+        return this.editEmp;
+    }
+
+    public JPanel editFlight(JButton editFlight) {
+        this.editFlight = new JPanel();
+        this.editFlight.setLayout(new BorderLayout());
+        this.editFlight.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JPanel southEmp = new JPanel();
+        southEmp.setLayout(new FlowLayout(FlowLayout.LEFT));
+        southEmp.setBackground(Color.WHITE);
+
+        JButton backBtn = new JButton("Back");
+        southEmp.add(backBtn);
+
+        this.editFlight.add(southEmp, BorderLayout.SOUTH);
+
+        editFlight.addActionListener((ActionEvent e) -> {
+            CardLayout cl = (CardLayout) this.adminPnl.getLayout();
+
+            cl.show(this.adminPnl, e.getActionCommand());
+        });
+
+        backBtn.addActionListener((ActionEvent e) -> {
+            CardLayout cl = (CardLayout) this.adminPnl.getLayout();
+
+            cl.show(this.adminPnl, "buttons");
+        });
+
+        return this.editFlight;
+    }
+
+    public JPanel generateReport(JButton genReport) {
+        this.genRep = new JPanel();
+        this.genRep.setLayout(new BorderLayout());
+        this.genRep.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JPanel southEmp = new JPanel();
+        southEmp.setLayout(new FlowLayout(FlowLayout.LEFT));
+        southEmp.setBackground(Color.WHITE);
+
+        JButton backBtn = new JButton("Back");
+        southEmp.add(backBtn);
+
+        this.genRep.add(southEmp, BorderLayout.SOUTH);
+
+        genReport.addActionListener((ActionEvent e) -> {
+            CardLayout cl = (CardLayout) this.adminPnl.getLayout();
+
+            cl.show(this.adminPnl, e.getActionCommand());
+        });
+
+        backBtn.addActionListener((ActionEvent e) -> {
+            CardLayout cl = (CardLayout) this.adminPnl.getLayout();
+
+            cl.show(this.adminPnl, "buttons");
+        });
+
+        return this.genRep;
     }
 
     public JPanel createPassenger() {
@@ -172,95 +270,6 @@ public class View implements ActionListener /*, DocumentListener, ListSelectionL
 
         return passengerPnl;
     }
-
-//    public JPanel createView() {
-//        JPanel viewPnl = new JPanel();
-//        viewPnl.setLayout(new CardLayout());
-//        viewPnl.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-//
-//        JPanel selectionPnl = new JPanel();
-//        selectionPnl.setBackground(Color.WHITE);
-//        selectionPnl.setLayout(new GridBagLayout());
-//        GridBagConstraints gbc = new GridBagConstraints();
-//        gbc.insets = new Insets(20, 20, 20, 20);
-//
-//        this.viewBook = new JButton("View Bookings");
-//        this.viewBook.setPreferredSize(new Dimension(250, 150));
-//
-//        this.viewFlight = new JButton("View Flights");
-//        this.viewFlight.setPreferredSize(new Dimension(250, 150));
-//
-//        this.viewPassenger = new JButton("View Passengers");
-//        this.viewPassenger.setPreferredSize(new Dimension(250, 150));
-//
-//        this.viewEmployee = new JButton("View Employees");
-//        this.viewEmployee.setPreferredSize(new Dimension(250, 150));
-//
-//        gbc.gridx = 0;
-//        gbc.gridy = 1;
-//        selectionPnl.add(this.viewBook, gbc);
-//
-//        gbc.gridx = 1;
-//        gbc.gridy = 1;
-//        selectionPnl.add(this.viewFlight, gbc);
-//
-//        gbc.gridx = 0;
-//        gbc.gridy = 2;
-//        selectionPnl.add(this.viewPassenger, gbc);
-//
-//        gbc.gridx = 1;
-//        gbc.gridy = 2;
-//        selectionPnl.add(this.viewEmployee, gbc);
-//
-//        viewPnl.add(selectionPnl, "Selection");
-//
-//        return viewPnl;
-//    }
-
-//    public JPanel createManage() {
-//        JPanel managePnl = new JPanel();
-//        managePnl.setLayout(new CardLayout());
-//        managePnl.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-//
-//        JPanel selectionPnl = new JPanel();
-//        selectionPnl.setBackground(Color.WHITE);
-//        selectionPnl.setLayout(new GridBagLayout());
-//        GridBagConstraints gbc = new GridBagConstraints();
-//        gbc.insets = new Insets(20, 20, 20, 20);
-//
-//        this.manageBook = new JButton("Manage Bookings");
-//        this.manageBook.setPreferredSize(new Dimension(250, 150));
-//
-//        this.manageFlight = new JButton("Manage Flights");
-//        this.manageFlight.setPreferredSize(new Dimension(250, 150));
-//
-//        this.managePassenger = new JButton("Manage Passengers");
-//        this.managePassenger.setPreferredSize(new Dimension(250, 150));
-//
-//        this.manageEmployee = new JButton("Manage Employees");
-//        this.manageEmployee.setPreferredSize(new Dimension(250, 150));
-//
-//        gbc.gridx = 0;
-//        gbc.gridy = 1;
-//        selectionPnl.add(this.manageBook, gbc);
-//
-//        gbc.gridx = 1;
-//        gbc.gridy = 1;
-//        selectionPnl.add(this.manageFlight, gbc);
-//
-//        gbc.gridx = 0;
-//        gbc.gridy = 2;
-//        selectionPnl.add(this.managePassenger, gbc);
-//
-//        gbc.gridx = 1;
-//        gbc.gridy = 2;
-//        selectionPnl.add(this.manageEmployee, gbc);
-//
-//        managePnl.add(selectionPnl, "Selection");
-//
-//
-//        return managePnl;
-//    }
 
     public JPanel createReport() {
         JPanel reportPnl = new JPanel();
@@ -371,22 +380,20 @@ public class View implements ActionListener /*, DocumentListener, ListSelectionL
         }
         String action = event.getActionCommand();
 
-        // clear selections when view changes
-        if (model.setCurrentView(action)) {
-            //view.clearHotelSelection();
-            //view.clearRoomSelection();
+        model.setCurrentView(action);
+
+        // once user clicks exit program button
+        if(action.equals("Exit Program")) {
+            System.exit(0);
         }
 
-        // show in console action (except comboBoxChanged)
-        System.out.println("ACTION READ: " + action);
+        // show in console action
+        System.out.println("ACTION: " + action);
 
-        // handle the event based on current view
-//        switch (model.getCurrentView()) {
-//            case "Create Hotel" -> this.handleCreate(event);
-//            case "View Hotels" -> this.handleView(event);
-//            case "Manage Hotels" -> this.handleManage(event);
-//            case "Book Reservation" -> this.handleBook(event);
-//        }
+        switch(model.getCurrentView()) {
+           // case "Admin Menu" -> this.handleAdmin(event);
+            //case "Passenger Menu" -> this.handlePassenger(event);
+        }
 
         // update view after any action
         this.updateView();
@@ -399,6 +406,8 @@ public class View implements ActionListener /*, DocumentListener, ListSelectionL
         this.menuAdmin.addActionListener(listener);
         this.menuPassenger.addActionListener(listener);
         this.menuExit.addActionListener(listener);
+
+
     }
 
 }
