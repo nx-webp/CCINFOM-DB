@@ -10,8 +10,9 @@ public class Model {
     private ArrayList<Passenger> passengers;
     private ArrayList<Booking> bookings;
 
-    public Model() {
+    public Model(Connection connection) {
         this.currentView = "Home";
+        this.connection = connection;
         this.flights = new ArrayList<>();
         this.employees = new ArrayList<>();
         this.bookings = new ArrayList<>();

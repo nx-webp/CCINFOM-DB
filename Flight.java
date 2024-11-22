@@ -11,6 +11,15 @@ import java.util.ArrayList;
  */
 public class Flight {
     private int flight_id;
+    private int gate_number;
+    private String destination;
+    private String origin;
+    private String departure;
+    private String arrival;
+    private int pilot_id;
+    private int copilot_id;
+    private int lead_attendant;
+    private int flight_attendant;
     private ArrayList<Seat> seats;
     private int seatAmount = 300;
     private double price;
@@ -132,4 +141,81 @@ public class Flight {
     public int getFlight_id(){
         return this.flight_id;
     }
+
+    public String getOrigin() {
+        return origin;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
+    public int getCopilot_id() {
+        return copilot_id;
+    }
+
+    public int getFlight_attendant() {
+        return flight_attendant;
+    }
+
+    public int getGate_number() {
+        return gate_number;
+    }
+
+    public int getLead_attendant() {
+        return lead_attendant;
+    }
+
+    public int getPilot_id() {
+        return pilot_id;
+    }
+
+    public String getArrival() {
+        return arrival;
+    }
+
+    public String getDeparture() {
+        return departure;
+    }
+
+    public void setFlight_id(int flight_id) {
+        this.flight_id = flight_id;
+    }
+
+    public void setOrigin(String origin) {
+        this.origin = origin;
+    }
+
+    public void setDestination(String destination) {
+        this.destination = destination;
+    }
+
+    public void setArrival(String arrival) {
+        this.arrival = arrival;
+    }
+
+    public void setCopilot_id(int copilot_id) {
+        this.copilot_id = copilot_id;
+    }
+
+    public void setDeparture(String departure) {
+        this.departure = departure;
+    }
+
+    public void setFlight_attendant(int flight_attendant) {
+        this.flight_attendant = flight_attendant;
+    }
+
+    public void setGate_number(int gate_number) {
+        this.gate_number = gate_number;
+    }
+
+    public void setLead_attendant(int lead_attendant) {
+        this.lead_attendant = lead_attendant;
+    }
+
+    public void setPilot_id(int pilot_id) {
+        this.pilot_id = pilot_id;
+    }
+
 }
