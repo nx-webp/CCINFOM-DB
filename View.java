@@ -8,6 +8,7 @@ public class View implements ActionListener /*, DocumentListener, ListSelectionL
     private JFrame mainFrame;
     private JPanel mainPnl, centerMainPnl;
     private JPanel adminPnl, editEmp, editFlight, genRep;
+    private JPanel passPnl, manageAcc, bookFlight;
     private JButton menuAdmin, menuPassenger, menuExit, menuHome;
     private JButton genFlight, genRevenue, genEmployee, genPassenger;
 
@@ -219,14 +220,35 @@ public class View implements ActionListener /*, DocumentListener, ListSelectionL
         this.genRep.setLayout(new BorderLayout());
         this.genRep.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JPanel southEmp = new JPanel();
-        southEmp.setLayout(new FlowLayout(FlowLayout.LEFT));
-        southEmp.setBackground(Color.WHITE);
+        JPanel northPnl = new JPanel();
+        northPnl.setBackground(Color.WHITE);
+        JLabel repLabel = new JLabel("Generate Reports");
+        northPnl.add(repLabel);
+
+        JPanel centerPnl = new JPanel();
+        centerPnl.setLayout(new GridLayout(2, 2, 5, 5));
+        centerPnl.setBackground(Color.WHITE);
+        centerPnl.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        JButton flight = new JButton("Flight Occupancy Report");
+        JButton revenue = new JButton("Revenue Report");
+        JButton passenger = new JButton("Passenger Report");
+        JButton employee = new JButton("Employee Statistics Report");
+
+        centerPnl.add(flight);
+        centerPnl.add(revenue);
+        centerPnl.add(passenger);
+        centerPnl.add(employee);
+
+        JPanel southPnl = new JPanel();
+        southPnl.setLayout(new FlowLayout(FlowLayout.LEFT));
+        southPnl.setBackground(Color.WHITE);
 
         JButton backBtn = new JButton("Back");
-        southEmp.add(backBtn);
+        southPnl.add(backBtn);
 
-        this.genRep.add(southEmp, BorderLayout.SOUTH);
+        this.genRep.add(northPnl, BorderLayout.NORTH);
+        this.genRep.add(centerPnl, BorderLayout.CENTER);
+        this.genRep.add(southPnl, BorderLayout.SOUTH);
 
         genReport.addActionListener((ActionEvent e) -> {
             CardLayout cl = (CardLayout) this.adminPnl.getLayout();
@@ -244,96 +266,53 @@ public class View implements ActionListener /*, DocumentListener, ListSelectionL
     }
 
     public JPanel createPassenger() {
-        JPanel passengerPnl = new JPanel();
-        passengerPnl.setLayout(new BorderLayout());
-        passengerPnl.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        this.passPnl = new JPanel();
+        this.passPnl.setLayout(new CardLayout());
+        this.passPnl.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JPanel buttonsPnl = new JPanel();
+        buttonsPnl.setLayout(new BorderLayout());
+        buttonsPnl.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JPanel northPnl = new JPanel();
         northPnl.setBackground(Color.WHITE);
         JLabel label = new JLabel("Passenger's Menu");
         northPnl.add(label);
 
-        passengerPnl.add(northPnl, BorderLayout.NORTH);
-
         JPanel centerPnl = new JPanel();
         centerPnl.setLayout(new GridLayout(2, 1,  5, 5));
         centerPnl.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         centerPnl.setBackground(Color.WHITE);
 
-        JButton bookFlight = new JButton("Book Flight");
-        JButton manageAccount = new JButton("Manage Account");
+        JButton bookFlight = new JButton("Book a Flight");
+        JButton manageAcc = new JButton("Manage Your Account");
 
         centerPnl.add(bookFlight);
-        centerPnl.add(manageAccount);
+        centerPnl.add(manageAcc);
 
-        passengerPnl.add(centerPnl, BorderLayout.CENTER);
+        buttonsPnl.add(northPnl, BorderLayout.NORTH);
+        buttonsPnl.add(centerPnl, BorderLayout.CENTER);
 
-        return passengerPnl;
+        this.passPnl.add(buttonsPnl, "buttons");
+
+        this.passPnl.add(bookFlight(bookFlight), "Book a Flight");
+        this.passPnl.add(manageAcc(manageAcc), "Manage Your Account");
+
+        return this.passPnl;
     }
 
-    public JPanel createReport() {
-        JPanel reportPnl = new JPanel();
-        reportPnl.setLayout(new CardLayout());
-        reportPnl.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    public JPanel bookFlight(JButton bookFlight) {
+        this.bookFlight = new JPanel();
 
-        JPanel selectionPnl = new JPanel();
-        selectionPnl.setBackground(Color.WHITE);
-        selectionPnl.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(20, 20, 20, 20);
-
-        this.genFlight = new JButton("Flight Occupancy Report");
-        //this.genFlight.setFont(new Font("Arial", Font.BOLD, 17));
-        this.genFlight.setPreferredSize(new Dimension(250, 150));
-
-        this.genRevenue = new JButton("Revenue Report");
-        this.genRevenue.setPreferredSize(new Dimension(250, 150));
-
-        this.genPassenger = new JButton("Passenger Report");
-        this.genPassenger.setPreferredSize(new Dimension(250, 150));
-
-        this.genEmployee = new JButton("Employee Statistics Report");
-        this.genEmployee.setPreferredSize(new Dimension(250, 150));
-
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        selectionPnl.add(this.genFlight, gbc);
-
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        selectionPnl.add(this.genRevenue, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        selectionPnl.add(this.genPassenger, gbc);
-
-        gbc.gridx = 1;
-        gbc.gridy = 2;
-        selectionPnl.add(this.genEmployee, gbc);
-
-        reportPnl.add(selectionPnl, "Selection");
-
-        return reportPnl;
+        return this.bookFlight;
     }
 
-    public JPanel createBook() {
-        JPanel bookPnl = new JPanel();
-        bookPnl.setLayout(new BorderLayout());
-        bookPnl.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    public JPanel manageAcc(JButton manageAcc) {
+        this.manageAcc = new JPanel();
 
-        JPanel northPanel = new JPanel();
-        northPanel.setLayout(new FlowLayout());
-        northPanel.add(new JLabel("Select Flight Listing:"));
-
-        northPanel.setBackground(Color.WHITE);
-
-        bookPnl.add(northPanel, BorderLayout.NORTH);
-
-        JPanel centerPanel = new JPanel();
-        centerPanel.setBackground(Color.WHITE);
-
-        return bookPnl;
+        return this.manageAcc;
     }
+
 
 
     public void setMenuEnabled(boolean home, boolean admin, boolean passenger, boolean exit) {
