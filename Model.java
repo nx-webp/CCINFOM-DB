@@ -67,7 +67,7 @@ public class Model {
     //employee functions
     
     public boolean createEmployee(String last_name, String first_name, String job_title, String hire_date, float salary, String department) throws SQLException {
-    	String insertEmployee = "INSERT INTO Employee (last_name, first_name, job_title, salary, hire_date, department) VALUES (?, ?, ?, ?, ?, ?)";
+    	String insertEmployee = "INSERT INTO employees (last_name, first_name, job_title, salary, hire_date, department) VALUES (?, ?, ?, ?, ?, ?)";
 		PreparedStatement stmt = connection.prepareStatement(insertEmployee);
 		
 	stmt.setString(1, last_name);
