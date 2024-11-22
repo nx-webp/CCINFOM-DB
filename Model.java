@@ -62,7 +62,25 @@ public class Model {
     
     //passenger functions
     
-    
+    public boolean createPassenger(String passport_number, String last_name, String first_name, String birthdate, int contact_no, String email_address, String vip_status) throws SQLException{
+        String query = "INSERT INTO passengers (passport_number, last_name, first_name, birthdate, contact_no, email_address, vip_status) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        PreparedStatement stmt = connection.prepareStatement(query);
+        
+        stmt.setString(1, passport_number);
+        stmt.setString(2, last_name);
+        stmt.setString(3, first_name);
+        stmt.setString(4, birthdate);
+        stmt.setInt(5, contact_no);
+        stmt.setString(6, email_address);
+        stmt.setString(7, vip_status);
+        
+        stmt.executeUpdate();
+        
+        Passenger newPassenger = new Passenger(passengers.get(passengers.size() - 1).getID() + 1);
+        passengers.add(newPassenger);
+        
+        return true;
+    }
     
     //employee functions
     
