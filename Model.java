@@ -5,9 +5,17 @@ import java.util.Scanner;
 public class Model {
     private Connection connection; // refers to the connection to the SQL database
     private String currentView;
+    private ArrayList<Flight> flights;
+    private ArrayList<Employee> employees;
+    private ArrayList<Passenger> passengers;
+    private ArrayList<Booking> bookings;
 
     public Model() {
         this.currentView = "Home";
+	this.flights = new ArrayList<>();
+        this.employees = new ArrayList<>();
+        this.bookings = new ArrayList<>();
+        this.passengers = new ArrayList<>();
     }
     
     /* public static void flightBooking (Statement statement, Connection con) throws SQLException {
@@ -70,6 +78,10 @@ public class Model {
         stmt.setString(6, department);
         
         stmt.executeUpdate();
+
+	Employee newEmployee = new Employee(employees.get(employees.size() - 1).getID() + 1);
+        employees.add(newEmployee);
+        
         return true;
     }
     
