@@ -18,6 +18,7 @@ public class Flight {
     public Flight(int flight_id, double price) {
         this.flight_id = flight_id;
         this.price = price;
+        this.seats = new ArrayList<>();
         for(int i = 1; i <= 30; i++){
             Seat newSeat = new Economy("A" + i, price);
             seats.add(newSeat);
