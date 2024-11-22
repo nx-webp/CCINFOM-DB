@@ -16,6 +16,7 @@ public class Model {
         this.employees = new ArrayList<>();
         this.bookings = new ArrayList<>();
         this.passengers = new ArrayList<>();
+        
 	/*
 	while(resultset(flightID))
  		flights.add(new Flight(flightID, price))
@@ -28,49 +29,12 @@ public class Model {
      	*/
     }
     
-    /* public static void flightBooking (Statement statement, Connection con) throws SQLException {
-    	
-    	//declare variables
-    	int member_id, flight_id, checkin_bags;
-    	float total_cost;
-    	String checkin_date, seat_number, seat_class, food_order;
-    	PreparedStatement stmt = null;
-    	
-    	Scanner scanner = new Scanner(System.in);
-    	int choice;
-    	
-    	System.out.println("\nOptions:");
-        System.out.println("1. Book a New Flight");
-        System.out.println("2. Update Flight Booking");
-        System.out.println("3: Cancel Flight Booking");
-        System.out.println("0. Return to Previous Menu");
-        System.out.print("Enter your choice: ");
-        choice = scanner.nextInt();
-        
-        do {
-        	
-        	switch (choice) {
-        		case 2: { //update booking
-        			int booking_id;
-        			
-        			System.out.println("Enter Booking ID: ");
-        	    	member_id = scanner.nextInt();
-        	    	scanner.nextLine();
-        			
-        	    	// FILL IN !!
-        			String updateBooking = "UPDATE bookings SET ___ WHERE booking_id = ?";
-        			
-        			stmt = con.prepareStatement(updateBooking);
-        			break;
-        		}
-        	}
-        	
-        } while (choice != 0);
-        
-        scanner.close();
-    }*/
     
-    //passenger functions
+    /*
+    ---------------------------------------------------------------------------------------------------
+    PASSENGERS
+    ---------------------------------------------------------------------------------------------------
+    */
     
     public boolean createPassenger(String passport_number, String last_name, String first_name, String birthdate, int contact_no, String email_address, String vip_status) throws SQLException{
         String query = "INSERT INTO passengers (passport_number, last_name, first_name, birthdate, contact_no, email_address, vip_status) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -92,7 +56,99 @@ public class Model {
         return true;
     }
     
-    //employee functions
+    public boolean deletePassenger (int passenger_id) throws SQLException {
+        // define the query needed to get the flight to delete, '?' is a placeholder
+        String query = "DELETE * FROM passengers WHERE passenger_id = ?";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+        
+        stmt.setInt(1, passenger_id);
+        stmt.executeUpdate();
+        return true;
+    }
+    
+    public boolean updatePassport (int passenger_id, String passport_number) throws SQLException{
+        String query = "UPDATE passengers SET passport_number = ? WHERE passenger_id = ?";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+        
+        stmt.setString(1, passport_number);
+        stmt.setInt(2, passenger_id);
+        stmt.executeUpdate();
+        return true;
+    }
+    
+    public boolean updatePLastName (int passenger_id, String last_name) throws SQLException{
+        String query = "UPDATE passengers SET last_name = ? WHERE passenger_id = ?";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+        
+        stmt.setString(1, last_name);
+        stmt.setInt(2, passenger_id);
+        stmt.executeUpdate();
+        return true;
+    }
+    
+    public boolean updatePFirstName (int passenger_id, String first_name) throws SQLException{
+        String query = "UPDATE passengers SET first_name = ? WHERE passenger_id = ?";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+        
+        stmt.setString(1, first_name);
+        stmt.setInt(2, passenger_id);
+        stmt.executeUpdate();
+        return true;
+    }
+    
+    public boolean updateBirthdate (int passenger_id, String birthdate) throws SQLException{
+        String query = "UPDATE passengers SET birthdate = ? WHERE passenger_id = ?";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+        
+        stmt.setString(1, birthdate);
+        stmt.setInt(2, passenger_id);
+        stmt.executeUpdate();
+        return true;
+    }
+    
+    public boolean updateContactNo (int passenger_id, int contact_number) throws SQLException{
+        String query = "UPDATE passengers SET contact_no = ? WHERE passenger_id = ?";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+        
+        stmt.setInt(1, contact_number);
+        stmt.setInt(2, passenger_id);
+        stmt.executeUpdate();
+        return true;
+    }
+    
+    public boolean updateEmail (int passenger_id, String email) throws SQLException{
+        String query = "UPDATE passengers SET email_address = ? WHERE passenger_id = ?";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+        
+        stmt.setString(1, email);
+        stmt.setInt(2, passenger_id);
+        stmt.executeUpdate();
+        return true;
+    }
+    
+    public boolean updateStatus (int passenger_id, String vip_status) throws SQLException{
+        String query = "UPDATE passengers SET vip_status = ? WHERE passenger_id = ?";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+        
+        stmt.setString(1, vip_status);
+        stmt.setInt(2, passenger_id);
+        stmt.executeUpdate();
+        return true;
+    }
+    
+    /*
+    ---------------------------------------------------------------------------------------------------
+    EMPLOYEES
+    ---------------------------------------------------------------------------------------------------
+    */
     
     public boolean createEmployee(String last_name, String first_name, String job_title, String hire_date, float salary, String department) throws SQLException {
     	String insertEmployee = "INSERT INTO employees (last_name, first_name, job_title, salary, hire_date, department) VALUES (?, ?, ?, ?, ?, ?)";
@@ -124,7 +180,77 @@ public class Model {
         return true;
     }
     
-    //flight functions
+    public boolean updateELastName (int employee_id, String last_name) throws SQLException{
+        String query = "UPDATE employees SET last_name = ? WHERE employee_id = ?";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+        
+        stmt.setString(1, last_name);
+        stmt.setInt(2, employee_id);
+        stmt.executeUpdate();
+        return true;
+    }
+    
+    public boolean updateEFirstName (int employee_id, String first_name) throws SQLException{
+        String query = "UPDATE employees SET first_name = ? WHERE employee_id = ?";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+        
+        stmt.setString(1, first_name);
+        stmt.setInt(2, employee_id);
+        stmt.executeUpdate();
+        return true;
+    }
+    
+    public boolean updateJobTitle (int employee_id, String job_title) throws SQLException{
+        String query = "UPDATE employees SET job_title = ? WHERE employee_id = ?";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+        
+        stmt.setString(1, job_title);
+        stmt.setInt(2, employee_id);
+        stmt.executeUpdate();
+        return true;
+    }
+    
+    public boolean updateSalary (int employee_id, float salary) throws SQLException{
+        String query = "UPDATE employees SET salary = ? WHERE employee_id = ?";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+        
+        stmt.setDouble(1, salary);
+        stmt.setInt(2, employee_id);
+        stmt.executeUpdate();
+        return true;
+    }
+    
+    public boolean updateHireDate (int employee_id, String hire_date) throws SQLException{
+        String query = "UPDATE employees SET hire_date = ? WHERE employee_id = ?";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+        
+        stmt.setString(1, hire_date);
+        stmt.setInt(2, employee_id);
+        stmt.executeUpdate();
+        return true;
+    }
+    
+    public boolean updateDepartment (int employee_id, String department) throws SQLException{
+        String query = "UPDATE employees SET department = ? WHERE employee_id = ?";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+        
+        stmt.setString(1, department);
+        stmt.setInt(2, employee_id);
+        stmt.executeUpdate();
+        return true;
+    }
+    
+    /*
+    ---------------------------------------------------------------------------------------------------
+    FLIGHTS
+    ---------------------------------------------------------------------------------------------------
+    */
     
     public boolean createFlight(int gate_number, String destination, String origin, String departure, String arrival, int pilot_id, int copilot_id, int lead_attendant_id, int flight_attendant_id, double price) throws SQLException {
 	String query = "insert into flights (gate_number, destination, origin, departure, arrival, pilot_id, copilot_id, lead_attendant, flight_attendant) values (?, ?, ?, ?, ?, ?, ?, ?, ?);";
@@ -163,22 +289,114 @@ public class Model {
         
         PreparedStatement stmt = connection.prepareStatement(query);
         
-        stmt.setInt(1, flightID);
-        stmt.setInt(2, gate_number);
+        stmt.setInt(1, gate_number);
+        stmt.setInt(2, flightID);
+        stmt.executeUpdate();
+        return true;
+    }
+    
+    public boolean updateDesination (int flightID, String destination) throws SQLException{
+        String query = "UPDATE flights SET destination = ? WHERE employee_id = ?";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+        
+        stmt.setString(1, destination);
+        stmt.setInt(2, flightID);
+        stmt.executeUpdate();
+        return true;
+    }
+    
+    public boolean updateOrigin (int flightID, String origin) throws SQLException{
+        String query = "UPDATE flights SET origin = ? WHERE employee_id = ?";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+        
+        stmt.setString(1, origin);
+        stmt.setInt(2, flightID);
+        stmt.executeUpdate();
+        return true;
+    }
+    
+    public boolean updateDeparture (int flightID, String departure) throws SQLException{
+        String query = "UPDATE flights SET departure = ? WHERE employee_id = ?";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+        
+        stmt.setString(1, departure);
+        stmt.setInt(2, flightID);
+        stmt.executeUpdate();
+        return true;
+    }
+    
+    public boolean updateArrival (int flightID, String arrival) throws SQLException{
+        String query = "UPDATE flights SET arrival = ? WHERE employee_id = ?";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+        
+        stmt.setString(1, arrival);
+        stmt.setInt(2, flightID);
+        stmt.executeUpdate();
+        return true;
+    }
+    
+    public boolean updatePilot (int flightID, int pilot_id) throws SQLException{
+        String query = "UPDATE flights SET pilot_id = ? WHERE employee_id = ?";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+        
+        stmt.setInt(1, pilot_id);
+        stmt.setInt(2, flightID);
+        stmt.executeUpdate();
+        return true;
+    }
+    
+    public boolean updateCoPilot (int flightID, int copilot_id) throws SQLException{
+        String query = "UPDATE flights SET copilot_id = ? WHERE employee_id = ?";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+        
+        stmt.setInt(1, copilot_id);
+        stmt.setInt(2, flightID);
+        stmt.executeUpdate();
+        return true;
+    }
+    
+    public boolean updateLeadAttendant (int flightID, int lead_attendant) throws SQLException{
+        String query = "UPDATE flights SET lead_attendant = ? WHERE employee_id = ?";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+        
+        stmt.setInt(1, lead_attendant);
+        stmt.setInt(2, flightID);
+        stmt.executeUpdate();
+        return true;
+    }
+    
+    public boolean updateFlightAttendant (int flightID, int flight_attendant) throws SQLException{
+        String query = "UPDATE flights SET flight_attendant = ? WHERE employee_id = ?";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+        
+        stmt.setInt(1, flight_attendant);
+        stmt.setInt(2, flightID);
         stmt.executeUpdate();
         return true;
     }
 	
-    //booking functions
+    /*
+    ---------------------------------------------------------------------------------------------------
+    BOOKINGS
+    ---------------------------------------------------------------------------------------------------
+    */
     
-    public boolean createBooking (int member_id, int flight_id,
+    public boolean createBooking (int passenger_id, int flight_id,
     		String checkin_date, String seat_number, String seat_class,
     		Float total_cost, String food_order, int checkin_bags) throws SQLException {
-    	String query = "INSERT INTO bookings (member_id, flight_id, checkin_date, seat_number, class, total_cost, food_order, checkin_bags) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    	String query = "INSERT INTO bookings (passenger_id, flight_id, checkin_date, seat_number, seat_class, total_cost, food_order, total_checkin_bags) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         
     	 PreparedStatement stmt = connection.prepareStatement(query);
         
-        stmt.setInt(1, member_id);
+        stmt.setInt(1, passenger_id);
         stmt.setInt(2, flight_id);
         stmt.setString(3, checkin_date);
         stmt.setString(4, seat_number);
@@ -195,17 +413,110 @@ public class Model {
         return true;
     }
 
-    public boolean deleteBooking(int booking_id, int member_id) throws SQLException {
-	String cancelBooking = "DELETE FROM bookings WHERE booking_id = ? AND member_id = ?";
+    public boolean deleteBooking(int booking_id, int passenger_id) throws SQLException {
+	String cancelBooking = "DELETE FROM bookings WHERE booking_id = ?";
 	     
 	PreparedStatement stmt = connection.prepareStatement(cancelBooking);
 	     
 	stmt.setInt(1, booking_id);
-	stmt.setInt(2, member_id);
 	     
 	stmt.executeUpdate();
 	return true;
     }
+    
+    public boolean updatePassenger (int ref_id, int passenger_id) throws SQLException{
+        String query = "UPDATE bookings SET passenger_id = ? WHERE ref_id = ?";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+        
+        stmt.setInt(1, passenger_id);
+        stmt.setInt(2, ref_id);
+        stmt.executeUpdate();
+        return true;
+    }
+    
+    public boolean updateFlight (int ref_id, int flight_id) throws SQLException{
+        String query = "UPDATE bookings SET pass = ? WHERE ref_id = ?";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+        
+        stmt.setInt(1, flight_id);
+        stmt.setInt(2, ref_id);
+        stmt.executeUpdate();
+        return true;
+    }
+    
+    public boolean updateCheckIn (int ref_id, String checkin_date) throws SQLException{
+        String query = "UPDATE bookings SET checkin_date = ? WHERE ref_id = ?";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+        
+        stmt.setString(1, checkin_date);
+        stmt.setInt(2, ref_id);
+        stmt.executeUpdate();
+        return true;
+    }
+    
+    public boolean updateSeat (int ref_id, int seat_number) throws SQLException{
+        String query = "UPDATE bookings SET seat_number = ? WHERE ref_id = ?";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+        
+        stmt.setInt(1, seat_number);
+        stmt.setInt(2, ref_id);
+        stmt.executeUpdate();
+        return true;
+    }
+    
+    public boolean updateClass (int ref_id, String seat_class) throws SQLException{
+        String query = "UPDATE bookings SET seat_class = ? WHERE ref_id = ?";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+        
+        stmt.setString(1, seat_class);
+        stmt.setInt(2, ref_id);
+        stmt.executeUpdate();
+        return true;
+    }
+    
+    public boolean updateTotalCost (int ref_id, float total_cost) throws SQLException{
+        String query = "UPDATE bookings SET total_cost = ? WHERE ref_id = ?";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+        
+        stmt.setDouble(1, total_cost);
+        stmt.setInt(2, ref_id);
+        stmt.executeUpdate();
+        return true;
+    }
+    
+    public boolean updateFoodOrder (int ref_id, String food_order) throws SQLException{
+        String query = "UPDATE bookings SET food_order = ? WHERE ref_id = ?";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+        
+        stmt.setString(1, food_order);
+        stmt.setInt(2, ref_id);
+        stmt.executeUpdate();
+        return true;
+    }
+    
+    public boolean updateTotalBaggage (int ref_id, int total_checkin_bags) throws SQLException{
+        String query = "UPDATE bookings SET total_checkin_bags = ? WHERE ref_id = ?";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+        
+        stmt.setInt(1, total_checkin_bags);
+        stmt.setInt(2, ref_id);
+        stmt.executeUpdate();
+        return true;
+    }
+    
+    /*
+    ---------------------------------------------------------------------------------------------------
+    VIEWS
+    ---------------------------------------------------------------------------------------------------
+    */
 
     public boolean viewBooking(int booking_ID) throws SQLException {
         // define the query needed to get the flight to delete, '?' is a placeholder
