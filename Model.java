@@ -95,6 +95,26 @@ public class Model {
         return true;
     }
 
+    public boolean viewBooking(String bookingID) throws SQLException {
+        // define the query needed to get the flight to delete, '?' is a placeholder
+        String query = "select b.ref_id as booking_no, flight_id, p.passenger_id, last_name, first_name, passport_number, birthdate, contact_no, email_address, vip_status from bookings b join passengers p on b.passenger_id = p.passenger_id where booking_id = ?";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+
+	stmt.setString(1, booking_ID);
+        stmt.executeUpdate();
+        return true;
+    }
+
+    public boolean viewBooking() throws SQLException {
+        // define the query needed to get the flight to delete, '?' is a placeholder
+        String query = "select b.ref_id as booking_no, flight_id, p.passenger_id, last_name, first_name, passport_number, birthdate, contact_no, email_address, vip_status from bookings b join passengers p on b.passenger_id = p.passenger_id";
+        
+        PreparedStatement stmt = connection.prepareStatement(query);
+
+        stmt.executeUpdate();
+        return true;
+    }
 
     public boolean setCurrentView(String currentView) {
         if (currentView.equals("Home") || currentView.equals("Admin Menu") ||
