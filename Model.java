@@ -123,7 +123,7 @@ public class Model {
         PreparedStatement stmt = connection.prepareStatement(query);
         
         stmt.setInt(1, flightID);
-        stmt.setInt(2, flightID);
+        stmt.setInt(2, gate_number);
         stmt.executeUpdate();
         return true;
     }
