@@ -15,6 +15,10 @@ import javax.swing.JOptionPane;
  */
 public class ViewController extends javax.swing.JFrame {
     private Model model;
+    private final ArrayList<Employee> employees = new ArrayList<>();
+    private final ArrayList<Passenger> passengers = new ArrayList<>();
+    private final ArrayList<Flight> flights = new ArrayList<>();
+    private final ArrayList<Booking> bookings = new ArrayList<>();
     /**
      * Creates new form Main
      */
