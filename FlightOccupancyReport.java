@@ -6,27 +6,11 @@ public class FlightOccupancyReport {
     private String destination;
     private int numPassenger;
 
-    public FlightOccupancyReport(int flight_id, String year, String month,
-                                 ArrayList<Flight> flights, ArrayList<Booking> bookings) {
-        for(Flight flight : flights) {
-            if(flight.getFlight_id() == flight_id) {
-
-                this.flight_id = flight_id;
-                this.origin = flight.getOrigin();
-                this.destination = flight.getDestination();
-                this.numPassenger = 0;
-
-                for(Booking booking : bookings) {
-                    if(booking.getFlight_id() == flight_id &&
-                            booking.getCheckin_date().startsWith(year + "-" + month)) {
-                        numPassenger++;
-                    }
-                }
-            }
-
-            //exit loop when flight is found
-            break;
-        }
+    public FlightOccupancyReport(int flight_id, String origin, String destination, int numPassenger) {
+        this.flight_id = flight_id;
+        this.origin = origin;
+        this.destination = destination;
+        this.numPassenger = numPassenger;
     }
 
     public int getFlight_id() {

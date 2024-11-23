@@ -10,6 +10,7 @@ public class Model {
     private ArrayList<Employee> employees;
     private ArrayList<Passenger> passengers;
     private ArrayList<Booking> bookings;
+    private ArrayList<FlightOccupancyReport> foReports;
 
     public Model(Connection connection) {
         this.currentView = "Home";
@@ -19,6 +20,7 @@ public class Model {
         this.employees = new ArrayList<>();
         this.bookings = new ArrayList<>();
         this.passengers = new ArrayList<>();
+        this.foReports = new ArrayList<>();
         
         this.fetchData();
         
@@ -676,9 +678,35 @@ public class Model {
     public ArrayList<Passenger> getPassengers() {
         return passengers;
     }
-
 	    
-    
+    /*
+    ---------------------------------------------------------------------------------------------------
+    GENERATE REPORTS
+    ---------------------------------------------------------------------------------------------------
+    */
+
+    public boolean generateFOR (int year, int month) throws SQLException {
+        String query = "SELECT f.flight_id, f.origin, f.destination, COUNT(b.checkin_date) AS numbers " +
+                        "FROM flights f JOIN bookings b ON f.flight_id = b.flight_id " +
+                        "WHERE YEAR(b.checkin_date) = ? AND MONTH(b.checkin_date) = ? " +
+                        "GROUP BY f.flight_id, f.origin, f.destination " +
+                        "ORDER BY f.flight_id;";
+
+        PreparedStatement stmt = connection.prepareStatement(query);
+
+        stmt.setInt(1, year);
+        stmt.setInt(2, month);
+        ResultSet rs = stmt.executeQuery();
+
+        while(rs.next()) {
+            FlightOccupancyReport holder = new FlightOccupancyReport(rs.getInt("flight_id"),
+                                                                     rs.getString("destination"),
+                                                                     rs.getString("origin"),
+                                                                     rs.getInt("numbers"));
+            foReports.add(holder);
+        }
+        return true;
+    }
     
     
     
