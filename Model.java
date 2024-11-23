@@ -564,7 +564,7 @@ public class Model {
         return true;
     }
 
-    public boolean deleteBooking(int booking_id, int passenger_id) throws SQLException {
+    public boolean deleteBooking(int booking_id) throws SQLException {
 	    String cancelBooking = "DELETE FROM bookings WHERE booking_id = ?";
 	     
 	    PreparedStatement stmt = connection.prepareStatement(cancelBooking);
