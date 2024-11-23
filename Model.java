@@ -715,16 +715,10 @@ public class Model {
     }
 
     public boolean generateESR (int year, int month) throws SQLException {
-        String query = "SELECT f.flight_id, f.origin, f.destination, COUNT(b.checkin_date) AS numbers " +
-                "FROM flights f JOIN bookings b ON f.flight_id = b.flight_id " +
-                "WHERE YEAR(b.checkin_date) = ? AND MONTH(b.checkin_date) = ? " +
-                "GROUP BY f.flight_id, f.origin, f.destination " +
-                "ORDER BY f.flight_id;";
-
-        /*
-        SELECT e.employee_id, COUNT(
-        FROM e
-         */
+        String query = "SELECT e.employee_id, COUNT(f.flight_id) AS numTasks, (e.salary * COUNT(f.flight_id)) AS totalRevenue " +
+                "FROM employees e LEFT JOIN flights f ON e.employee_id IN (f.pilot_id, f.copilot_id, f.lead_attendant, f.flight_attendant)" +
+                "WHERE YEAR(f.departure) = ? AND MONTH(f.departure) = ? " +
+                "GROUP BY e.employee_id, e.salary";
 
         PreparedStatement stmt = connection.prepareStatement(query);
 
@@ -767,7 +761,27 @@ public class Model {
     }
 
     public boolean generatePassR (int year, int month) throws SQLException {
+        String query = "SELECT p.last_name, p.first_name, p.email_address, p.vip_status, COUNT(b.ref_id) AS totalBookings " +
+                "FROM passengers p LEFT JOIN bookings b ON p.passenger_id = b.passenger_id " +
+                "WHERE YEAR(b.checkin_date) = ? AND MONTH(b.checkin_date) = ? " +
+                "GROUP BY p.last_name, p.first_name, p.email_address, p.vip_status;";
 
+        PreparedStatement stmt = connection.prepareStatement(query);
+
+        stmt.setInt(1, year);
+        stmt.setInt(1, month);
+
+        ResultSet rs = stmt.executeQuery();
+
+        while(rs.next()) {
+            PassengerReport holder = new PassengerReport(rs.getString("last_name"),
+                                                     rs.getString("first_name"),
+                                                     rs.getString("email_address"),
+                                                     rs.getString("vip_status"),
+                                                     rs.getInt("totalBookings"));
+
+            passReports.add(holder);
+        }
         return true;
     }
 

@@ -5,10 +5,11 @@ public class PassengerReport {
     private String vip_status;
     private int totalBookings;
 
-    public PassengerReport(String last_name, String first_name, String email_address, int totalBookings) {
+    public PassengerReport(String last_name, String first_name, String email_address, String vip_status, int totalBookings) {
         this.last_name = last_name;
         this.first_name = first_name;
         this.email_address = email_address;
+        this.vip_status = vip_status;
         this.totalBookings = totalBookings;
     }
 
