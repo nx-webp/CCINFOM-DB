@@ -11,6 +11,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import java.sql.Statement;
+import java.sql.ResultSet;
 
 /**
  *
@@ -22,6 +24,10 @@ public class ViewController extends javax.swing.JFrame {
     private final ArrayList<Passenger> passengers = new ArrayList<>();
     private final ArrayList<Flight> flights = new ArrayList<>();
     private final ArrayList<Booking> bookings = new ArrayList<>();
+    private ArrayList<FlightOccupancyReport> foReports = new ArrayList<>();
+    private ArrayList<EmployeeStatisticsReport> esReports = new ArrayList<>();
+    private ArrayList<RevenueReport> revReports = new ArrayList<>();
+    private ArrayList<PassengerReport> passReports = new ArrayList<>();
     /**
      * Creates new form Main
      */
