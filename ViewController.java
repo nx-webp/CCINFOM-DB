@@ -4,6 +4,9 @@
  */
 package group3db;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 /**
@@ -2638,7 +2641,18 @@ public class ViewController extends javax.swing.JFrame {
         }
         //</editor-fold>
         //</editor-fold>
+        String url = "jdbc:mysql://localhost:3306/airport"; // change this too
+        String username = "root";
+        String password = ""; // Change this na lng
+        
+        try {
+            Connection connection = DriverManager.getConnection(url, username, password);
+            System.out.println("Success Connection!");
 
+        }catch(SQLException e) {
+            System.out.println("Database connection failed:" + e.getMessage());
+        }
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
