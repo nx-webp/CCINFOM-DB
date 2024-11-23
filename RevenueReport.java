@@ -9,6 +9,10 @@ public class RevenueReport {
         this.totalRevenue = totalRevenue;
     }
 
+    public int getMonth() {
+        return month;
+    }
+    
     public double getTotalRevenue() {
         return totalRevenue;
     }
