@@ -4,11 +4,13 @@
  */
 package group3db;
 
+import java.awt.HeadlessException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import javax.swing.JOptionPane;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -1863,6 +1865,8 @@ public class ViewController extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_viewBookings9ActionPerformed
 
+    //****************************************************************************************
+    //****************************************************************************************
     private void createEmployeeButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                     
         String job_title = cJobTitle.getText();
         String last_name = cEmpLastName.getText();
@@ -1876,11 +1880,11 @@ public class ViewController extends javax.swing.JFrame {
         else{
             float salary = Float.parseFloat(cSalary.getText());
             try {
-                Class.forName("com.mysql.jdbc.Driver");
-                Connection con = DriverManager.getConnection("jdbc:mysql//localhost/school", "root", "");
-                String insertEmployee = "INSERT INTO employees (last_name, first_name, job_title, salary, hire_date, department) VALUES (?, ?, ?, ?, ?, ?)";
+                Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/airport", "root", "Cupidissodumb<3");
+                String insertEmployee = "INSERT INTO employees (last_name, first_name, job_title, salary, hire_date,department) VALUES (?, ?, ?, ?, ?, ?)";
 		PreparedStatement stmt = con.prepareStatement(insertEmployee);
 		
+            
 	    stmt.setString(1, last_name);
             stmt.setString(2, first_name);
             stmt.setString(3, job_title);
@@ -1890,7 +1894,7 @@ public class ViewController extends javax.swing.JFrame {
         
             stmt.executeUpdate();
 
-            if( employees.isEmpty()){
+             if( employees.isEmpty()){
                 Employee newEmployee = new Employee(100000, last_name, first_name, job_title, hire_date, salary, department);
                 employees.add(newEmployee);
             }
@@ -1899,9 +1903,8 @@ public class ViewController extends javax.swing.JFrame {
                 employees.add(newEmployee);
                 JOptionPane.showMessageDialog(this, "Employee created");
             }
-            
-            }
-            catch(Exception e){
+            }catch(SQLException e){
+                System.out.println("Database connection failed:" + e.getMessage());
                 JOptionPane.showMessageDialog(this, "Error creating employee", "Try again", JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -2668,9 +2671,9 @@ public class ViewController extends javax.swing.JFrame {
         }
         //</editor-fold>
         //</editor-fold>
-        String url = "jdbc:mysql://localhost:3306/airport"; // change this too
+       /* String url = "jdbc:mysql://localhost:3306/airport"; // change this too
         String username = "root";
-        String password = ""; // Change this na lng
+        String password = "Cupidissodumb<3"; // Change this na lng
         
         try {
             Connection connection = DriverManager.getConnection(url, username, password);
@@ -2678,7 +2681,7 @@ public class ViewController extends javax.swing.JFrame {
 
         }catch(SQLException e) {
             System.out.println("Database connection failed:" + e.getMessage());
-        }
+        }*/
         
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
