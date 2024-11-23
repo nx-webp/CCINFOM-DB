@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
 
 public class View implements ActionListener /*, DocumentListener, ListSelectionListener */{
     private Model model;
@@ -14,8 +15,8 @@ public class View implements ActionListener /*, DocumentListener, ListSelectionL
     private JButton submitOcc, submitRev, submitStats, submitPass;
     private JComboBox monthComboBox, yearComboBox;
 
-    public View(Model model) {
-        this.model = new Model();
+    public View(Connection connection) {
+        this.model = new Model(connection); //*** The constructor Model() is undefined
 
         this.mainFrame = new JFrame();
         this.mainFrame.setTitle("Airline Database Management System");
