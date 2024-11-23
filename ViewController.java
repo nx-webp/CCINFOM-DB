@@ -1884,8 +1884,8 @@ public class ViewController extends javax.swing.JFrame {
 	    stmt.setString(1, last_name);
             stmt.setString(2, first_name);
             stmt.setString(3, job_title);
-            stmt.setString(4, hire_date);
-            stmt.setDouble(5, salary);
+	    stmt.setDouble(4, salary);
+            stmt.setString(5, hire_date);
             stmt.setString(6, department);
         
             stmt.executeUpdate();
