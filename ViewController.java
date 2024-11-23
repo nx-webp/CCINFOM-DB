@@ -1858,7 +1858,7 @@ public class ViewController extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_viewBookings9ActionPerformed
 
-    private void createEmployeeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createEmployeeButtonActionPerformed
+    private void createEmployeeButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                     
         String job_title = cJobTitle.getText();
         String last_name = cEmpLastName.getText();
         String first_name = cEmpFirstName.getText();
@@ -1871,7 +1871,24 @@ public class ViewController extends javax.swing.JFrame {
         else{
             float salary = Float.parseFloat(cSalary.getText());
             try {
-                model.createEmployee(last_name, first_name, job_title, hire_date, salary, department);
+                Class.forName("com.mysql.jdbc.Driver");
+                Connection con = DriverManager.getConnection("jdbc:mysql//localhost/school", "root", "");
+                String insertEmployee = "INSERT INTO employees (last_name, first_name, job_title, salary, hire_date, " +
+                                "department) VALUES (?, ?, ?, ?, ?, ?)";
+		PreparedStatement stmt = con.prepareStatement(insertEmployee);
+		
+	    stmt.setString(1, last_name);
+            stmt.setString(2, first_name);
+            stmt.setString(3, job_title);
+            stmt.setString(4, hire_date);
+            stmt.setDouble(5, salary);
+            stmt.setString(6, department);
+        
+            stmt.executeUpdate();
+
+            Employee newEmployee = new Employee(employees.get(employees.size() - 1).getID() + 1, last_name,
+                                        first_name, job_title, hire_date, salary, department);
+            employees.add(newEmployee);
                 JOptionPane.showMessageDialog(this, "Employee created");
             }
             catch(Exception e){
