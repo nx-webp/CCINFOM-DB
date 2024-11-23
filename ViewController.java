@@ -1884,16 +1884,22 @@ public class ViewController extends javax.swing.JFrame {
 	    stmt.setString(1, last_name);
             stmt.setString(2, first_name);
             stmt.setString(3, job_title);
-	    stmt.setDouble(4, salary);
+            stmt.setDouble(4, salary);
             stmt.setString(5, hire_date);
             stmt.setString(6, department);
         
             stmt.executeUpdate();
 
-            Employee newEmployee = new Employee(employees.get(employees.size() - 1).getID() + 1, last_name,
-                                        first_name, job_title, hire_date, salary, department);
-            employees.add(newEmployee);
+            if( employees.isEmpty()){
+                Employee newEmployee = new Employee(100000, last_name, first_name, job_title, hire_date, salary, department);
+                employees.add(newEmployee);
+            }
+            else{
+                Employee newEmployee = new Employee(employees.get(employees.size() - 1).getID() + 1, last_name, first_name, job_title, hire_date, salary, department);
+                employees.add(newEmployee);
                 JOptionPane.showMessageDialog(this, "Employee created");
+            }
+            
             }
             catch(Exception e){
                 JOptionPane.showMessageDialog(this, "Error creating employee", "Try again", JOptionPane.ERROR_MESSAGE);
