@@ -11,6 +11,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import java.sql.Statement;
+import java.sql.ResultSet;
 
 /**
  *
@@ -22,6 +24,10 @@ public class ViewController extends javax.swing.JFrame {
     private final ArrayList<Passenger> passengers = new ArrayList<>();
     private final ArrayList<Flight> flights = new ArrayList<>();
     private final ArrayList<Booking> bookings = new ArrayList<>();
+    private ArrayList<FlightOccupancyReport> foReports = new ArrayList<>();
+    private ArrayList<EmployeeStatisticsReport> esReports = new ArrayList<>();
+    private ArrayList<RevenueReport> revReports = new ArrayList<>();
+    private ArrayList<PassengerReport> passReports = new ArrayList<>();
     /**
      * Creates new form Main
      */
@@ -1649,10 +1655,10 @@ public class ViewController extends javax.swing.JFrame {
         else{
             try {
                 model.createPassenger(passport_number, last_name, first_name, birthdate, Integer.parseInt(contact_noString), email_address, vip_status);
-                JOptionPane.showMessageDialog(this, "Employee created");
+                JOptionPane.showMessageDialog(this, "Passenger created");
             }
             catch(Exception e){
-                JOptionPane.showMessageDialog(this, "Error creating employee", "Try again", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Error creating passenger", "Try again", JOptionPane.ERROR_MESSAGE);
             }
         }
                 
@@ -1865,6 +1871,7 @@ public class ViewController extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_viewBookings9ActionPerformed
 
+    //**********************************************************************************
     private void createEmployeeButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                     
         String job_title = cJobTitle.getText();
         String last_name = cEmpLastName.getText();
@@ -1931,7 +1938,7 @@ public class ViewController extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_dEmployeeIDActionPerformed
 
-    private void deleteEmployeeButtonActionPerformed(java.awt.event.ActionEvent evt) {
+private void deleteEmployeeButtonActionPerformed(java.awt.event.ActionEvent evt) {
     // Retrieve the employee ID from the text field
     String employeeIDString = dEmployeeID.getText();
 
@@ -1970,8 +1977,13 @@ public class ViewController extends javax.swing.JFrame {
         String deleteEmployeeQuery = "DELETE FROM employees WHERE employee_id = ?";
         try (PreparedStatement stmt = con.prepareStatement(deleteEmployeeQuery)) {
             stmt.setInt(1, employeeID);
+            
             int rowsAffected = stmt.executeUpdate();
-
+            
+            for(int i = 0; i < employees.size(); i++) {
+            if(employees.get(i).getID() == employeeID)
+                employees.remove(i);
+        }
             // Confirm deletion
             if (rowsAffected > 0) {
                 JOptionPane.showMessageDialog(this, "Employee deleted successfully!");
@@ -1986,7 +1998,7 @@ public class ViewController extends javax.swing.JFrame {
         System.out.println("Database connection failed: " + e.getMessage());
         JOptionPane.showMessageDialog(this, "Failed to connect to the database. Please check your connection settings.", "Error", JOptionPane.ERROR_MESSAGE);
     }
-}//GEN-LAST:event_deleteEmployeeButtonActionPerformed
+}
 
     private void cDepartmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cDepartmentActionPerformed
         // TODO add your handling code here:
@@ -1997,17 +2009,17 @@ public class ViewController extends javax.swing.JFrame {
     }//GEN-LAST:event_uJobTitleActionPerformed
 
     private void updateJobTitleButtonActionPerformed(java.awt.event.ActionEvent evt) {
-    // Retrieve input fields
+    
     String employeeIDString = uEmployeeID.getText();
     String job_title = uJobTitle.getText();
 
-    // Validate that fields are not empty
+    
     if (employeeIDString.isEmpty() || job_title.isEmpty()) {
         JOptionPane.showMessageDialog(this, "Please enter all required fields.", "Error", JOptionPane.ERROR_MESSAGE);
         return;
     }
 
-    // Parse employee ID and handle invalid input
+    
     int employeeID;
     try {
         employeeID = Integer.parseInt(employeeIDString);
@@ -2016,23 +2028,23 @@ public class ViewController extends javax.swing.JFrame {
         return;
     }
 
-    // Database connection details
+    
     String url = "jdbc:mysql://localhost:3306/airport";
     String username = "root";
     String password = "Cupidissodumb<3";
 
-    // Attempt database connection and update operation
+    
     try (Connection connection = DriverManager.getConnection(url, username, password)) {
         System.out.println("Database connection successful.");
 
-        // Check if the employee exists
+       
         Model model = new Model(connection);
         if (!model.findEmployee(employeeID)) {
             JOptionPane.showMessageDialog(this, "Employee does not exist.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        // Attempt to update the job title
+        
         try {
             model.updateJobTitle(employeeID, job_title);
             JOptionPane.showMessageDialog(this, "Employee job title updated successfully!");
