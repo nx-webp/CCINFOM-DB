@@ -539,7 +539,7 @@ public class Model {
     */
     
     public boolean createBooking (int passenger_id, int flight_id, String checkin_date, String seat_number,
-                                  String seat_class, Float total_cost, String food_order, int checkin_bags)
+                                  String seat_class, double total_cost, String food_order, int checkin_bags)
             throws SQLException {
     	String query = "INSERT INTO bookings (passenger_id, flight_id, checkin_date, seat_number, " +
                 "seat_class, total_cost, food_order, total_checkin_bags) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
