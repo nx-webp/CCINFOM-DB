@@ -1878,8 +1878,7 @@ public class ViewController extends javax.swing.JFrame {
             try {
                 Class.forName("com.mysql.jdbc.Driver");
                 Connection con = DriverManager.getConnection("jdbc:mysql//localhost/school", "root", "");
-                String insertEmployee = "INSERT INTO employees (last_name, first_name, job_title, salary, hire_date, " +
-                                "department) VALUES (?, ?, ?, ?, ?, ?)";
+                String insertEmployee = "INSERT INTO employees (last_name, first_name, job_title, salary, hire_date, department) VALUES (?, ?, ?, ?, ?, ?)";
 		PreparedStatement stmt = con.prepareStatement(insertEmployee);
 		
 	    stmt.setString(1, last_name);
