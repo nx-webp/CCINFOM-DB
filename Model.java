@@ -314,7 +314,7 @@ public class Model {
         return true;
     }
     
-    public boolean deleteEmployee (int employee_id) throws SQLException {
+     public boolean deleteEmployee (int employee_id) throws SQLException {
         // define the query needed to get the flight to delete, '?' is a placeholder
         String query = "DELETE * FROM employees WHERE employee_id = ?";
         
@@ -322,6 +322,12 @@ public class Model {
         
         stmt.setInt(1, employee_id);
         stmt.executeUpdate();
+        
+        for(int i = 0; i < employees.size(); i++) {
+            if(employees.get(i).getID() == employee_id)
+                employees.remove(i);
+        }
+        
         return true;
     }
     
@@ -333,6 +339,12 @@ public class Model {
         stmt.setString(1, last_name);
         stmt.setInt(2, employee_id);
         stmt.executeUpdate();
+        
+        for(int i = 0; i < employees.size(); i++) {
+            if(employees.get(i).getID() == employee_id)
+                employees.get(i).setLast_name(last_name);
+        }
+        
         return true;
     }
     
