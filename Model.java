@@ -811,7 +811,13 @@ public class Model {
         return false;
     }
     
-    
+    public double getTotalPrice(int flight_id, String seat_number){
+        for(int i = 0; i < flights.size(); i++){
+            if(flights.get(i).getFlight_id() == flight_id)
+                return flights.get(i).getSeatPrice(seat_number);
+        }
+        return -1;
+    }
     
     
     
