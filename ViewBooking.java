@@ -1,4 +1,4 @@
-public class viewBooking {
+public class ViewBooking {
     // booking info
     private int ref_id;
     private int passenger_id;
@@ -19,7 +19,7 @@ public class viewBooking {
     private String email_address;
     private String vip_status;
 
-    public viewBooking(int ref_id, int passenger_id, int flight_id, String checkin_date, String seat_no,
+    public ViewBooking(int ref_id, int passenger_id, int flight_id, String checkin_date, String seat_no,
                        String seat_class, double total_cost, String food_order, int total_checkin_bags,
                        String passport_number, String last_name, String first_name,
                        String birthdate, int contact_no, String email_address, String vip_status) {

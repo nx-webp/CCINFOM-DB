@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class viewPassenger {
+public class ViewPassenger {
     // passenger info
     private int passenger_id;
     private String passport_number;
@@ -14,7 +14,7 @@ public class viewPassenger {
     // list of bookings
     private ArrayList<Booking> bookings;
 
-    public viewPassenger(int passenger_id, String passport_number, String last_name, String first_name,
+    public ViewPassenger(int passenger_id, String passport_number, String last_name, String first_name,
                          String birthdate, int contact_no, String email_address, String vip_status,
                          ArrayList<Booking> bookings) {
         this.passenger_id = passenger_id;

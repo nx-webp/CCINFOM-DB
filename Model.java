@@ -15,6 +15,9 @@ public class Model {
     private ArrayList<EmployeeStatisticsReport> esReports;
     private ArrayList<RevenueReport> revReports;
     private ArrayList<PassengerReport> passReports;
+    private ArrayList<ViewBooking> viewBookings;
+    private ArrayList<ViewFlight> viewFlights;
+    private ArrayList<ViewPassenger> viewPassengers;
 
     public Model(Connection connection) {
         this.currentView = "Home";
@@ -695,6 +698,132 @@ public class Model {
 
     public ArrayList<Passenger> getPassengers() {
         return passengers;
+    }
+
+    public boolean viewBooking () throws SQLException{
+        String query = "SELECT b.ref_id, b.passenger_id, b.flight_id, b.checkin_date, b.seat_no, " +
+                "b.seat_class, b.total_cost, b.food_order, b.total_checkin_bags, p.last_name, p.first_name, " +
+                "p.email_address, p.vip_status, p.contact_no, p.passport_number " +
+                "FROM bookings b JOIN passengers p ON b.passenger_id = p.passenger_id ";
+
+        PreparedStatement stmt = connection.prepareStatement(query);
+
+        ResultSet rs = stmt.executeQuery();
+
+        while(rs.next()) {
+            ViewBooking holder = new ViewBooking(rs.getInt("ref_id"),
+                    rs.getInt("passenger_id"),
+                    rs.getInt("flight_id"),
+                    rs.getString("checkin_date"),
+                    rs.getString("seat_no"),
+                    rs.getString("seat_class"),
+                    rs.getDouble("total_cost"),
+                    rs.getString("food_order"),
+                    rs.getInt("total_checkin_bags"),
+                    rs.getString("passport_number"),
+                    rs.getString("last_name"),
+                    rs.getString("first_name"),
+                    rs.getString("birthdate"),
+                    rs.getInt("contact_no"),
+                    rs.getString("email_address"),
+                    rs.getString("vip_status"));
+
+            viewBookings.add(holder);
+        }
+        return true;
+    }
+
+    public boolean viewFlight () throws SQLException{
+        String query = "SELECT * FROM flights";
+        String query2 = "SELECT * FROM passengers p " +
+                "JOIN bookings b ON p.passenger_id = b.passenger_id " +
+                "WHERE b.flight_id = ?";
+
+        PreparedStatement stmt = connection.prepareStatement(query);
+        PreparedStatement stmt2 = connection.prepareStatement(query2);
+
+        ResultSet rs = stmt.executeQuery();
+
+        ArrayList<Passenger> arrayHolder = new ArrayList<>();
+
+        while(rs.next()) {
+            stmt2.setInt(1, rs.getInt("flight_id"));
+            ResultSet rs2 = stmt2.executeQuery();
+
+            while (rs2.next()) {
+                Passenger elementHolder = new Passenger(rs.getInt("passenger_id"),
+                                                  rs.getString("passport_number"),
+                                                  rs.getString("last_name"),
+                                                  rs.getString("first_name"),
+                                                  rs.getString("birthdate"),
+                                                  rs.getInt("contact_no"),
+                                                  rs.getString("email_address"),
+                                                  rs.getString("vip_status"));
+
+                arrayHolder.add(elementHolder);
+            }
+
+            ViewFlight holder = new ViewFlight(rs.getInt("flight_id"),
+                    rs.getInt("gate_number"),
+                    rs.getString("destination"),
+                    rs.getString("origin"),
+                    rs.getString("departure"),
+                    rs.getString("arrival"),
+                    rs.getInt("pilot_id"),
+                    rs.getInt("copilot_id"),
+                    rs.getInt("lead_attendant"),
+                    rs.getInt("flight_attendant"),
+                    arrayHolder);
+
+            viewFlights.add(holder);
+        }
+        return true;
+    }
+
+    public boolean viewPassenger () throws SQLException{
+        String query = "SELECT * FROM passengers";
+        String query2 = "SELECT * FROM bookings b " +
+                "JOIN passengers p ON b.passenger_id = p.passenger_id " +
+                "WHERE b.passenger_id = ?";
+
+        PreparedStatement stmt = connection.prepareStatement(query);
+        PreparedStatement stmt2 = connection.prepareStatement(query2);
+
+        ResultSet rs = stmt.executeQuery();
+
+        ArrayList<Booking> arrayHolder = new ArrayList<>();
+
+        while(rs.next()) {
+            stmt2.setInt(1, rs.getInt("passenger_id"));
+            ResultSet rs2 = stmt2.executeQuery();
+
+            while (rs2.next()) {
+                Booking elementHolder = new Booking(rs.getInt("ref_id"),
+                                              rs.getInt("passenger_id"),
+                                              rs.getInt("flight_id"),
+                                              rs.getString("checkin_date"),
+                                              rs.getString("seat_no"),
+                                              rs.getString("saet_class"),
+                                              rs.getDouble("total_cost"),
+                                              rs.getString("food_order"),
+                                              rs.getInt("total_checkin_bags"));
+
+                arrayHolder.add(elementHolder);
+            }
+
+            ViewPassenger holder = new ViewPassenger(rs.getInt("passenger_id"),
+                                                     rs.getString("passport_number"),
+                                                     rs.getString("last_name"),
+                                                     rs.getString("first_name"),
+                                                     rs.getString("birthdate"),
+                                                     rs.getInt("contact_no"),
+                                                     rs.getString("email_address"),
+                                                     rs.getString("vip_status"),
+                                                     arrayHolder);
+
+            viewPassengers.add(holder);
+        }
+        return true;
     }
 	    
     /*
