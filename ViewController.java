@@ -1865,8 +1865,6 @@ public class ViewController extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_viewBookings9ActionPerformed
 
-    //****************************************************************************************
-    //****************************************************************************************
     private void createEmployeeButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                     
         String job_title = cJobTitle.getText();
         String last_name = cEmpLastName.getText();
@@ -1933,23 +1931,62 @@ public class ViewController extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_dEmployeeIDActionPerformed
 
-    private void deleteEmployeeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteEmployeeButtonActionPerformed
-        String employeeIDString = dEmployeeID.getText();
+    private void deleteEmployeeButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    // Retrieve the employee ID from the text field
+    String employeeIDString = dEmployeeID.getText();
 
-        if(employeeIDString.isEmpty())
-            JOptionPane.showMessageDialog(this, "Please enter required field", "Try again", JOptionPane.ERROR_MESSAGE);
-        else if(model.findEmployee(Integer.parseInt(employeeIDString)) == false) 
-            JOptionPane.showMessageDialog(this, "Employee does not exist", "Try again", JOptionPane.ERROR_MESSAGE);
-        else {
-            try {
-                model.deleteEmployee(Integer.parseInt(employeeIDString));
-                JOptionPane.showMessageDialog(this, "Employee deleted");
-            }
-            catch(Exception e){
-                JOptionPane.showMessageDialog(this, "Error deleting employee", "Try again", JOptionPane.ERROR_MESSAGE);
-            }
+    // Validate that the field is not empty
+    if (employeeIDString.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Please enter the employee ID.", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // Parse the employee ID and handle invalid input
+    int employeeID;
+    try {
+        employeeID = Integer.parseInt(employeeIDString);
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Invalid employee ID. Please enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // Database connection details
+    String url = "jdbc:mysql://localhost:3306/airport";
+    String username = "root";
+    String password = "Cupidissodumb<3";
+
+    // Connect to the database
+    try (Connection con = DriverManager.getConnection(url, username, password)) {
+        System.out.println("Database connection successful.");
+
+        // Check if the employee exists
+        Model model = new Model(con);
+        if (!model.findEmployee(employeeID)) {
+            JOptionPane.showMessageDialog(this, "Employee does not exist.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
-    }//GEN-LAST:event_deleteEmployeeButtonActionPerformed
+
+        // Prepare and execute the SQL DELETE statement
+        String deleteEmployeeQuery = "DELETE FROM employees WHERE employee_id = ?";
+        try (PreparedStatement stmt = con.prepareStatement(deleteEmployeeQuery)) {
+            stmt.setInt(1, employeeID);
+            int rowsAffected = stmt.executeUpdate();
+
+            // Confirm deletion
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(this, "Employee deleted successfully!");
+            } else {
+                JOptionPane.showMessageDialog(this, "Error: Employee could not be deleted.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error while deleting employee: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+    } catch (SQLException e) {
+        System.out.println("Database connection failed: " + e.getMessage());
+        JOptionPane.showMessageDialog(this, "Failed to connect to the database. Please check your connection settings.", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}//GEN-LAST:event_deleteEmployeeButtonActionPerformed
 
     private void cDepartmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cDepartmentActionPerformed
         // TODO add your handling code here:
@@ -1959,24 +1996,57 @@ public class ViewController extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_uJobTitleActionPerformed
 
-    private void updateJobTitleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateJobTitleButtonActionPerformed
-        String employeeIDString = uEmployeeID.getText();
-        String job_title = uJobTitle.getText();
-        
-        if(employeeIDString.isEmpty() || job_title.isEmpty())
-            JOptionPane.showMessageDialog(this, "Please enter required fields", "Try again", JOptionPane.ERROR_MESSAGE);
-        else if(model.findEmployee(Integer.parseInt(employeeIDString)) == false) 
-            JOptionPane.showMessageDialog(this, "Employee does not exist", "Try again", JOptionPane.ERROR_MESSAGE);
-        else {
-            try {
-                model.updateJobTitle(Integer.parseInt(employeeIDString), job_title);
-                JOptionPane.showMessageDialog(this, "Employee job_title updated");
-            }
-            catch(Exception e){
-                JOptionPane.showMessageDialog(this, "Error updating employee job_title", "Try again", JOptionPane.ERROR_MESSAGE);
-            }
+    private void updateJobTitleButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    // Retrieve input fields
+    String employeeIDString = uEmployeeID.getText();
+    String job_title = uJobTitle.getText();
+
+    // Validate that fields are not empty
+    if (employeeIDString.isEmpty() || job_title.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Please enter all required fields.", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // Parse employee ID and handle invalid input
+    int employeeID;
+    try {
+        employeeID = Integer.parseInt(employeeIDString);
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Invalid Employee ID. Please enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // Database connection details
+    String url = "jdbc:mysql://localhost:3306/airport";
+    String username = "root";
+    String password = "Cupidissodumb<3";
+
+    // Attempt database connection and update operation
+    try (Connection connection = DriverManager.getConnection(url, username, password)) {
+        System.out.println("Database connection successful.");
+
+        // Check if the employee exists
+        Model model = new Model(connection);
+        if (!model.findEmployee(employeeID)) {
+            JOptionPane.showMessageDialog(this, "Employee does not exist.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
-    }//GEN-LAST:event_updateJobTitleButtonActionPerformed
+
+        // Attempt to update the job title
+        try {
+            model.updateJobTitle(employeeID, job_title);
+            JOptionPane.showMessageDialog(this, "Employee job title updated successfully!");
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error while updating job title: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Unexpected error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+    } catch (SQLException e) {
+        System.out.println("Database connection failed: " + e.getMessage());
+        JOptionPane.showMessageDialog(this, "Failed to connect to the database. Please check your connection settings.", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
 
     private void uEmpLastNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uEmpLastNameActionPerformed
         // TODO add your handling code here:
