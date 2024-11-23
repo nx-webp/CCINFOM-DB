@@ -743,7 +743,39 @@ public class Model {
     
     
     
+    //FIND FUNCTIONS
     
+    public boolean findEmployee(int employee_id){
+        for(int i = 0; i < employees.size(); i++){
+            if(employee_id == employees.get(i).getID())
+                return true;
+        }
+        return false;
+    }
+    
+    public boolean findPassenger(int passenger_id){
+        for(int i = 0; i < passengers.size(); i++){
+            if(passenger_id == passengers.get(i).getID())
+                return true;
+        }
+        return false;
+    }
+    
+    public boolean findFlight(int flight_id){
+        for(int i = 0; i < flights.size(); i++){
+            if(flight_id == flights.get(i).getFlight_id())
+                return true;
+        }
+        return false;
+    }
+    
+    public boolean findBooking(int ref_id){
+        for(int i = 0; i < bookings.size(); i++){
+            if(ref_id == bookings.get(i).getID())
+                return true;
+        }
+        return false;
+    }
     
     
     
