@@ -22,6 +22,13 @@ public class ViewController extends javax.swing.JFrame {
     private final ArrayList<Passenger> passengers = new ArrayList<>();
     private final ArrayList<Flight> flights = new ArrayList<>();
     private final ArrayList<Booking> bookings = new ArrayList<>();
+    private final ArrayList<FlightOccupancyReport> foReports = new ArrayList<>();
+    private final ArrayList<EmployeeStatisticsReport> esReports = new ArrayList<>();
+    private final ArrayList<RevenueReport> revReports = new ArrayList<>();
+    private final ArrayList<PassengerReport> passReports = new ArrayList<>();
+    private final ArrayList<ViewBooking> viewBooking = new ArrayList<>();
+    private final ArrayList<ViewFlight> viewFlight = new ArrayList<>();
+    private final ArrayList<ViewPassenger> viewPassenger = new ArrayList<>();
     /**
      * Creates new form Main
      */
