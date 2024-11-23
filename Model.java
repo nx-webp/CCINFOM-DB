@@ -1,4 +1,5 @@
 import javax.swing.plaf.nimbus.State;
+import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -12,6 +13,8 @@ public class Model {
     private ArrayList<Booking> bookings;
     private ArrayList<FlightOccupancyReport> foReports;
     private ArrayList<EmployeeStatisticsReport> esReports;
+    private ArrayList<RevenueReport> revReports;
+    private ArrayList<PassengerReport> passReports;
 
     public Model(Connection connection) {
         this.currentView = "Home";
@@ -22,6 +25,8 @@ public class Model {
         this.bookings = new ArrayList<>();
         this.passengers = new ArrayList<>();
         this.foReports = new ArrayList<>();
+        this.revReports = new ArrayList<>();
+        this.passReports = new ArrayList<>();
         
         this.fetchData();
         
@@ -734,6 +739,34 @@ public class Model {
 
             foReports.add(holder);
         }
+        return true;
+    }
+
+    public boolean generateRevR (int year) throws SQLException {
+        String query = "SELECT MONTH(f.departure) AS month, COUNT(f.flight_id) AS numbers, SUM(b.total_cost) as revenue " +
+                "FROM flights f LEFT JOIN bookings b ON f.flight_id " +
+                "WHERE YEAR(f.departure) = ? " +
+                "GROUP BY month " +
+                "ORDER BY month;";
+
+        PreparedStatement stmt = connection.prepareStatement(query);
+
+        stmt.setInt(1, year);
+
+        ResultSet rs = stmt.executeQuery();
+
+        while(rs.next()) {
+            RevenueReport holder = new RevenueReport(rs.getInt("month"),
+                                                     rs.getInt("numbers"),
+                                                     rs.getInt("revenue"));
+
+            revReports.add(holder);
+        }
+        return true;
+    }
+
+    public boolean generatePassR (int year, int month) throws SQLException {
+
         return true;
     }
 

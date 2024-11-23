@@ -1,8 +1,10 @@
 public class RevenueReport {
+    private int month;
     private int numFlights;
     private double totalRevenue;
 
-    public RevenueReport(int numFlights, double totalRevenue) {
+    public RevenueReport(int month, int numFlights, double totalRevenue) {
+        this.month = month;
         this.numFlights = numFlights;
         this.totalRevenue = totalRevenue;
     }
