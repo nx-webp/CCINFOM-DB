@@ -11,6 +11,7 @@ public class Model {
     private ArrayList<Passenger> passengers;
     private ArrayList<Booking> bookings;
     private ArrayList<FlightOccupancyReport> foReports;
+    private ArrayList<EmployeeStatisticsReport> esReports;
 
     public Model(Connection connection) {
         this.currentView = "Home";
@@ -707,6 +708,36 @@ public class Model {
         }
         return true;
     }
+
+    public boolean generateESR (int year, int month) throws SQLException {
+        String query = "SELECT f.flight_id, f.origin, f.destination, COUNT(b.checkin_date) AS numbers " +
+                "FROM flights f JOIN bookings b ON f.flight_id = b.flight_id " +
+                "WHERE YEAR(b.checkin_date) = ? AND MONTH(b.checkin_date) = ? " +
+                "GROUP BY f.flight_id, f.origin, f.destination " +
+                "ORDER BY f.flight_id;";
+
+        /*
+        SELECT e.employee_id, COUNT(
+        FROM e
+         */
+
+        PreparedStatement stmt = connection.prepareStatement(query);
+
+        stmt.setInt(1, year);
+        stmt.setInt(2, month);
+        ResultSet rs = stmt.executeQuery();
+
+        while(rs.next()) {
+            EmployeeStatisticsReport holder = new EmployeeStatisticsReport(rs.getInt("employee_id"),
+                    rs.getString(""),
+                    rs.getInt("numbers"));
+
+            foReports.add(holder);
+        }
+        return true;
+    }
+
+
     
     
     
