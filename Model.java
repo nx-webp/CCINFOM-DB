@@ -803,7 +803,7 @@ public class Model {
                                               rs.getInt("flight_id"),
                                               rs.getString("checkin_date"),
                                               rs.getString("seat_no"),
-                                              rs.getString("saet_class"),
+                                              rs.getString("seat_class"),
                                               rs.getDouble("total_cost"),
                                               rs.getString("food_order"),
                                               rs.getInt("total_checkin_bags"));
