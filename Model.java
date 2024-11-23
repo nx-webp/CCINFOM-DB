@@ -733,11 +733,12 @@ public class Model {
         ResultSet rs = stmt.executeQuery();
 
         while(rs.next()) {
-            EmployeeStatisticsReport holder = new EmployeeStatisticsReport(rs.getInt("employee_id"),
-                    rs.getString(""),
-                    rs.getInt("numbers"));
+            EmployeeStatisticsReport holder = new EmployeeStatisticsReport(
+                    rs.getInt("employee_id"),
+                    rs.getInt("numTasks"),
+                    rs.getDouble("totalRevenue"));
 
-            foReports.add(holder);
+            esReports.add(holder);
         }
         return true;
     }
