@@ -608,12 +608,12 @@ public class Model {
         return true;
     }
     
-    public boolean updateSeat (int ref_id, int seat_number) throws SQLException{
+    public boolean updateSeat (int ref_id, String seat_number) throws SQLException{
         String query = "UPDATE bookings SET seat_number = ? WHERE ref_id = ?";
         
         PreparedStatement stmt = connection.prepareStatement(query);
         
-        stmt.setInt(1, seat_number);
+        stmt.setString(1, seat_number);
         stmt.setInt(2, ref_id);
         stmt.executeUpdate();
         return true;
