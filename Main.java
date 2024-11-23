@@ -1,3 +1,4 @@
+import java.sql.Connection;
 import java.util.Scanner;
 import java.sql.*;
 
@@ -27,15 +28,14 @@ public class Main {
     	 		SQL schema which contains our tables ^^ (configure with the JDBC)
     	*/
     	
-        String url = "";
+    	String url = "jdbc:mysql://localhost:3306/airport"; // change this too
         String username = "root";
-        String password = "";
-
-        try {
-            Connection connection = DriverManager.getConnection(url, username, password);
+        String password = ""; // Change this na lng
+        
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
 
             Model model = new Model(connection);
-            View view = new View(model);
+            View view = new View(connection);
         } catch(SQLException e) {
             System.out.println("Error in opening the database! Make sure username and password is correct.");
         }
