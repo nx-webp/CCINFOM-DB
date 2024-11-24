@@ -2,15 +2,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package group3db;
+//package group3db;
+
+import com.mysql.cj.result.BufferedRowList;
 
 import java.awt.HeadlessException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -29,6 +29,9 @@ public class ViewController extends javax.swing.JFrame {
     private final ArrayList<ViewBooking> viewBooking = new ArrayList<>();
     private final ArrayList<ViewFlight> viewFlight = new ArrayList<>();
     private final ArrayList<ViewPassenger> viewPassenger = new ArrayList<>();
+    private final String url = "jdbc:mysql://localhost:3306/ccinfom";
+    private final String username = "root";
+    private final String password = "12345678";
     /**
      * Creates new form Main
      */
@@ -2001,8 +2004,7 @@ public class ViewController extends javax.swing.JFrame {
         viewFlight.clear();
         
         try {
-        Class.forName("com.mysql.jdbc.Driver");
-        Connection con = DriverManager.getConnection("jdbc:mysql//localhost/school", "root", "");
+        Connection con = DriverManager.getConnection(this.url, this.username, this.password);
         String query = "SELECT * FROM flights";
         String query2 = "SELECT * FROM passengers p " +
                 "JOIN bookings b ON p.passenger_id = b.passenger_id " +
@@ -2064,8 +2066,7 @@ public class ViewController extends javax.swing.JFrame {
         viewPassenger.clear();
         
         try {
-        Class.forName("com.mysql.jdbc.Driver");
-        Connection con = DriverManager.getConnection("jdbc:mysql//localhost/school", "root", "");
+        Connection con = DriverManager.getConnection(this.url, this.username, this.password);
         String query = "SELECT * FROM passengers";
         String query2 = "SELECT * FROM bookings b " +
                 "JOIN passengers p ON b.passenger_id = p.passenger_id " +
@@ -2111,6 +2112,7 @@ public class ViewController extends javax.swing.JFrame {
         }
         catch(Exception e){
             JOptionPane.showMessageDialog(this, "Error generating report", "Try again", JOptionPane.ERROR_MESSAGE);
+            System.out.println(e.getMessage());
         }
         
         DefaultTableModel table = (DefaultTableModel) viewPassengerTable.getModel();
@@ -2125,8 +2127,7 @@ public class ViewController extends javax.swing.JFrame {
         viewBooking.clear();
         
         try {
-        Class.forName("com.mysql.jdbc.Driver");
-        Connection con = DriverManager.getConnection("jdbc:mysql//localhost/school", "root", "");
+        Connection con = DriverManager.getConnection(this.url, this.username, this.password);
         String query = "SELECT b.ref_id, b.passenger_id, b.flight_id, b.checkin_date, b.seat_no, " +
                 "b.seat_class, b.total_cost, b.food_order, b.total_checkin_bags, p.last_name, p.first_name, " +
                 "p.email_address, p.vip_status, p.contact_no, p.passport_number " +
@@ -2165,34 +2166,8 @@ public class ViewController extends javax.swing.JFrame {
         for(int i = 0; i < viewBooking.size(); i++){
             table.addRow(new Object[]{viewBooking.get(i).getID(), viewBooking.get(i).getPassenger_id(), viewBooking.get(i).getFlight_id(), viewBooking.get(i).getCheckin_date(), viewBooking.get(i).getSeat_no(), viewBooking.get(i).getSeat_class(), viewBooking.get(i).getTotal_cost(), viewBooking.get(i).getFood_order(), viewBooking.get(i).getTotal_checkin_bags(), viewBooking.get(i).getPassport_number(), viewBooking.get(i).getLast_name(), viewBooking.get(i).getFirst_name(), viewBooking.get(i).getBirthdate(), viewBooking.get(i).getContact_no(), viewBooking.get(i).getEmail_address(), viewBooking.get(i).getVip_status()});
         }
-    }                                            
+    }
 
-    private void createPassengerButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                      
-        String passport_number = cPassportNumber.getText();
-        String last_name = cLastName.getText();
-        String first_name = cFirstName.getText();
-        String birthdate = cBirthdate.getText();
-        String contact_noString = cContactNo.getText();
-        String email_address = cEmailAddress.getText();
-        String vip_status = cVIPStatus.getSelectedItem().toString();
-        
-        if (passport_number.isEmpty() || last_name.isEmpty() || first_name.isEmpty() || birthdate.isEmpty() || contact_noString.isEmpty() || email_address.isEmpty())
-            JOptionPane.showMessageDialog(this, "Please enter all fields", "Try again", JOptionPane.ERROR_MESSAGE);
-        else{
-            try {
-                model.createPassenger(passport_number, last_name, first_name, birthdate, Integer.parseInt(contact_noString), email_address, vip_status);
-                JOptionPane.showMessageDialog(this, "Employee created");
-            }
-            catch(Exception e){
-                JOptionPane.showMessageDialog(this, "Error creating employee", "Try again", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-                
-    }                                                     
-
-    private void cPassportNumberActionPerformed(java.awt.event.ActionEvent evt) {                                                
-        // TODO add your handling code here:
-    }  
 
  private void createPassengerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createPassengerButtonActionPerformed
     String passport_number = cPassportNumber.getText();
@@ -2207,7 +2182,7 @@ public class ViewController extends javax.swing.JFrame {
     if (passport_number.isEmpty() || last_name.isEmpty() || first_name.isEmpty() || birthdate.isEmpty() || contact_noString.isEmpty() || email_address.isEmpty()) {
         JOptionPane.showMessageDialog(this, "Please enter all fields", "Try again", JOptionPane.ERROR_MESSAGE);
     } else {
-        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/airport", "root", "Cupidissodumb<3")) {
+        try (Connection con = DriverManager.getConnection(this.url, this.username, this.password)) {
             String insertPassengerSQL = "INSERT INTO passengers (passport_number, last_name, first_name, birthdate, contact_no, email_address, vip_status) VALUES (?, ?, ?, ?, ?, ?, ?)";
             
             try (PreparedStatement stmt = con.prepareStatement(insertPassengerSQL)) {
@@ -2216,7 +2191,7 @@ public class ViewController extends javax.swing.JFrame {
                 stmt.setString(2, last_name);
                 stmt.setString(3, first_name);
                 stmt.setString(4, birthdate);
-                stmt.setInt(5, Integer.parseInt(contact_noString));
+                stmt.setInt(5, (int) Long.parseLong(contact_noString));
                 stmt.setString(6, email_address);
                 stmt.setString(7, vip_status);
                 
@@ -2273,7 +2248,7 @@ private void deletePassengerButtonActionPerformed(java.awt.event.ActionEvent evt
         return;
     }
 
-    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/airport", "root", "Cupidissodumb<3")) {
+    try (Connection con = DriverManager.getConnection(this.url, this.username, this.password)) {
         String deletePassengerSQL = "DELETE FROM passengers WHERE passenger_id = ?";
 
         try (PreparedStatement stmt = con.prepareStatement(deletePassengerSQL)) {
@@ -2477,7 +2452,7 @@ private void deletePassengerButtonActionPerformed(java.awt.event.ActionEvent evt
         else{
             float salary = Float.parseFloat(cSalary.getText());
             try {
-                Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/airport", "root", "Cupidissodumb<3");
+                Connection con = DriverManager.getConnection(this.url, this.username, this.password);
                 String insertEmployee = "INSERT INTO employees (last_name, first_name, job_title, salary, hire_date,department) VALUES (?, ?, ?, ?, ?, ?)";
 		PreparedStatement stmt = con.prepareStatement(insertEmployee);
 		
@@ -2548,12 +2523,6 @@ private void deleteEmployeeButtonActionPerformed(java.awt.event.ActionEvent evt)
         JOptionPane.showMessageDialog(this, "Invalid employee ID. Please enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
         return;
     }
-
-    // Database connection details
-    String url = "jdbc:mysql://localhost:3306/airport";
-    String username = "root";
-    String password = "Cupidissodumb<3";
-
     // Connect to the database
     try (Connection con = DriverManager.getConnection(url, username, password)) {
         System.out.println("Database connection successful.");
@@ -2619,12 +2588,6 @@ private void deleteEmployeeButtonActionPerformed(java.awt.event.ActionEvent evt)
         JOptionPane.showMessageDialog(this, "Invalid Employee ID. Please enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
         return;
     }
-
-    
-    String url = "jdbc:mysql://localhost:3306/airport";
-    String username = "root";
-    String password = "Cupidissodumb<3";
-
     
     try (Connection connection = DriverManager.getConnection(url, username, password)) {
         System.out.println("Database connection successful.");
@@ -2818,7 +2781,7 @@ private void deleteEmployeeButtonActionPerformed(java.awt.event.ActionEvent evt)
     }
 
    
-    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/airport", "root", "Cupidissodumb<3")) {
+    try (Connection con = DriverManager.getConnection(this.url, this.username, this.password)) {
         String insertFlight = "INSERT INTO flights (gate_number, destination, origin, departure, arrival, pilot_id, copilot_id, lead_attendant_id, flight_attendant_id, base_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = con.prepareStatement(insertFlight)) {
             stmt.setInt(1, Integer.parseInt(gate_numberString));
@@ -2879,7 +2842,7 @@ private void deletePassengerButton2ActionPerformed(java.awt.event.ActionEvent ev
     }
 
    
-    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/airport", "root", "Cupidissodumb<3")) {
+    try (Connection con = DriverManager.getConnection(this.url, this.username, this.password)) {
         String deleteFlight = "DELETE FROM flights WHERE flight_id = ?";
         try (PreparedStatement stmt = con.prepareStatement(deleteFlight)) {
             stmt.setInt(1, Integer.parseInt(flight_idString));
@@ -3088,7 +3051,7 @@ private void createPassengerButton3ActionPerformed(java.awt.event.ActionEvent ev
     }
     
     // SQL Logic to Insert Booking into the Database
-    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/airport", "root", "Cupidissodumb<3")) {
+    try (Connection con = DriverManager.getConnection(this.url, this.username, this.password)) {
         String insertBooking = "INSERT INTO bookings (passenger_id, flight_id, check_in_date, seat_no, seat_class, total_price, food, total_bags) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         
         try (PreparedStatement stmt = con.prepareStatement(insertBooking)) {
@@ -3144,7 +3107,7 @@ private void deletePassengerButton3ActionPerformed(java.awt.event.ActionEvent ev
         return;
     }
     
-    try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/airport", "root", "Cupidissodumb<3")) {
+    try (Connection con = DriverManager.getConnection(this.url, this.username, this.password)) {
         String deleteBookingSQL = "DELETE FROM bookings WHERE booking_id = ?";
         
         try (PreparedStatement stmt = con.prepareStatement(deleteBookingSQL)) {
@@ -3424,8 +3387,7 @@ private void deletePassengerButton3ActionPerformed(java.awt.event.ActionEvent ev
             JOptionPane.showMessageDialog(this, "Enter valid month", "Try again", JOptionPane.ERROR_MESSAGE);
         else {
         try {
-        Class.forName("com.mysql.jdbc.Driver");
-        Connection con = DriverManager.getConnection("jdbc:mysql//localhost/school", "root", "");
+        Connection con = DriverManager.getConnection(this.url, this.username, this.password);
         String query = "SELECT f.flight_id, f.origin, f.destination, COUNT(b.checkin_date) AS numbers " +
                         "FROM flights f JOIN bookings b ON f.flight_id = b.flight_id " +
                         "WHERE YEAR(b.checkin_date) = ? AND MONTH(b.checkin_date) = ? " +
@@ -3471,8 +3433,7 @@ private void deletePassengerButton3ActionPerformed(java.awt.event.ActionEvent ev
             JOptionPane.showMessageDialog(this, "Enter valid year", "Try again", JOptionPane.ERROR_MESSAGE);
         else {
         try {
-        Class.forName("com.mysql.jdbc.Driver");
-        Connection con = DriverManager.getConnection("jdbc:mysql//localhost/school", "root", "");
+        Connection con = DriverManager.getConnection(this.url, this.username, this.password);
         String query = "SELECT MONTH(f.departure) AS month, COUNT(f.flight_id) AS numbers, SUM(b.total_cost) as revenue " +
                 "FROM flights f LEFT JOIN bookings b ON f.flight_id " +
                 "WHERE YEAR(f.departure) = ? " +
@@ -3522,8 +3483,7 @@ private void deletePassengerButton3ActionPerformed(java.awt.event.ActionEvent ev
             JOptionPane.showMessageDialog(this, "Enter valid month", "Try again", JOptionPane.ERROR_MESSAGE);
         else {
         try {
-        Class.forName("com.mysql.jdbc.Driver");
-        Connection con = DriverManager.getConnection("jdbc:mysql//localhost/school", "root", "");
+        Connection con = DriverManager.getConnection(this.url, this.username, this.password);
         String query = "SELECT p.last_name, p.first_name, p.email_address, p.vip_status, COUNT(b.ref_id) AS totalBookings " +
                 "FROM passengers p LEFT JOIN bookings b ON p.passenger_id = b.passenger_id " +
                 "WHERE YEAR(b.checkin_date) = ? AND MONTH(b.checkin_date) = ? " +
@@ -3575,8 +3535,7 @@ private void deletePassengerButton3ActionPerformed(java.awt.event.ActionEvent ev
             JOptionPane.showMessageDialog(this, "Enter valid month", "Try again", JOptionPane.ERROR_MESSAGE);
         else {
         try {
-        Class.forName("com.mysql.jdbc.Driver");
-        Connection con = DriverManager.getConnection("jdbc:mysql//localhost/school", "root", "");
+        Connection con = DriverManager.getConnection(this.url, this.username, this.password);
         String query = "SELECT MONTH(f.departure) AS month, COUNT(f.flight_id) AS numbers, SUM(b.total_cost) as revenue " +
                 "FROM flights f LEFT JOIN bookings b ON f.flight_id " +
                 "WHERE YEAR(f.departure) = ? " +
