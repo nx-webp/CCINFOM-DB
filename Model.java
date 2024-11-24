@@ -62,11 +62,13 @@ public class Model {
             rs.close();
         } catch(SQLException e) {
             System.out.println("Error! Something happened to the database.");
+            System.out.println(e.getMessage());
         } finally {
             try {
                 stmt.close();
             } catch (SQLException e) {
                 System.out.println("Error! Unable to close the statement.");
+                System.out.println(e.getMessage());
             }
         }
 
@@ -92,6 +94,7 @@ public class Model {
             rs.close();
         } catch(SQLException e) {
             System.out.println("Error! Something happened to the database.");
+            System.out.println(e.getMessage());
         } finally {
             try {
                 stmt.close();
@@ -127,6 +130,7 @@ public class Model {
             rs.close();
         } catch(SQLException e) {
             System.out.println("Error! Something happened to the database.");
+            System.out.println(e.getMessage());
         } finally {
             try {
                 stmt.close();
@@ -150,7 +154,7 @@ public class Model {
                                                  rs.getInt("flight_id"),
                                                  rs.getString("checkin_date"),
                                                  rs.getString("seat_no"),
-                                                 rs.getString("saet_class"),
+                                                 rs.getString("seat_class"),
                                                  rs.getDouble("total_cost"),
                                                  rs.getString("food_order"),
                                                  rs.getInt("total_checkin_bags"));
@@ -160,6 +164,7 @@ public class Model {
             rs.close();
         } catch(SQLException e) {
             System.out.println("Error! Something happened to the database.");
+            System.out.println(e.getMessage());
         } finally {
             try {
                 stmt.close();
