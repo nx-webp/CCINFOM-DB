@@ -28,9 +28,7 @@ public class ViewController extends javax.swing.JFrame {
     private final ArrayList<ViewFlight> viewFlight = new ArrayList<>();
     private final ArrayList<ViewPassenger> viewPassenger = new ArrayList<>();
     private final Connection con;
-    private static final String url = "jdbc:mysql://localhost:3306/ccinfom";
-    private static final String username = "root";
-    private static final String password = "12345678";
+
     /**
      * Creates new form Main
      */
@@ -2039,14 +2037,12 @@ public class ViewController extends javax.swing.JFrame {
             ArrayList<Passenger> arrayHolder = new ArrayList<>();
 
             while(rs.next()) {
-                System.out.println("Processing flight ID: " + rs.getInt("flight_id"));
                 stmt2.setInt(1, rs.getInt("flight_id"));
                 ResultSet rs2 = stmt2.executeQuery();
 
                 arrayHolder.clear();
 
                 while (rs2.next()) {
-                    System.out.println("Processing passenger ID: " + rs2.getInt("passenger_id"));
                     Passenger elementHolder = new Passenger(rs2.getInt("passenger_id"),
                             rs2.getString("passport_number"),
                             rs2.getString("last_name"),
@@ -2181,7 +2177,7 @@ public class ViewController extends javax.swing.JFrame {
         try {
             String query = "SELECT b.ref_id, b.passenger_id, b.flight_id, b.checkin_date, b.seat_no, " +
                     "b.seat_class, b.total_cost, b.food_order, b.total_checkin_bags, p.last_name, p.first_name, " +
-                    "p.email_address, p.vip_status, p.contact_no, p.passport_number " +
+                    "p.birthdate, p.email_address, p.vip_status, p.contact_no, p.passport_number " +
                     "FROM bookings b JOIN passengers p ON b.passenger_id = p.passenger_id;";
 
             PreparedStatement stmt = con.prepareStatement(query);
@@ -2210,6 +2206,7 @@ public class ViewController extends javax.swing.JFrame {
             }
         }
         catch(Exception e){
+            System.out.println(e.getMessage());
             JOptionPane.showMessageDialog(this, "Error generating report", "Try again", JOptionPane.ERROR_MESSAGE);
         }
 
@@ -3524,6 +3521,7 @@ public class ViewController extends javax.swing.JFrame {
             }
 
             DefaultTableModel table = (DefaultTableModel) RRTable.getModel();
+            table.setRowCount(0);
             for(int i = 0; i < revReports.size(); i++){
                 table.addRow(new Object[]{revReports.get(i).getMonth(), revReports.get(i).getNumFlights(), revReports.get(i).getTotalRevenue()});
             }
@@ -3556,7 +3554,7 @@ public class ViewController extends javax.swing.JFrame {
                 PreparedStatement stmt = con.prepareStatement(query);
 
                 stmt.setInt(1, Integer.parseInt(year.getText()));
-                stmt.setInt(1, Integer.parseInt(month.getText()));
+                stmt.setInt(2, Integer.parseInt(month.getText()));
 
                 ResultSet rs = stmt.executeQuery();
 
@@ -3572,9 +3570,11 @@ public class ViewController extends javax.swing.JFrame {
             }
             catch(Exception e){
                 JOptionPane.showMessageDialog(this, "Error generating report", "Try again", JOptionPane.ERROR_MESSAGE);
+                System.out.println(e.getMessage());
             }
 
             DefaultTableModel table = (DefaultTableModel) PRTable.getModel();
+            table.setRowCount(0);
             for(int i = 0; i < passReports.size(); i++){
                 table.addRow(new Object[]{passReports.get(i).getLast_name(), passReports.get(i).getFirst_name(), passReports.get(i).getEmail_address(), passReports.get(i).getVip_status(), passReports.get(i).getTotalBookings()});
             }
@@ -3599,31 +3599,35 @@ public class ViewController extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Enter valid month", "Try again", JOptionPane.ERROR_MESSAGE);
         else {
             try {
-                String query = "SELECT MONTH(f.departure) AS month, COUNT(f.flight_id) AS numbers, SUM(b.total_cost) as revenue " +
-                        "FROM flights f LEFT JOIN bookings b ON f.flight_id " +
-                        "WHERE YEAR(f.departure) = ? " +
-                        "GROUP BY month " +
-                        "ORDER BY month;";
+                String query = "SELECT e.employee_id, COUNT(f.flight_id) AS numTasks, (e.salary * COUNT(f.flight_id)) AS totalRevenue " +
+                        "FROM employees e LEFT JOIN flights f ON e.employee_id IN (f.pilot_id, f.copilot_id, f.lead_attendant, f.flight_attendant)" +
+                        "WHERE YEAR(f.departure) = ? AND MONTH(f.departure) = ? " +
+                        "GROUP BY e.employee_id, e.salary";
 
                 PreparedStatement stmt = con.prepareStatement(query);
 
                 stmt.setInt(1, Integer.parseInt(year.getText()));
+                stmt.setInt(2, Integer.parseInt(month.getText()));
 
                 ResultSet rs = stmt.executeQuery();
 
                 while(rs.next()) {
-                    RevenueReport holder = new RevenueReport(rs.getInt("month"),
-                            rs.getInt("numbers"),
-                            rs.getInt("revenue"));
+                    EmployeeStatisticsReport holder = new EmployeeStatisticsReport(
+                            rs.getInt("employee_id"),
+                            rs.getInt("numTasks"),
+                            rs.getDouble("totalRevenue"));
 
-                    revReports.add(holder);
+                    esReports.add(holder);
                 }
             }
             catch(Exception e){
+                System.out.println(e.getMessage());
                 JOptionPane.showMessageDialog(this, "Error generating report", "Try again", JOptionPane.ERROR_MESSAGE);
             }
 
             DefaultTableModel table = (DefaultTableModel) ESRTable.getModel();
+
+            table.setRowCount(0);
             for(int i = 0; i < esReports.size(); i++){
                 table.addRow(new Object[]{esReports.get(i).getEmployee_id(), esReports.get(i).getNumTasks(), esReports.get(i).getTotalRevenue()});
             }
