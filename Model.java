@@ -455,7 +455,7 @@ public class Model {
     }
 
     public boolean updateGateNumber(int flightID, int gate_number) throws SQLException{
-        String query = "UPDATE flights SET gate_number = ? WHERE flightID = ?";
+        String query = "UPDATE flights SET gate_number = ? WHERE flight_id = ?";
 
         PreparedStatement stmt = connection.prepareStatement(query);
 
@@ -466,7 +466,7 @@ public class Model {
     }
 
     public boolean updateDesination (int flightID, String destination) throws SQLException{
-        String query = "UPDATE flights SET destination = ? WHERE employee_id = ?";
+        String query = "UPDATE flights SET destination = ? WHERE flight_id = ?";
 
         PreparedStatement stmt = connection.prepareStatement(query);
 
@@ -477,7 +477,7 @@ public class Model {
     }
 
     public boolean updateOrigin (int flightID, String origin) throws SQLException{
-        String query = "UPDATE flights SET origin = ? WHERE employee_id = ?";
+        String query = "UPDATE flights SET origin = ? WHERE flight_id = ?";
 
         PreparedStatement stmt = connection.prepareStatement(query);
 
@@ -488,7 +488,7 @@ public class Model {
     }
 
     public boolean updateDeparture (int flightID, String departure) throws SQLException{
-        String query = "UPDATE flights SET departure = ? WHERE employee_id = ?";
+        String query = "UPDATE flights SET departure = ? WHERE flight_id = ?";
 
         PreparedStatement stmt = connection.prepareStatement(query);
 
@@ -499,7 +499,7 @@ public class Model {
     }
 
     public boolean updateArrival (int flightID, String arrival) throws SQLException{
-        String query = "UPDATE flights SET arrival = ? WHERE employee_id = ?";
+        String query = "UPDATE flights SET arrival = ? WHERE flight_id = ?";
 
         PreparedStatement stmt = connection.prepareStatement(query);
 
@@ -510,7 +510,7 @@ public class Model {
     }
 
     public boolean updatePilot (int flightID, int pilot_id) throws SQLException{
-        String query = "UPDATE flights SET pilot_id = ? WHERE employee_id = ?";
+        String query = "UPDATE flights SET pilot_id = ? WHERE flight_id = ?";
 
         PreparedStatement stmt = connection.prepareStatement(query);
 
@@ -521,7 +521,7 @@ public class Model {
     }
 
     public boolean updateCoPilot (int flightID, int copilot_id) throws SQLException{
-        String query = "UPDATE flights SET copilot_id = ? WHERE employee_id = ?";
+        String query = "UPDATE flights SET copilot_id = ? WHERE flight_id = ?";
 
         PreparedStatement stmt = connection.prepareStatement(query);
 
@@ -532,7 +532,7 @@ public class Model {
     }
 
     public boolean updateLeadAttendant (int flightID, int lead_attendant) throws SQLException{
-        String query = "UPDATE flights SET lead_attendant = ? WHERE employee_id = ?";
+        String query = "UPDATE flights SET lead_attendant = ? WHERE flight_id = ?";
 
         PreparedStatement stmt = connection.prepareStatement(query);
 
@@ -543,7 +543,7 @@ public class Model {
     }
 
     public boolean updateFlightAttendant (int flightID, int flight_attendant) throws SQLException{
-        String query = "UPDATE flights SET flight_attendant = ? WHERE employee_id = ?";
+        String query = "UPDATE flights SET flight_attendant = ? WHERE flight_id = ?";
 
         PreparedStatement stmt = connection.prepareStatement(query);
 

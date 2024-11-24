@@ -2654,8 +2654,6 @@ public class ViewController extends javax.swing.JFrame {
         }
 
         try {
-            System.out.println("Database connection successful.");
-
             if (!model.findEmployee(employeeID)) {
                 JOptionPane.showMessageDialog(this, "Employee does not exist.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -2683,11 +2681,13 @@ public class ViewController extends javax.swing.JFrame {
 
     private void viewBookings11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewBookings11ActionPerformed
         String employeeIDString = uEmployeeID.getText();
-        String last_name = uLastName.getText();
+        String last_name = uEmpLastName.getText();
+
+        System.out.println(last_name + " and " + employeeIDString);
 
         if(employeeIDString.isEmpty() || last_name.isEmpty())
             JOptionPane.showMessageDialog(this, "Please enter required fields", "Try again", JOptionPane.ERROR_MESSAGE);
-        else if(model.findEmployee(Integer.parseInt(employeeIDString)) == false)
+        else if(!model.findEmployee(Integer.parseInt(employeeIDString)))
             JOptionPane.showMessageDialog(this, "Employee does not exist", "Try again", JOptionPane.ERROR_MESSAGE);
         else {
             try {
@@ -2706,7 +2706,7 @@ public class ViewController extends javax.swing.JFrame {
 
     private void viewBookings12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewBookings12ActionPerformed
         String employeeIDString = uEmployeeID.getText();
-        String first_name = uFirstName.getText();
+        String first_name = uEmpFirstName.getText();
 
         if(employeeIDString.isEmpty() || first_name.isEmpty())
             JOptionPane.showMessageDialog(this, "Please enter required fields", "Try again", JOptionPane.ERROR_MESSAGE);
@@ -2932,7 +2932,7 @@ public class ViewController extends javax.swing.JFrame {
 
         if(flight_idString.isEmpty() || gate_numberString.isEmpty())
             JOptionPane.showMessageDialog(this, "Please enter required fields", "Try again", JOptionPane.ERROR_MESSAGE);
-        else if(model.findFlight(Integer.parseInt(flight_idString)) == false)
+        else if(!model.findFlight(Integer.parseInt(flight_idString)))
             JOptionPane.showMessageDialog(this, "Flight does not exist", "Try again", JOptionPane.ERROR_MESSAGE);
         else {
             try {
@@ -2941,6 +2941,7 @@ public class ViewController extends javax.swing.JFrame {
             }
             catch(Exception e){
                 JOptionPane.showMessageDialog(this, "Error updating Flight gate number", "Try again", JOptionPane.ERROR_MESSAGE);
+                System.out.println(e.getMessage());
             }
         }
     }//GEN-LAST:event_viewBookings17ActionPerformed
@@ -3001,11 +3002,11 @@ public class ViewController extends javax.swing.JFrame {
 
     private void viewBookings20ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewBookings20ActionPerformed
         String flight_idString = uFlightID.getText();
-        String departure = uOrigin.getText();
+        String departure = uDeparture.getText();
 
         if(flight_idString.isEmpty() || departure.isEmpty())
             JOptionPane.showMessageDialog(this, "Please enter required fields", "Try again", JOptionPane.ERROR_MESSAGE);
-        else if(model.findFlight(Integer.parseInt(flight_idString)) == false)
+        else if(!model.findFlight(Integer.parseInt(flight_idString)))
             JOptionPane.showMessageDialog(this, "Flight does not exist", "Try again", JOptionPane.ERROR_MESSAGE);
         else {
             try {
@@ -3014,6 +3015,7 @@ public class ViewController extends javax.swing.JFrame {
             }
             catch(Exception e){
                 JOptionPane.showMessageDialog(this, "Error updating Flight departure", "Try again", JOptionPane.ERROR_MESSAGE);
+                System.out.println(e.getMessage());
             }
         }
     }//GEN-LAST:event_viewBookings20ActionPerformed
@@ -3024,11 +3026,11 @@ public class ViewController extends javax.swing.JFrame {
 
     private void viewBookings21ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewBookings21ActionPerformed
         String flight_idString = uFlightID.getText();
-        String arrival = uOrigin.getText();
+        String arrival = uArrival.getText();
 
         if(flight_idString.isEmpty() || arrival.isEmpty())
             JOptionPane.showMessageDialog(this, "Please enter required fields", "Try again", JOptionPane.ERROR_MESSAGE);
-        else if(model.findFlight(Integer.parseInt(flight_idString)) == false)
+        else if(!model.findFlight(Integer.parseInt(flight_idString)))
             JOptionPane.showMessageDialog(this, "Flight does not exist", "Try again", JOptionPane.ERROR_MESSAGE);
         else {
             try {
@@ -3047,7 +3049,7 @@ public class ViewController extends javax.swing.JFrame {
 
     private void viewBookings22ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewBookings22ActionPerformed
         String flight_idString = uFlightID.getText();
-        String pilot_idString = uOrigin.getText();
+        String pilot_idString = uPilotID.getText();
 
         if(flight_idString.isEmpty() || pilot_idString.isEmpty())
             JOptionPane.showMessageDialog(this, "Please enter required fields", "Try again", JOptionPane.ERROR_MESSAGE);
@@ -3068,7 +3070,7 @@ public class ViewController extends javax.swing.JFrame {
 
     private void viewBookings23ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewBookings23ActionPerformed
         String flight_idString = uFlightID.getText();
-        String flight_attendant_idString = uOrigin.getText();
+        String flight_attendant_idString = uFlightAttendantID.getText();
 
         if(flight_idString.isEmpty() || flight_attendant_idString.isEmpty())
             JOptionPane.showMessageDialog(this, "Please enter required fields", "Try again", JOptionPane.ERROR_MESSAGE);
@@ -3382,7 +3384,7 @@ public class ViewController extends javax.swing.JFrame {
 
     private void viewBookings31ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewBookings31ActionPerformed
         String flight_idString = uFlightID.getText();
-        String copilot_idString = uOrigin.getText();
+        String copilot_idString = uCopilotID.getText();
 
         if(flight_idString.isEmpty() || copilot_idString.isEmpty())
             JOptionPane.showMessageDialog(this, "Please enter required fields", "Try again", JOptionPane.ERROR_MESSAGE);
@@ -3407,7 +3409,7 @@ public class ViewController extends javax.swing.JFrame {
 
     private void viewBookings32ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewBookings32ActionPerformed
         String flight_idString = uFlightID.getText();
-        String lead_attendant_idString = uOrigin.getText();
+        String lead_attendant_idString = uLeadAttendantID.getText();
 
         if(flight_idString.isEmpty() || lead_attendant_idString.isEmpty())
             JOptionPane.showMessageDialog(this, "Please enter required fields", "Try again", JOptionPane.ERROR_MESSAGE);
