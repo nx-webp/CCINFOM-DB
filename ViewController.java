@@ -17,7 +17,7 @@ import javax.swing.table.DefaultTableModel;
  * @author Admin
  */
 public class ViewController extends javax.swing.JFrame {
-    private Model model;
+    private static Model model;
     private final ArrayList<Employee> employees = new ArrayList<>();
     private final ArrayList<Passenger> passengers = new ArrayList<>();
     private final ArrayList<Flight> flights = new ArrayList<>();
@@ -29,13 +29,16 @@ public class ViewController extends javax.swing.JFrame {
     private final ArrayList<ViewBooking> viewBooking = new ArrayList<>();
     private final ArrayList<ViewFlight> viewFlight = new ArrayList<>();
     private final ArrayList<ViewPassenger> viewPassenger = new ArrayList<>();
-    private final String url = "jdbc:mysql://localhost:3306/ccinfom";
-    private final String username = "root";
-    private final String password = "12345678";
+    private final Connection con;
+    private static final String url = "jdbc:mysql://localhost:3306/ccinfom";
+    private static final String username = "root";
+    private static final String password = "12345678";
     /**
      * Creates new form Main
      */
-    public ViewController() {
+    public ViewController(Model model, Connection connection) {
+        this.con = connection;
+        ViewController.model = model;
         initComponents();
     }
 
@@ -2004,7 +2007,6 @@ public class ViewController extends javax.swing.JFrame {
         viewFlight.clear();
         
         try {
-        Connection con = DriverManager.getConnection(this.url, this.username, this.password);
         String query = "SELECT * FROM flights";
         String query2 = "SELECT * FROM passengers p " +
                 "JOIN bookings b ON p.passenger_id = b.passenger_id " +
@@ -2066,7 +2068,6 @@ public class ViewController extends javax.swing.JFrame {
         viewPassenger.clear();
         
         try {
-        Connection con = DriverManager.getConnection(this.url, this.username, this.password);
         String query = "SELECT * FROM passengers";
         String query2 = "SELECT * FROM bookings b " +
                 "JOIN passengers p ON b.passenger_id = p.passenger_id " +
@@ -2082,6 +2083,8 @@ public class ViewController extends javax.swing.JFrame {
         while(rs.next()) {
             stmt2.setInt(1, rs.getInt("passenger_id"));
             ResultSet rs2 = stmt2.executeQuery();
+
+            arrayHolder.clear();
 
             while (rs2.next()) {
                 Booking elementHolder = new Booking(rs.getInt("ref_id"),
@@ -2116,6 +2119,9 @@ public class ViewController extends javax.swing.JFrame {
         }
         
         DefaultTableModel table = (DefaultTableModel) viewPassengerTable.getModel();
+
+        table.setRowCount(0);
+
         for(int i = 0; i < viewPassenger.size(); i++){
             table.addRow(new Object[]{viewPassenger.get(i).getID(), viewPassenger.get(i).getPassport_number(), viewPassenger.get(i).getLast_name(), viewPassenger.get(i).getFirst_name(), viewPassenger.get(i).getBirthdate(), viewPassenger.get(i).getContact_no(), viewPassenger.get(i).getEmail_address(), viewPassenger.get(i).getVip_status()});
         }
@@ -2127,7 +2133,6 @@ public class ViewController extends javax.swing.JFrame {
         viewBooking.clear();
         
         try {
-        Connection con = DriverManager.getConnection(this.url, this.username, this.password);
         String query = "SELECT b.ref_id, b.passenger_id, b.flight_id, b.checkin_date, b.seat_no, " +
                 "b.seat_class, b.total_cost, b.food_order, b.total_checkin_bags, p.last_name, p.first_name, " +
                 "p.email_address, p.vip_status, p.contact_no, p.passport_number " +
@@ -2182,7 +2187,7 @@ public class ViewController extends javax.swing.JFrame {
     if (passport_number.isEmpty() || last_name.isEmpty() || first_name.isEmpty() || birthdate.isEmpty() || contact_noString.isEmpty() || email_address.isEmpty()) {
         JOptionPane.showMessageDialog(this, "Please enter all fields", "Try again", JOptionPane.ERROR_MESSAGE);
     } else {
-        try (Connection con = DriverManager.getConnection(this.url, this.username, this.password)) {
+        try {
             String insertPassengerSQL = "INSERT INTO passengers (passport_number, last_name, first_name, birthdate, contact_no, email_address, vip_status) VALUES (?, ?, ?, ?, ?, ?, ?)";
             
             try (PreparedStatement stmt = con.prepareStatement(insertPassengerSQL)) {
@@ -2204,7 +2209,7 @@ public class ViewController extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Error creating passenger", "Try again", JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Database connection failed", "Try again", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
@@ -2248,7 +2253,7 @@ private void deletePassengerButtonActionPerformed(java.awt.event.ActionEvent evt
         return;
     }
 
-    try (Connection con = DriverManager.getConnection(this.url, this.username, this.password)) {
+    try {
         String deletePassengerSQL = "DELETE FROM passengers WHERE passenger_id = ?";
 
         try (PreparedStatement stmt = con.prepareStatement(deletePassengerSQL)) {
@@ -2452,12 +2457,11 @@ private void deletePassengerButtonActionPerformed(java.awt.event.ActionEvent evt
         else{
             float salary = Float.parseFloat(cSalary.getText());
             try {
-                Connection con = DriverManager.getConnection(this.url, this.username, this.password);
                 String insertEmployee = "INSERT INTO employees (last_name, first_name, job_title, salary, hire_date,department) VALUES (?, ?, ?, ?, ?, ?)";
-		PreparedStatement stmt = con.prepareStatement(insertEmployee);
+		    PreparedStatement stmt = con.prepareStatement(insertEmployee);
 		
             
-	    stmt.setString(1, last_name);
+	        stmt.setString(1, last_name);
             stmt.setString(2, first_name);
             stmt.setString(3, job_title);
             stmt.setDouble(4, salary);
@@ -2524,7 +2528,7 @@ private void deleteEmployeeButtonActionPerformed(java.awt.event.ActionEvent evt)
         return;
     }
     // Connect to the database
-    try (Connection con = DriverManager.getConnection(url, username, password)) {
+    try {
         System.out.println("Database connection successful.");
 
         // Check if the employee exists
@@ -2555,7 +2559,7 @@ private void deleteEmployeeButtonActionPerformed(java.awt.event.ActionEvent evt)
             JOptionPane.showMessageDialog(this, "Error while deleting employee: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
 
-    } catch (SQLException e) {
+    } catch (Exception e) {
         System.out.println("Database connection failed: " + e.getMessage());
         JOptionPane.showMessageDialog(this, "Failed to connect to the database. Please check your connection settings.", "Error", JOptionPane.ERROR_MESSAGE);
     }
@@ -2589,11 +2593,9 @@ private void deleteEmployeeButtonActionPerformed(java.awt.event.ActionEvent evt)
         return;
     }
     
-    try (Connection connection = DriverManager.getConnection(url, username, password)) {
+    try {
         System.out.println("Database connection successful.");
 
-       
-        Model model = new Model(connection);
         if (!model.findEmployee(employeeID)) {
             JOptionPane.showMessageDialog(this, "Employee does not exist.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -2609,7 +2611,7 @@ private void deleteEmployeeButtonActionPerformed(java.awt.event.ActionEvent evt)
             JOptionPane.showMessageDialog(this, "Unexpected error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
 
-    } catch (SQLException e) {
+    } catch (Exception e) {
         System.out.println("Database connection failed: " + e.getMessage());
         JOptionPane.showMessageDialog(this, "Failed to connect to the database. Please check your connection settings.", "Error", JOptionPane.ERROR_MESSAGE);
     }
@@ -2781,7 +2783,7 @@ private void deleteEmployeeButtonActionPerformed(java.awt.event.ActionEvent evt)
     }
 
    
-    try (Connection con = DriverManager.getConnection(this.url, this.username, this.password)) {
+    try  {
         String insertFlight = "INSERT INTO flights (gate_number, destination, origin, departure, arrival, pilot_id, copilot_id, lead_attendant_id, flight_attendant_id, base_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = con.prepareStatement(insertFlight)) {
             stmt.setInt(1, Integer.parseInt(gate_numberString));
@@ -2836,13 +2838,13 @@ private void deletePassengerButton2ActionPerformed(java.awt.event.ActionEvent ev
         return;
     }
 
-    if (model.findFlight(Integer.parseInt(flight_idString)) == false) {
+    if (!model.findFlight(Integer.parseInt(flight_idString))) {
         JOptionPane.showMessageDialog(this, "Flight does not exist", "Try again", JOptionPane.ERROR_MESSAGE);
         return;
     }
 
    
-    try (Connection con = DriverManager.getConnection(this.url, this.username, this.password)) {
+    try {
         String deleteFlight = "DELETE FROM flights WHERE flight_id = ?";
         try (PreparedStatement stmt = con.prepareStatement(deleteFlight)) {
             stmt.setInt(1, Integer.parseInt(flight_idString));
@@ -3042,16 +3044,16 @@ private void createPassengerButton3ActionPerformed(java.awt.event.ActionEvent ev
     }
     
     // Validate if passenger and flight exist
-    if (model.findPassenger(Integer.parseInt(passenger_idString)) == false) {
+    if (!model.findPassenger(Integer.parseInt(passenger_idString))) {
         JOptionPane.showMessageDialog(this, "Passenger does not exist", "Try again", JOptionPane.ERROR_MESSAGE);
         return;
-    } else if (model.findFlight(Integer.parseInt(flight_idString)) == false) {
+    } else if (!model.findFlight(Integer.parseInt(flight_idString))) {
         JOptionPane.showMessageDialog(this, "Flight does not exist", "Try again", JOptionPane.ERROR_MESSAGE);
         return;
     }
     
     // SQL Logic to Insert Booking into the Database
-    try (Connection con = DriverManager.getConnection(this.url, this.username, this.password)) {
+    try  {
         String insertBooking = "INSERT INTO bookings (passenger_id, flight_id, check_in_date, seat_no, seat_class, total_price, food, total_bags) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         
         try (PreparedStatement stmt = con.prepareStatement(insertBooking)) {
@@ -3102,12 +3104,12 @@ private void deletePassengerButton3ActionPerformed(java.awt.event.ActionEvent ev
     if (booking_idString.isEmpty()) {
         JOptionPane.showMessageDialog(this, "Please enter required field", "Try again", JOptionPane.ERROR_MESSAGE);
         return;
-    } else if (model.findBooking(Integer.parseInt(booking_idString)) == false) {
+    } else if (!model.findBooking(Integer.parseInt(booking_idString))) {
         JOptionPane.showMessageDialog(this, "Booking does not exist", "Try again", JOptionPane.ERROR_MESSAGE);
         return;
     }
     
-    try (Connection con = DriverManager.getConnection(this.url, this.username, this.password)) {
+    try {
         String deleteBookingSQL = "DELETE FROM bookings WHERE booking_id = ?";
         
         try (PreparedStatement stmt = con.prepareStatement(deleteBookingSQL)) {
@@ -3387,7 +3389,6 @@ private void deletePassengerButton3ActionPerformed(java.awt.event.ActionEvent ev
             JOptionPane.showMessageDialog(this, "Enter valid month", "Try again", JOptionPane.ERROR_MESSAGE);
         else {
         try {
-        Connection con = DriverManager.getConnection(this.url, this.username, this.password);
         String query = "SELECT f.flight_id, f.origin, f.destination, COUNT(b.checkin_date) AS numbers " +
                         "FROM flights f JOIN bookings b ON f.flight_id = b.flight_id " +
                         "WHERE YEAR(b.checkin_date) = ? AND MONTH(b.checkin_date) = ? " +
@@ -3433,7 +3434,6 @@ private void deletePassengerButton3ActionPerformed(java.awt.event.ActionEvent ev
             JOptionPane.showMessageDialog(this, "Enter valid year", "Try again", JOptionPane.ERROR_MESSAGE);
         else {
         try {
-        Connection con = DriverManager.getConnection(this.url, this.username, this.password);
         String query = "SELECT MONTH(f.departure) AS month, COUNT(f.flight_id) AS numbers, SUM(b.total_cost) as revenue " +
                 "FROM flights f LEFT JOIN bookings b ON f.flight_id " +
                 "WHERE YEAR(f.departure) = ? " +
@@ -3483,7 +3483,6 @@ private void deletePassengerButton3ActionPerformed(java.awt.event.ActionEvent ev
             JOptionPane.showMessageDialog(this, "Enter valid month", "Try again", JOptionPane.ERROR_MESSAGE);
         else {
         try {
-        Connection con = DriverManager.getConnection(this.url, this.username, this.password);
         String query = "SELECT p.last_name, p.first_name, p.email_address, p.vip_status, COUNT(b.ref_id) AS totalBookings " +
                 "FROM passengers p LEFT JOIN bookings b ON p.passenger_id = b.passenger_id " +
                 "WHERE YEAR(b.checkin_date) = ? AND MONTH(b.checkin_date) = ? " +
@@ -3535,7 +3534,6 @@ private void deletePassengerButton3ActionPerformed(java.awt.event.ActionEvent ev
             JOptionPane.showMessageDialog(this, "Enter valid month", "Try again", JOptionPane.ERROR_MESSAGE);
         else {
         try {
-        Connection con = DriverManager.getConnection(this.url, this.username, this.password);
         String query = "SELECT MONTH(f.departure) AS month, COUNT(f.flight_id) AS numbers, SUM(b.total_cost) as revenue " +
                 "FROM flights f LEFT JOIN bookings b ON f.flight_id " +
                 "WHERE YEAR(f.departure) = ? " +
@@ -3605,21 +3603,22 @@ private void deletePassengerButton3ActionPerformed(java.awt.event.ActionEvent ev
         
         if(passenger_id.isEmpty())
             JOptionPane.showMessageDialog(this, "Please enter required field", "Try again", JOptionPane.ERROR_MESSAGE);
-        else if(model.findPassenger(Integer.parseInt(passenger_id)) == false) 
+        else if(!ViewController.model.findPassenger(Integer.parseInt(passenger_id)))
             JOptionPane.showMessageDialog(this, "Passenger does not exist", "Try again", JOptionPane.ERROR_MESSAGE);
         else {
-        DefaultTableModel table = (DefaultTableModel) viewPassengerBookingsTable.getModel();
-        for(int i = 0; i < viewPassenger.size(); i++){
-            if(viewPassenger.get(i).getID() == Integer.parseInt(passenger_id))
-                for(int j = 0; j < viewPassenger.get(i).getBookings().size(); j++)
-                    table.addRow(new Object[]{viewPassenger.get(i).getBookings().get(j).getID(), viewPassenger.get(i).getBookings().get(j).getPassenger_id(), viewPassenger.get(i).getBookings().get(j).getFlight_id(), viewPassenger.get(i).getBookings().get(j).getCheckin_date(), viewPassenger.get(i).getBookings().get(j).getSeat_no(), viewPassenger.get(i).getBookings().get(j).getSeat_class(), viewPassenger.get(i).getBookings().get(j).getTotal_cost(), viewPassenger.get(i).getBookings().get(j).getFood_order(), viewPassenger.get(i).getBookings().get(j).getTotal_checkin_bags()});
+            DefaultTableModel table = (DefaultTableModel) viewPassengerBookingsTable.getModel();
+            for(int i = 0; i < viewPassenger.size(); i++){
+                if(viewPassenger.get(i).getID() == Integer.parseInt(passenger_id))
+                    if(!viewPassenger.get(i).getBookings().isEmpty())
+                        for(int j = 0; j < viewPassenger.get(i).getBookings().size(); j++)
+                            table.addRow(new Object[]{viewPassenger.get(i).getBookings().get(j).getID(), viewPassenger.get(i).getBookings().get(j).getPassenger_id(), viewPassenger.get(i).getBookings().get(j).getFlight_id(), viewPassenger.get(i).getBookings().get(j).getCheckin_date(), viewPassenger.get(i).getBookings().get(j).getSeat_no(), viewPassenger.get(i).getBookings().get(j).getSeat_class(), viewPassenger.get(i).getBookings().get(j).getTotal_cost(), viewPassenger.get(i).getBookings().get(j).getFood_order(), viewPassenger.get(i).getBookings().get(j).getTotal_checkin_bags()});
         }
         }
     }    
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -3641,24 +3640,34 @@ private void deletePassengerButton3ActionPerformed(java.awt.event.ActionEvent ev
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(ViewController.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
-       /* String url = "jdbc:mysql://localhost:3306/airport"; // change this too
-        String username = "root";
-        String password = "Cupidissodumb<3"; // Change this na lng
-        
-        try {
-            Connection connection = DriverManager.getConnection(url, username, password);
-            System.out.println("Success Connection!");
 
-        }catch(SQLException e) {
-            System.out.println("Database connection failed:" + e.getMessage());
-        }*/
+
+        String url = "jdbc:mysql://localhost:3306/ccinfom";
+        String username = "root";
+        String password = "12345678";
+
+        Model model_use = null;
+        Connection connection = null;
+
+        try {
+            connection = DriverManager.getConnection(url, username, password);
+            System.out.println("Success Connection!");
+            model_use = new Model(connection);
+        } catch(SQLException e) {
+            System.out.println("Error in opening the database!");
+        }
+
+        if (model_use == null) {
+            System.out.println("Exiting the application as database connection failed.");
+            return; // Exit if the database connection failed
+        }
         
         /* Create and display the form */
+        Model finalModel_use = model_use;
+        Connection finalConnection = connection;
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ViewController().setVisible(true);
+                new ViewController(finalModel_use, finalConnection).setVisible(true);
             }
         });
     }
