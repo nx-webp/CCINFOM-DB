@@ -1,3 +1,6 @@
+
+package group3db;
+
 import javax.swing.plaf.nimbus.State;
 import javax.xml.transform.Result;
 import java.sql.*;
@@ -62,13 +65,11 @@ public class Model {
             rs.close();
         } catch(SQLException e) {
             System.out.println("Error! Something happened to the database.");
-            System.out.println(e.getMessage());
         } finally {
             try {
                 stmt.close();
             } catch (SQLException e) {
                 System.out.println("Error! Unable to close the statement.");
-                System.out.println(e.getMessage());
             }
         }
 
@@ -94,7 +95,6 @@ public class Model {
             rs.close();
         } catch(SQLException e) {
             System.out.println("Error! Something happened to the database.");
-            System.out.println(e.getMessage());
         } finally {
             try {
                 stmt.close();
@@ -130,7 +130,6 @@ public class Model {
             rs.close();
         } catch(SQLException e) {
             System.out.println("Error! Something happened to the database.");
-            System.out.println(e.getMessage());
         } finally {
             try {
                 stmt.close();
@@ -154,7 +153,7 @@ public class Model {
                                                  rs.getInt("flight_id"),
                                                  rs.getString("checkin_date"),
                                                  rs.getString("seat_no"),
-                                                 rs.getString("seat_class"),
+                                                 rs.getString("saet_class"),
                                                  rs.getDouble("total_cost"),
                                                  rs.getString("food_order"),
                                                  rs.getInt("total_checkin_bags"));
@@ -164,7 +163,6 @@ public class Model {
             rs.close();
         } catch(SQLException e) {
             System.out.println("Error! Something happened to the database.");
-            System.out.println(e.getMessage());
         } finally {
             try {
                 stmt.close();
@@ -182,7 +180,7 @@ public class Model {
     */
     
     public boolean createPassenger(String passport_number, String last_name, String first_name,
-                                   String birthdate, int contact_no, String email_address, String vip_status)
+                                   String birthdate, long contact_no, String email_address, String vip_status)
             throws SQLException{
         String query = "INSERT INTO passengers (passport_number, last_name, first_name, " +
                 "birthdate, contact_no, email_address, vip_status) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -192,7 +190,7 @@ public class Model {
         stmt.setString(2, last_name);
         stmt.setString(3, first_name);
         stmt.setString(4, birthdate);
-        stmt.setInt(5, contact_no);
+        stmt.setLong(5, contact_no);
         stmt.setString(6, email_address);
         stmt.setString(7, vip_status);
         
@@ -260,12 +258,12 @@ public class Model {
         return true;
     }
     
-    public boolean updateContactNo (int passenger_id, int contact_number) throws SQLException{
+    public boolean updateContactNo (int passenger_id, long contact_number) throws SQLException{
         String query = "UPDATE passengers SET contact_no = ? WHERE passenger_id = ?";
         
         PreparedStatement stmt = connection.prepareStatement(query);
         
-        stmt.setInt(1, contact_number);
+        stmt.setLong(1, contact_number);
         stmt.setInt(2, passenger_id);
         stmt.executeUpdate();
         return true;
