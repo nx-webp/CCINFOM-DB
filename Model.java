@@ -261,12 +261,12 @@ public class Model {
         return true;
     }
 
-    public boolean updateContactNo (int passenger_id, int contact_number) throws SQLException{
+    public boolean updateContactNo (int passenger_id, Long contact_number) throws SQLException{
         String query = "UPDATE passengers SET contact_no = ? WHERE passenger_id = ?";
 
         PreparedStatement stmt = connection.prepareStatement(query);
 
-        stmt.setInt(1, contact_number);
+        stmt.setLong(1, contact_number);
         stmt.setInt(2, passenger_id);
         stmt.executeUpdate();
         return true;
@@ -630,7 +630,7 @@ public class Model {
     }
 
     public boolean updateSeat (int ref_id, String seat_number) throws SQLException{
-        String query = "UPDATE bookings SET seat_number = ? WHERE ref_id = ?";
+        String query = "UPDATE bookings SET seat_no = ? WHERE ref_id = ?";
 
         PreparedStatement stmt = connection.prepareStatement(query);
 

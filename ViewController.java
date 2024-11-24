@@ -2447,15 +2447,16 @@ public class ViewController extends javax.swing.JFrame {
 
         if(passenger_idString.isEmpty() || contact_noString.isEmpty())
             JOptionPane.showMessageDialog(this, "Please enter required fields", "Try again", JOptionPane.ERROR_MESSAGE);
-        else if(model.findPassenger(Integer.parseInt(passenger_idString)) == false)
+        else if(!model.findPassenger(Integer.parseInt(passenger_idString)))
             JOptionPane.showMessageDialog(this, "Passenger does not exist", "Try again", JOptionPane.ERROR_MESSAGE);
         else {
             try {
-                model.updateContactNo(Integer.parseInt(passenger_idString), Integer.parseInt(contact_noString));
+                model.updateContactNo(Integer.parseInt(passenger_idString), Long.parseLong(contact_noString));
                 JOptionPane.showMessageDialog(this, "Passenger contact_no updated");
             }
             catch(Exception e){
                 JOptionPane.showMessageDialog(this, "Error updating Passenger contact_no", "Try again", JOptionPane.ERROR_MESSAGE);
+                System.out.println(e.getMessage());
             }
         }
     }//GEN-LAST:event_viewBookings7ActionPerformed
@@ -3284,7 +3285,7 @@ public class ViewController extends javax.swing.JFrame {
 
         if(booking_id.isEmpty() || seat_no.isEmpty())
             JOptionPane.showMessageDialog(this, "Please enter required fields", "Try again", JOptionPane.ERROR_MESSAGE);
-        else if(model.findBooking(Integer.parseInt(booking_id)) == false)
+        else if(!model.findBooking(Integer.parseInt(booking_id)))
             JOptionPane.showMessageDialog(this, "Booking does not exist", "Try again", JOptionPane.ERROR_MESSAGE);
         else {
             try {
@@ -3293,6 +3294,7 @@ public class ViewController extends javax.swing.JFrame {
             }
             catch(Exception e){
                 JOptionPane.showMessageDialog(this, "Error updating Booking seat_no", "Try again", JOptionPane.ERROR_MESSAGE);
+                System.out.println(e.getMessage());
             }
         }
     }//GEN-LAST:event_viewBookings27ActionPerformed
