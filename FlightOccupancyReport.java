@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 public class FlightOccupancyReport {
     private int flight_id;
     private String origin;

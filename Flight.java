@@ -112,34 +112,6 @@ public class Flight {
         }
     }
     
-    public boolean isSeatOccupied(String seatName) {
-        for(int i = 0; i < seatAmount; i++){
-            if(seatName.equals(seats.get(i).getName()))
-                return seats.get(i).isOccupied();
-        }
-        return true;
-    }
-    
-    public boolean occupySeat(String seatName) {
-        for(int i = 0; i < seatAmount; i++){
-            if(seatName.equals(seats.get(i).getName())){
-                seats.get(i).occupySeat();
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    public boolean unoccupySeat(String seatName) {
-        for(int i = 0; i < seatAmount; i++){
-            if(seatName.equals(seats.get(i).getName())){
-                seats.get(i).unoccupySeat();
-                return true;
-            }
-        }
-        return false;
-    }
-    
     public double getSeatPrice(String seatName) {
         for(int i = 0; i < seatAmount; i++){
             if(seatName.equals(seats.get(i).getName()))

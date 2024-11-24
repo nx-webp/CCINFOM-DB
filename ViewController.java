@@ -1996,6 +1996,32 @@ public class ViewController extends javax.swing.JFrame {
     private void viewEmployeesActionPerformed(java.awt.event.ActionEvent evt) {
         jTabbedPane1.setSelectedIndex(4);
 
+        employees.clear();
+
+        String employeesQuery = "SELECT * FROM employees";
+
+        try {
+            PreparedStatement stmt = this.con.prepareStatement(employeesQuery);
+
+            ResultSet rs = stmt.executeQuery(employeesQuery);
+
+            while(rs.next()) {
+                // create new employee
+                Employee empHolder = new Employee(rs.getInt("employee_id"),
+                        rs.getString("last_name"),
+                        rs.getString("first_name"),
+                        rs.getString("job_title"),
+                        rs.getString("hire_date"),
+                        rs.getDouble("salary"),
+                        rs.getString("department"));
+
+                employees.add(empHolder);
+            }
+            rs.close();
+        } catch(SQLException e) {
+            System.out.println("Error! Something happened to the database.");
+            System.out.println(e.getMessage());
+        }
         DefaultTableModel table = (DefaultTableModel) employeeTable.getModel();
 
         table.setRowCount(0);
@@ -2115,7 +2141,6 @@ public class ViewController extends javax.swing.JFrame {
                 arrayHolder.clear();
 
                 while (rs2.next()) {
-                    System.out.println("CHECKING: " + rs.getInt("passenger_id"));
                     Booking elementHolder = new Booking(rs2.getInt("ref_id"),
                             rs2.getInt("passenger_id"),
                             rs2.getInt("flight_id"),
@@ -2679,7 +2704,6 @@ public class ViewController extends javax.swing.JFrame {
         String employeeIDString = uEmployeeID.getText();
         String last_name = uEmpLastName.getText();
 
-        System.out.println(last_name + " and " + employeeIDString);
 
         if(employeeIDString.isEmpty() || last_name.isEmpty())
             JOptionPane.showMessageDialog(this, "Please enter required fields", "Try again", JOptionPane.ERROR_MESSAGE);
@@ -2910,7 +2934,7 @@ public class ViewController extends javax.swing.JFrame {
             }
         } catch (SQLException e) {
             System.out.println("Database connection failed: " + e.getMessage());
-            JOptionPane.showMessageDialog(this, "Error deleting flight: " + e.getMessage(), "Try again", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error deleting flight. There is a booking!", "Try again", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_deletePassengerButton2ActionPerformed
 
@@ -3167,7 +3191,7 @@ public class ViewController extends javax.swing.JFrame {
         }
 
         try {
-            String deleteBookingSQL = "DELETE FROM bookings WHERE booking_id = ?";
+            String deleteBookingSQL = "DELETE FROM bookings WHERE ref_id = ?";
 
             try (PreparedStatement stmt = con.prepareStatement(deleteBookingSQL)) {
 

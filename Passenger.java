@@ -63,37 +63,4 @@ public class Passenger {
         return vip_status;
     }
 
-    // setters
-    public void setID(int passenger_id){
-        this.passenger_id = passenger_id;
-    }
-
-    public void setPassport_number(String passport_number) {
-        this.passport_number = passport_number;
-    }
-
-    public void setLast_name(String last_name) {
-        this.last_name = last_name;
-    }
-
-    public void setFirst_name(String first_name) {
-        this.first_name = first_name;
-    }
-
-    public void setBirthdate(String birthdate) {
-        this.birthdate = birthdate;
-    }
-
-    public void setContact_no(long contact_no) {
-        this.contact_no = contact_no;
-    }
-
-    public void setEmail_address(String email_address) {
-        this.email_address = email_address;
-    }
-
-    public void setVip_status(String vip_status) {
-        this.vip_status = vip_status;
-    }
-
 }

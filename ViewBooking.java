@@ -33,6 +33,7 @@ public class ViewBooking {
         this.food_order = food_order;
         this.total_checkin_bags = total_checkin_bags;
 
+        this.passport_number = passport_number;
         this.last_name = last_name;
         this.first_name = first_name;
         this.birthdate = birthdate;
