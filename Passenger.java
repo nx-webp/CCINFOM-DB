@@ -7,19 +7,21 @@
  *
  * @author Admin
  */
+package group3db;
+
 public class Passenger {
     private int passenger_id;
     private String passport_number;
     private String last_name;
     private String first_name;
     private String birthdate;
-    private int contact_no;
+    private long contact_no; 
     private String email_address;
     private String vip_status;
 
     // constructor
     public Passenger(int passenger_id, String passport_number, String last_name, String first_name,
-                     String birthdate, int contact_no, String email_address, String vip_status) {
+                     String birthdate, long contact_no, String email_address, String vip_status) {
         this.passenger_id = passenger_id;
         this.last_name = last_name;
         this.first_name = first_name;
@@ -50,7 +52,7 @@ public class Passenger {
         return birthdate;
     }
 
-    public int getContact_no() {
+    public long getContact_no() {
         return contact_no;
     }
 
@@ -83,7 +85,7 @@ public class Passenger {
         this.birthdate = birthdate;
     }
 
-    public void setContact_no(int contact_no) {
+    public void setContact_no(long contact_no) {
         this.contact_no = contact_no;
     }
 
