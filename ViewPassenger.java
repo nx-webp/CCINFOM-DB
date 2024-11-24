@@ -1,9 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package group3db;
-
 import java.util.ArrayList;
 
 public class ViewPassenger {
@@ -13,7 +7,7 @@ public class ViewPassenger {
     private String last_name;
     private String first_name;
     private String birthdate;
-    private long contact_no;
+    private Long contact_no;
     private String email_address;
     private String vip_status;
 
@@ -21,7 +15,7 @@ public class ViewPassenger {
     private ArrayList<Booking> bookings;
 
     public ViewPassenger(int passenger_id, String passport_number, String last_name, String first_name,
-                         String birthdate, long contact_no, String email_address, String vip_status,
+                         String birthdate, Long contact_no, String email_address, String vip_status,
                          ArrayList<Booking> bookings) {
         this.passenger_id = passenger_id;
         this.last_name = last_name;
@@ -54,7 +48,7 @@ public class ViewPassenger {
         return birthdate;
     }
 
-    public long getContact_no() {
+    public Long getContact_no() {
         return contact_no;
     }
 

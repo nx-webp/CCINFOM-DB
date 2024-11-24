@@ -7,7 +7,6 @@
  *
  * @author Admin
  */
-package group3db;
 
 public class Passenger {
     private int passenger_id;

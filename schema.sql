@@ -38,7 +38,7 @@ CREATE Table passengers (
     last_name VARCHAR(20) NOT NULL,
     first_name VARCHAR(30) NOT NULL,
     birthdate DATE,
-    contact_no INT(15) NOT NULL,
+    contact_no BIGINT NOT NULL,
     email_address VARCHAR(320),
     vip_status ENUM('Silver', 'Gold', 'Platinum', 'Diamond'),
     UNIQUE (passenger_id),
