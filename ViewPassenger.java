@@ -18,6 +18,7 @@ public class ViewPassenger {
                          String birthdate, Long contact_no, String email_address, String vip_status,
                          ArrayList<Booking> bookings) {
         this.passenger_id = passenger_id;
+        this.passport_number = passport_number;
         this.last_name = last_name;
         this.first_name = first_name;
         this.birthdate = birthdate;

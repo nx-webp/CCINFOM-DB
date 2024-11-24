@@ -1808,7 +1808,6 @@ public class ViewController extends javax.swing.JFrame {
         viewEmployees.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 viewEmployeesActionPerformed(evt);
-                System.out.println("ACTION!");
             }
         });
 
@@ -1996,10 +1995,6 @@ public class ViewController extends javax.swing.JFrame {
 
     private void viewEmployeesActionPerformed(java.awt.event.ActionEvent evt) {
         jTabbedPane1.setSelectedIndex(4);
-
-        for(Employee employee : employees)  {
-            System.out.println("ID: " + employee.getID());
-        }
 
         DefaultTableModel table = (DefaultTableModel) employeeTable.getModel();
 
@@ -3233,9 +3228,9 @@ public class ViewController extends javax.swing.JFrame {
 
         if(booking_id.isEmpty() || flight_id.isEmpty())
             JOptionPane.showMessageDialog(this, "Please enter required fields", "Try again", JOptionPane.ERROR_MESSAGE);
-        else if(model.findBooking(Integer.parseInt(booking_id)) == false)
+        else if(!model.findBooking(Integer.parseInt(booking_id)))
             JOptionPane.showMessageDialog(this, "Booking does not exist", "Try again", JOptionPane.ERROR_MESSAGE);
-        else if(model.findFlight(Integer.parseInt(flight_id)) == false)
+        else if(!model.findFlight(Integer.parseInt(flight_id)))
             JOptionPane.showMessageDialog(this, "Flight does not exist", "Try again", JOptionPane.ERROR_MESSAGE);
         else {
             try {
