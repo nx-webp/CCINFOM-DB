@@ -39,6 +39,7 @@ public class ViewController extends javax.swing.JFrame {
     public ViewController(Model model, Connection connection) {
         this.con = connection;
         ViewController.model = model;
+        model.fetchData();
         initComponents();
     }
 
@@ -1445,10 +1446,10 @@ public class ViewController extends javax.swing.JFrame {
         jLabel72.setText("Create Booking:");
         bookingManager.add(jLabel72, new org.netbeans.lib.awtextra.AbsoluteConstraints(33, 18, -1, -1));
 
-        cFood.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "NULL", "Silver", "Gold", "Platinum", "Diamond" }));
+        cFood.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Beef", "Chicken", "Pork", "Fish", "Vegan" }));
         bookingManager.add(cFood, new org.netbeans.lib.awtextra.AbsoluteConstraints(185, 298, 255, 30));
 
-        uFood.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "NULL", "Silver", "Gold", "Platinum", "Diamond" }));
+        uFood.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Beef", "Chicken", "Pork", "Fish", "Vegan" }));
         bookingManager.add(uFood, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 470, 255, 30));
 
         jTabbedPane1.addTab("book", bookingManager);
@@ -1487,7 +1488,7 @@ public class ViewController extends javax.swing.JFrame {
                 {null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "flight_id", "gate_no", "destination", "origin", "departure", "arrival", "pilot_id", "copilot_id", "lead_attendant_id", "flight_attendant_id"
+                "flight_id", "gate_no", "destination", "origin", "departure", "arrival", "pilot_id", "copilot_id", "lead_attendant", "flight_attendant"
             }
         ));
         jScrollPane1.setViewportView(viewFlightTable);
@@ -1995,8 +1996,18 @@ public class ViewController extends javax.swing.JFrame {
         jTabbedPane1.setSelectedIndex(4);
         
         DefaultTableModel table = (DefaultTableModel) employeeTable.getModel();
+
+        table.setRowCount(0);
+
         for(int i = 0; i < employees.size(); i++){
-            table.addRow(new Object[]{employees.get(i).getID(), employees.get(i).getLast_name(), employees.get(i).getFirst_name(), employees.get(i).getJob_title(), employees.get(i).getHire_date(), employees.get(i).getSalary(), employees.get(i).getDepartment()});
+            table.addRow(new Object[]{
+                    employees.get(i).getID(),
+                    employees.get(i).getLast_name(),
+                    employees.get(i).getFirst_name(),
+                    employees.get(i).getJob_title(),
+                    employees.get(i).getHire_date(),
+                    employees.get(i).getSalary(),
+                    employees.get(i).getDepartment()});
         }
         
     }                                             
@@ -2007,57 +2018,75 @@ public class ViewController extends javax.swing.JFrame {
         viewFlight.clear();
         
         try {
-        String query = "SELECT * FROM flights";
-        String query2 = "SELECT * FROM passengers p " +
-                "JOIN bookings b ON p.passenger_id = b.passenger_id " +
-                "WHERE b.flight_id = ?";
+            String query = "SELECT * FROM flights;";
+            String query2 = "SELECT * FROM passengers p " +
+                    "JOIN bookings b ON p.passenger_id = b.passenger_id " +
+                    "WHERE b.flight_id = ?;";
 
-        PreparedStatement stmt = con.prepareStatement(query);
-        PreparedStatement stmt2 = con.prepareStatement(query2);
+            PreparedStatement stmt = this.con.prepareStatement(query);
+            PreparedStatement stmt2 = this.con.prepareStatement(query2);
 
-        ResultSet rs = stmt.executeQuery();
+            ResultSet rs = stmt.executeQuery();
 
-        ArrayList<Passenger> arrayHolder = new ArrayList<>();
+            ArrayList<Passenger> arrayHolder = new ArrayList<>();
 
-        while(rs.next()) {
-            stmt2.setInt(1, rs.getInt("flight_id"));
-            ResultSet rs2 = stmt2.executeQuery();
+            while(rs.next()) {
+                System.out.println("Processing flight ID: " + rs.getInt("flight_id"));
+                stmt2.setInt(1, rs.getInt("flight_id"));
+                ResultSet rs2 = stmt2.executeQuery();
 
-            while (rs2.next()) {
-                Passenger elementHolder = new Passenger(rs.getInt("passenger_id"),
-                                                  rs.getString("passport_number"),
-                                                  rs.getString("last_name"),
-                                                  rs.getString("first_name"),
-                                                  rs.getString("birthdate"),
-                                                  rs.getInt("contact_no"),
-                                                  rs.getString("email_address"),
-                                                  rs.getString("vip_status"));
+                arrayHolder.clear();
 
-                arrayHolder.add(elementHolder);
+                while (rs2.next()) {
+                    System.out.println("Processing passenger ID: " + rs2.getInt("passenger_id"));
+                    Passenger elementHolder = new Passenger(rs2.getInt("passenger_id"),
+                                                      rs2.getString("passport_number"),
+                                                      rs2.getString("last_name"),
+                                                      rs2.getString("first_name"),
+                                                      rs2.getString("birthdate"),
+                                                      rs2.getInt("contact_no"),
+                                                      rs2.getString("email_address"),
+                                                      rs2.getString("vip_status"));
+
+                    arrayHolder.add(elementHolder);
+                }
+
+                ViewFlight holder = new ViewFlight(rs.getInt("flight_id"),
+                        rs.getInt("gate_number"),
+                        rs.getString("destination"),
+                        rs.getString("origin"),
+                        rs.getString("departure"),
+                        rs.getString("arrival"),
+                        rs.getInt("pilot_id"),
+                        rs.getInt("copilot_id"),
+                        rs.getInt("lead_attendant"),
+                        rs.getInt("flight_attendant"),
+                        arrayHolder);
+
+                viewFlight.add(holder);
             }
-
-            ViewFlight holder = new ViewFlight(rs.getInt("flight_id"),
-                    rs.getInt("gate_number"),
-                    rs.getString("destination"),
-                    rs.getString("origin"),
-                    rs.getString("departure"),
-                    rs.getString("arrival"),
-                    rs.getInt("pilot_id"),
-                    rs.getInt("copilot_id"),
-                    rs.getInt("lead_attendant"),
-                    rs.getInt("flight_attendant"),
-                    arrayHolder);
-
-            viewFlight.add(holder);
-        }
         }
         catch(Exception e){
             JOptionPane.showMessageDialog(this, "Error generating report", "Try again", JOptionPane.ERROR_MESSAGE);
+            System.out.println(e.getMessage());
         }
         
         DefaultTableModel table = (DefaultTableModel) viewFlightTable.getModel();
+
+        table.setRowCount(0);
+
         for(int i = 0; i < viewFlight.size(); i++){
-            table.addRow(new Object[]{viewFlight.get(i).getFlight_id(), viewFlight.get(i).getGate_number(), viewFlight.get(i).getDestination(), viewFlight.get(i).getOrigin(), viewFlight.get(i).getDeparture(), viewFlight.get(i).getArrival(), viewFlight.get(i).getPilot_id(), viewFlight.get(i).getCopilot_id(), viewFlight.get(i).getLead_attendant(), viewFlight.get(i).getFlight_attendant()});
+            table.addRow(new Object[]{
+                    viewFlight.get(i).getFlight_id(),
+                    viewFlight.get(i).getGate_number(),
+                    viewFlight.get(i).getDestination(),
+                    viewFlight.get(i).getOrigin(),
+                    viewFlight.get(i).getDeparture(),
+                    viewFlight.get(i).getArrival(),
+                    viewFlight.get(i).getPilot_id(),
+                    viewFlight.get(i).getCopilot_id(),
+                    viewFlight.get(i).getLead_attendant(),
+                    viewFlight.get(i).getFlight_attendant()});
         }
         
     }                                           
@@ -2068,7 +2097,7 @@ public class ViewController extends javax.swing.JFrame {
         viewPassenger.clear();
         
         try {
-        String query = "SELECT * FROM passengers";
+        String query = "SELECT * FROM passengers;";
         String query2 = "SELECT * FROM bookings b " +
                 "JOIN passengers p ON b.passenger_id = p.passenger_id " +
                 "WHERE b.passenger_id = ?";
@@ -2087,15 +2116,16 @@ public class ViewController extends javax.swing.JFrame {
             arrayHolder.clear();
 
             while (rs2.next()) {
-                Booking elementHolder = new Booking(rs.getInt("ref_id"),
-                                              rs.getInt("passenger_id"),
-                                              rs.getInt("flight_id"),
-                                              rs.getString("checkin_date"),
-                                              rs.getString("seat_no"),
-                                              rs.getString("seat_class"),
-                                              rs.getDouble("total_cost"),
-                                              rs.getString("food_order"),
-                                              rs.getInt("total_checkin_bags"));
+                System.out.println("CHECKING: " + rs.getInt("passenger_id"));
+                Booking elementHolder = new Booking(rs2.getInt("ref_id"),
+                                              rs2.getInt("passenger_id"),
+                                              rs2.getInt("flight_id"),
+                                              rs2.getString("checkin_date"),
+                                              rs2.getString("seat_no"),
+                                              rs2.getString("seat_class"),
+                                              rs2.getDouble("total_cost"),
+                                              rs2.getString("food_order"),
+                                              rs2.getInt("total_checkin_bags"));
 
                 arrayHolder.add(elementHolder);
             }
@@ -2123,7 +2153,15 @@ public class ViewController extends javax.swing.JFrame {
         table.setRowCount(0);
 
         for(int i = 0; i < viewPassenger.size(); i++){
-            table.addRow(new Object[]{viewPassenger.get(i).getID(), viewPassenger.get(i).getPassport_number(), viewPassenger.get(i).getLast_name(), viewPassenger.get(i).getFirst_name(), viewPassenger.get(i).getBirthdate(), viewPassenger.get(i).getContact_no(), viewPassenger.get(i).getEmail_address(), viewPassenger.get(i).getVip_status()});
+            table.addRow(new Object[]{
+                    viewPassenger.get(i).getID(),
+                    viewPassenger.get(i).getPassport_number(),
+                    viewPassenger.get(i).getLast_name(),
+                    viewPassenger.get(i).getFirst_name(),
+                    viewPassenger.get(i).getBirthdate(),
+                    viewPassenger.get(i).getContact_no(),
+                    viewPassenger.get(i).getEmail_address(),
+                    viewPassenger.get(i).getVip_status()});
         }
     }                                              
 
@@ -2136,7 +2174,7 @@ public class ViewController extends javax.swing.JFrame {
         String query = "SELECT b.ref_id, b.passenger_id, b.flight_id, b.checkin_date, b.seat_no, " +
                 "b.seat_class, b.total_cost, b.food_order, b.total_checkin_bags, p.last_name, p.first_name, " +
                 "p.email_address, p.vip_status, p.contact_no, p.passport_number " +
-                "FROM bookings b JOIN passengers p ON b.passenger_id = p.passenger_id ";
+                "FROM bookings b JOIN passengers p ON b.passenger_id = p.passenger_id;";
 
         PreparedStatement stmt = con.prepareStatement(query);
 
@@ -2168,8 +2206,25 @@ public class ViewController extends javax.swing.JFrame {
         }
         
         DefaultTableModel table = (DefaultTableModel) viewBookingsTable.getModel();
+        table.setRowCount(0);
         for(int i = 0; i < viewBooking.size(); i++){
-            table.addRow(new Object[]{viewBooking.get(i).getID(), viewBooking.get(i).getPassenger_id(), viewBooking.get(i).getFlight_id(), viewBooking.get(i).getCheckin_date(), viewBooking.get(i).getSeat_no(), viewBooking.get(i).getSeat_class(), viewBooking.get(i).getTotal_cost(), viewBooking.get(i).getFood_order(), viewBooking.get(i).getTotal_checkin_bags(), viewBooking.get(i).getPassport_number(), viewBooking.get(i).getLast_name(), viewBooking.get(i).getFirst_name(), viewBooking.get(i).getBirthdate(), viewBooking.get(i).getContact_no(), viewBooking.get(i).getEmail_address(), viewBooking.get(i).getVip_status()});
+            table.addRow(new Object[]{
+                    viewBooking.get(i).getID(),
+                    viewBooking.get(i).getPassenger_id(),
+                    viewBooking.get(i).getFlight_id(),
+                    viewBooking.get(i).getCheckin_date(),
+                    viewBooking.get(i).getSeat_no(),
+                    viewBooking.get(i).getSeat_class(),
+                    viewBooking.get(i).getTotal_cost(),
+                    viewBooking.get(i).getFood_order(),
+                    viewBooking.get(i).getTotal_checkin_bags(),
+                    viewBooking.get(i).getPassport_number(),
+                    viewBooking.get(i).getLast_name(),
+                    viewBooking.get(i).getFirst_name(),
+                    viewBooking.get(i).getBirthdate(),
+                    viewBooking.get(i).getContact_no(),
+                    viewBooking.get(i).getEmail_address(),
+                    viewBooking.get(i).getVip_status()});
         }
     }
 
@@ -2784,7 +2839,7 @@ private void deleteEmployeeButtonActionPerformed(java.awt.event.ActionEvent evt)
 
    
     try  {
-        String insertFlight = "INSERT INTO flights (gate_number, destination, origin, departure, arrival, pilot_id, copilot_id, lead_attendant_id, flight_attendant_id, base_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String insertFlight = "INSERT INTO flights (gate_number, destination, origin, departure, arrival, pilot_id, copilot_id, lead_attendant, flight_attendant) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = con.prepareStatement(insertFlight)) {
             stmt.setInt(1, Integer.parseInt(gate_numberString));
             stmt.setString(2, destination);
@@ -2795,7 +2850,6 @@ private void deleteEmployeeButtonActionPerformed(java.awt.event.ActionEvent evt)
             stmt.setInt(7, Integer.parseInt(copilot_idString));
             stmt.setInt(8, Integer.parseInt(lead_attendant_idString));
             stmt.setInt(9, Integer.parseInt(flight_attendant_idString));
-            stmt.setDouble(10, basePrice);
 
             stmt.executeUpdate();
             JOptionPane.showMessageDialog(this, "Flight created successfully.");
@@ -3054,7 +3108,7 @@ private void createPassengerButton3ActionPerformed(java.awt.event.ActionEvent ev
     
     // SQL Logic to Insert Booking into the Database
     try  {
-        String insertBooking = "INSERT INTO bookings (passenger_id, flight_id, check_in_date, seat_no, seat_class, total_price, food, total_bags) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String insertBooking = "INSERT INTO bookings (passenger_id, flight_id, checkin_date, seat_no, seat_class, total_cost, food_order, total_checkin_bags) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         
         try (PreparedStatement stmt = con.prepareStatement(insertBooking)) {
             // Set values to the prepared statement
@@ -3413,6 +3467,9 @@ private void deletePassengerButton3ActionPerformed(java.awt.event.ActionEvent ev
         }
         
         DefaultTableModel table = (DefaultTableModel) FORTable.getModel();
+
+        table.setRowCount(0);
+
         for(int i = 0; i < foReports.size(); i++){
             table.addRow(new Object[]{foReports.get(i).getFlight_id(), foReports.get(i).getOrigin(), foReports.get(i).getDestination(), foReports.get(i).getNumPassenger()});
         }
@@ -3578,7 +3635,7 @@ private void deletePassengerButton3ActionPerformed(java.awt.event.ActionEvent ev
         
         if(flight_id.isEmpty())
             JOptionPane.showMessageDialog(this, "Please enter required field", "Try again", JOptionPane.ERROR_MESSAGE);
-        else if(model.findFlight(Integer.parseInt(flight_id)) == false) 
+        else if(!model.findFlight(Integer.parseInt(flight_id)))
             JOptionPane.showMessageDialog(this, "Flight does not exist", "Try again", JOptionPane.ERROR_MESSAGE);
         else {
         DefaultTableModel table = (DefaultTableModel) viewFlightPassengersTable.getModel();
@@ -3607,6 +3664,9 @@ private void deletePassengerButton3ActionPerformed(java.awt.event.ActionEvent ev
             JOptionPane.showMessageDialog(this, "Passenger does not exist", "Try again", JOptionPane.ERROR_MESSAGE);
         else {
             DefaultTableModel table = (DefaultTableModel) viewPassengerBookingsTable.getModel();
+
+            table.setRowCount(0);
+
             for(int i = 0; i < viewPassenger.size(); i++){
                 if(viewPassenger.get(i).getID() == Integer.parseInt(passenger_id))
                     if(!viewPassenger.get(i).getBookings().isEmpty())
